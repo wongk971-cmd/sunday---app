@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sunday">
+    <meta name="theme-color" content="#0f0f1a">
+    <title>Sunday Assistant V3</title>
+    
+    <!-- App Icon for iPhone Home Screen -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7b2cbf;
+            --accent-success: #00ff88;
+            --accent-danger: #ff4757;
+            --accent-warning: #ff6b35;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 45px; height: 45px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .logo-text h1 { font-size: 24px; font-weight: 700; }
+        .logo-text span { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+
+        .header-time { text-align: right; font-family: 'JetBrains Mono', monospace; }
+        .header-time .time { font-size: 24px; font-weight: 500; color: var(--accent-primary); }
+        .header-time .date { font-size: 12px; color: var(--text-secondary); }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 6px;
+            background: var(--glass);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 60px;
+            padding: 10px 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-tab .icon { font-size: 18px; }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s ease-out; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--glass);
+        }
+
+        .badge.live {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--accent-danger);
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        .badge.tracking {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-success);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: var(--glass);
+            padding: 15px 10px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Weather */
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .weather-icon { font-size: 50px; }
+        .weather-temp { font-size: 38px; font-weight: 700; }
+        .weather-condition { color: var(--text-secondary); font-size: 14px; }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .weather-detail {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .weather-detail .value { font-size: 16px; font-weight: 600; color: var(--accent-primary); }
+        .weather-detail .label { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+        /* Location List */
+        .location-list { display: flex; flex-direction: column; gap: 8px; }
+
+        .location-card {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .location-card:active { background: rgba(255, 255, 255, 0.1); }
+
+        .location-info { display: flex; align-items: center; gap: 10px; }
+        .location-name { font-weight: 500; font-size: 14px; }
+        .location-temp { font-size: 18px; font-weight: 600; color: var(--accent-primary); }
+
+        /* Input */
+        .input-group { margin-bottom: 12px; }
+        .input-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            -webkit-appearance: none;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        select.input-field { cursor: pointer; }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-danger), #ff6b6b);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-success), #00d68f);
+            color: #0f0f1a;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 250px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: var(--bg-secondary);
+        }
+
+        #journeyMap, #parkingMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -21px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-primary);
+        }
+
+        .timeline-dot.active {
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+        }
+
+        .timeline-content {
+            background: var(--glass);
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+        }
+
+        .timeline-title { font-weight: 600; font-size: 13px; }
+        .timeline-time { font-size: 11px; color: var(--text-muted); }
+        .timeline-duration {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-success);
+            border-radius: 10px;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        /* Parking */
+        .parking-display { text-align: center; padding: 25px 15px; }
+        .parking-icon { font-size: 50px; margin-bottom: 12px; }
+        .parking-location { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .parking-time { color: var(--text-muted); font-size: 12px; margin-bottom: 15px; }
+        .parking-photo { max-width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; }
+
+        /* Reminders */
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+        }
+
+        .reminder-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--accent-warning), #ff8c42);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .reminder-content { flex: 1; }
+        .reminder-task { font-weight: 500; font-size: 13px; }
+        .reminder-time { font-size: 11px; color: var(--text-muted); }
+        .reminder-delete { background: none; border: none; color: var(--text-muted); padding: 8px; font-size: 14px; cursor: pointer; }
+
+        /* Currency */
+        .rate-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+        }
+
+        .rate-pair { display: flex; align-items: center; gap: 10px; }
+        .rate-flag { font-size: 22px; }
+        .rate-info { display: flex; flex-direction: column; }
+        .rate-code { font-weight: 600; font-size: 13px; }
+        .rate-name { font-size: 10px; color: var(--text-muted); }
+        .rate-value { font-size: 18px; font-weight: 600; color: var(--accent-success); font-family: 'JetBrains Mono', monospace; }
+
+        /* Alerts */
+        .alert-card {
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+
+        .alert-card.danger {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--accent-danger);
+        }
+
+        .alert-card.warning {
+            background: rgba(255, 165, 0, 0.1);
+            border-color: var(--accent-warning);
+        }
+
+        .alert-card.info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .alert-icon { font-size: 20px; }
+        .alert-title { font-weight: 600; font-size: 14px; }
+        .alert-time { margin-left: auto; font-size: 10px; color: var(--text-muted); }
+        .alert-body { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Chat */
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
+        }
+
+        .chat-message { margin-bottom: 12px; }
+        .chat-message.user { text-align: right; }
+
+        .chat-bubble {
+            display: inline-block;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .chat-message.bot .chat-bubble { background: var(--glass); }
+
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { flex: 1; }
+        .chat-input-area .btn { width: auto; padding: 14px 18px; }
+
+        .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+        .quick-btn {
+            padding: 8px 12px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .quick-btn:active { background: var(--accent-primary); color: var(--bg-primary); }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 30px 15px; }
+        .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+        .empty-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .empty-text { color: var(--text-muted); font-size: 12px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-success);
+            border-radius: var(--radius-md);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(-150%);
+            transition: transform 0.4s ease;
+        }
+
+        .toast.show { transform: translateY(0); }
+        .toast.error { border-color: var(--accent-danger); }
+        .toast-icon { font-size: 18px; }
+        .toast-message { font-size: 13px; }
+
+        /* Loading */
+        .loading { display: flex; justify-content: center; padding: 30px; }
+        .spinner {
+            width: 30px; height: 30px;
+            border: 3px solid var(--glass);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* GPS Status */
+        .gps-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .gps-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .gps-dot.active {
+            background: var(--accent-success);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        /* News */
+        .news-item {
+            padding: 12px;
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .news-item:active { background: rgba(255, 255, 255, 0.08); }
+        .news-source {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .news-title { font-size: 13px; font-weight: 500; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">☀️</div>
+                <div class="logo-text">
+                    <h1>Sunday</h1>
+                    <span>AI ASSISTANT V3</span>
+                </div>
+            </div>
+            <div class="header-time">
+                <div class="time" id="currentTime">00:00</div>
+                <div class="date" id="currentDate">Loading...</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-page="dashboard"><span class="icon">🏠</span><span>Home</span></button>
+            <button class="nav-tab" data-page="weather"><span class="icon">🌤️</span><span>Weather</span></button>
+            <button class="nav-tab" data-page="journey"><span class="icon">🗺️</span><span>Journey</span></button>
+            <button class="nav-tab" data-page="parking"><span class="icon">🅿️</span><span>Parking</span></button>
+            <button class="nav-tab" data-page="tools"><span class="icon">🛠️</span><span>Tools</span></button>
+            <button class="nav-tab" data-page="alerts"><span class="icon">🚨</span><span>Alerts</span></button>
+            <button class="nav-tab" data-page="chat"><span class="icon">💬</span><span>Chat</span></button>
+        </nav>
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <div class="page active" id="page-dashboard">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="dashTemp">--°</div>
+                    <div class="stat-label">Temp</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="dashAlerts">0</div>
+                    <div class="stat-label">Alerts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="dashReminders">0</div>
+                    <div class="stat-label">Reminders</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🌤️ Weather</div>
+                    <span class="badge live">● LIVE</span>
+                </div>
+                <div class="weather-main" id="dashWeather">
+                    <div class="weather-icon">☀️</div>
+                    <div>
+                        <div class="weather-temp">--°C</div>
+                        <div class="weather-condition">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🚨 Recent Alerts</div>
+                </div>
+                <div id="dashAlertsPreview">
+                    <div class="alert-card info">
+                        <div class="alert-header">
+                            <span class="alert-icon">✅</span>
+                            <span class="alert-title">All Clear</span>
+                        </div>
+                        <div class="alert-body">No alerts at the moment.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📰 News</div>
+                </div>
+                <div id="dashNews"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
+        </div>
+
+        <!-- ==================== WEATHER ==================== -->
+        <div class="page" id="page-weather">
+            <div class="input-group">
+                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search any city...">
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div>
+                    <span class="badge live">● LIVE</span>
+                </div>
+                <div class="weather-main">
+                    <div class="weather-icon" id="weatherIcon">☀️</div>
+                    <div>
+                        <div class="weather-temp"><span id="weatherTemp">--</span>°C</div>
+                        <div class="weather-condition" id="weatherCondition">Loading...</div>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-detail">
+                        <div class="value" id="weatherWind">--</div>
+                        <div class="label">Wind km/h</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div class="value" id="weatherHumidity">--</div>
+                        <div class="label">Humidity %</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div class="value" id="weatherRain">--</div>
+                        <div class="label">Rain %</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🌍 Monitored Locations</div>
+                </div>
+                <div class="location-list" id="monitoredLocations">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== JOURNEY ==================== -->
+        <div class="page" id="page-journey">
+            <div class="gps-status">
+                <div class="gps-dot" id="gpsDot"></div>
+                <span id="gpsText">GPS Ready</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="journeyDistance">0.0</div>
+                    <div class="stat-label">km</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="journeyTime">0</div>
+                    <div class="stat-label">mins</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="journeyStops">0</div>
+                    <div class="stat-label">stops</div>
+                </div>
+            </div>
+
+            <!-- Active Journey -->
+            <div class="card" id="activeJourneyCard" style="display: none;">
+                <div class="card-header">
+                    <div class="card-title">🚗 Active Journey</div>
+                    <span class="badge tracking">● TRACKING</span>
+                </div>
+                <div class="map-container">
+                    <div id="journeyMap"></div>
+                </div>
+                <div class="timeline" id="journeyTimeline"></div>
+                <button class="btn btn-danger" onclick="endJourney()">🏁 End Journey</button>
+            </div>
+
+            <!-- Start Journey -->
+            <div class="card" id="startJourneyCard">
+                <div class="card-header">
+                    <div class="card-title">🚀 Start Journey</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">🗺️</div>
+                    <div class="empty-title">Ready to Track?</div>
+                    <div class="empty-text">I'll track your route on map and record all stops.</div>
+                </div>
+                <button class="btn btn-primary" onclick="startJourney()">📍 Start Journey</button>
+            </div>
+
+            <!-- History -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📜 Journey History</div>
+                </div>
+                <div id="journeyHistory"></div>
+            </div>
+        </div>
+
+        <!-- ==================== PARKING ==================== -->
+        <div class="page" id="page-parking">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🚗 My Car Location</div>
+                </div>
+                <div id="parkingDisplay">
+                    <div class="parking-display">
+                        <div class="parking-icon">🚗</div>
+                        <div class="parking-location">No location saved</div>
+                        <div class="parking-time">Save your parking spot</div>
+                    </div>
+                </div>
+                <div class="map-container" id="parkingMapContainer" style="display: none;">
+                    <div id="parkingMap"></div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="saveParking('gps')">📍 Save GPS</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="saveParking('photo', event)">
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⭐ Saved Places</div>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="input-field" id="customPlaceName" placeholder="Name this place (e.g., Home)">
+                </div>
+                <button class="btn btn-secondary" onclick="saveCustomPlace()">💾 Save Place</button>
+                <div id="customPlacesList" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- ==================== TOOLS ==================== -->
+        <div class="page" id="page-tools">
+            <!-- Reminders -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⏰ Reminders</div>
+                    <span class="badge" id="reminderBadge">0</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="input-field" id="reminderTask" placeholder="What to remind?">
+                </div>
+                <div class="btn-row" style="margin-bottom: 15px;">
+                    <select class="input-field" id="reminderTime">
+                        <option value="10">10 mins</option>
+                        <option value="15">15 mins</option>
+                        <option value="30">30 mins</option>
+                        <option value="45">45 mins</option>
+                        <option value="60">1 hour</option>
+                        <option value="90">1.5 hours</option>
+                        <option value="120">2 hours</option>
+                        <option value="180">3 hours</option>
+                        <option value="240">4 hours</option>
+                        <option value="360">6 hours</option>
+                        <option value="480">8 hours</option>
+                        <option value="720">12 hours</option>
+                        <option value="1440">24 hours</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addReminder()">⏰ Set</button>
+                </div>
+                <div id="reminderList"></div>
+            </div>
+
+            <!-- Currency Rates -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">💱 Currency Rates (vs MYR)</div>
+                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px;font-size:11px" onclick="loadCurrencyRates()">🔄</button>
+                </div>
+                <div id="currencyRates"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
+
+            <!-- News -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📰 News</div>
+                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px;font-size:11px" onclick="loadNews()">🔄</button>
+                </div>
+                <div id="newsList"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
+        </div>
+
+        <!-- ==================== ALERTS ==================== -->
+        <div class="page" id="page-alerts">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🌍 Earthquake Monitor</div>
+                    <span class="badge live">● LIVE</span>
+                </div>
+                <div id="earthquakeAlerts"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⛈️ Weather Alerts</div>
+                </div>
+                <div id="weatherAlerts">
+                    <div class="alert-card info">
+                        <div class="alert-header">
+                            <span class="alert-icon">✅</span>
+                            <span class="alert-title">All Clear</span>
+                        </div>
+                        <div class="alert-body">No severe weather in monitored areas.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📜 Alert History</div>
+                </div>
+                <div id="alertHistory"></div>
+            </div>
+        </div>
+
+        <!-- ==================== CHAT ==================== -->
+        <div class="page" id="page-chat">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">💬 Ask Sunday</div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message bot">
+                        <div class="chat-bubble">Hello! 👋 I'm Sunday. Ask me about health tips or anything!</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="input-field" id="chatInput" placeholder="Type message..." onkeypress="if(event.key==='Enter')sendChat()">
+                    <button class="btn btn-primary" onclick="sendChat()">➤</button>
+                </div>
+                <div class="quick-btns">
+                    <button class="quick-btn" onclick="quickChat('headache')">🤕 Headache</button>
+                    <button class="quick-btn" onclick="quickChat('fever')">🤒 Fever</button>
+                    <button class="quick-btn" onclick="quickChat('stomach pain')">🤢 Stomach</button>
+                    <button class="quick-btn" onclick="quickChat('flu')">🤧 Flu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <span class="toast-message">Success!</span>
+    </div>
+
+    <script>
+        // ==================== APP STATE ====================
+        const APP = {
+            journey: null,
+            watchId: null,
+            journeyMap: null,
+            journeyPath: [],
+            journeyMarkers: [],
+            parkingMap: null,
+            reminders: [],
+            parking: null,
+            customPlaces: {},
+            journeyHistory: [],
+            alerts: [],
+            earthquakeCheckInterval: null
+        };
+
+        // ==================== LOCATIONS ====================
+        const VIP_LOCATIONS = {
+            'Johor Jaya': { lat: 1.5360, lon: 103.7930 },
+            'Iskandar Puteri': { lat: 1.4190, lon: 103.6350 },
+            'Ulu Tiram': { lat: 1.5973, lon: 103.8205 }
+        };
+
+        const GLOBAL_LOCATIONS = {
+            'Singapore': { lat: 1.3521, lon: 103.8198 },
+            'Tokyo': { lat: 35.6895, lon: 139.6917 },
+            'London': { lat: 51.5074, lon: -0.1278 },
+            'Dubai': { lat: 25.2769, lon: 55.2962 },
+            'Sydney': { lat: -33.8688, lon: 151.2093 },
+            'Seoul': { lat: 37.5665, lon: 126.9780 }
+        };
+
+        const ALL_LOCATIONS = { ...VIP_LOCATIONS, ...GLOBAL_LOCATIONS };
+
+        // ==================== CURRENCIES ====================
+        const CURRENCIES = [
+            { code: 'USD', name: 'US Dollar', flag: '🇺🇸' },
+            { code: 'SGD', name: 'Singapore Dollar', flag: '🇸🇬' },
+            { code: 'EUR', name: 'Euro', flag: '🇪🇺' },
+            { code: 'GBP', name: 'British Pound', flag: '🇬🇧' },
+            { code: 'JPY', name: 'Japanese Yen', flag: '🇯🇵' },
+            { code: 'CNY', name: 'Chinese Yuan', flag: '🇨🇳' },
+            { code: 'KRW', name: 'Korean Won', flag: '🇰🇷' },
+            { code: 'AUD', name: 'Australian Dollar', flag: '🇦🇺' },
+            { code: 'THB', name: 'Thai Baht', flag: '🇹🇭' },
+            { code: 'IDR', name: 'Indonesian Rupiah', flag: '🇮🇩' },
+            { code: 'INR', name: 'Indian Rupee', flag: '🇮🇳' },
+            { code: 'PHP', name: 'Philippine Peso', flag: '🇵🇭' },
+            { code: 'VND', name: 'Vietnamese Dong', flag: '🇻🇳' },
+            { code: 'AED', name: 'UAE Dirham', flag: '🇦🇪' },
+            { code: 'SAR', name: 'Saudi Riyal', flag: '🇸🇦' },
+            { code: 'CHF', name: 'Swiss Franc', flag: '🇨🇭' },
+            { code: 'CAD', name: 'Canadian Dollar', flag: '🇨🇦' },
+            { code: 'NZD', name: 'New Zealand Dollar', flag: '🇳🇿' },
+            { code: 'HKD', name: 'Hong Kong Dollar', flag: '🇭🇰' },
+            { code: 'TWD', name: 'Taiwan Dollar', flag: '🇹🇼' }
+        ];
+
+        // ==================== MEDICAL DATABASE ====================
+        const MEDICAL_DB = {
+            stomach: {
+                keywords: ['stomach', 'gastric', 'tummy', 'nausea', 'vomit'],
+                reply: '🤢 <b>Stomach Care:</b><br>1. Sip warm ginger tea<br>2. Avoid spicy/oily food<br>3. Rest upright<br>4. Try peppermint tea<br><br>⚠️ See doctor if pain persists 24+ hours'
+            },
+            fever: {
+                keywords: ['fever', 'hot', 'temperature', 'chills'],
+                reply: '🤒 <b>Fever Care:</b><br>1. Drink lots of water<br>2. Cool towel on forehead<br>3. Take Paracetamol if needed<br>4. Rest well<br><br>⚠️ See doctor if fever > 39°C'
+            },
+            headache: {
+                keywords: ['headache', 'migraine', 'head', 'dizzy'],
+                reply: '🧠 <b>Headache Relief:</b><br>1. Drink water<br>2. Rest in dark room<br>3. Cold compress<br>4. Gentle massage<br><br>⚠️ See doctor if frequent'
+            },
+            flu: {
+                keywords: ['flu', 'cold', 'sneeze', 'cough', 'runny'],
+                reply: '🤧 <b>Flu Care:</b><br>1. Rest and stay warm<br>2. Warm soup and tea<br>3. Vitamin C<br>4. Honey for throat<br><br>⚠️ See doctor if worsens'
+            }
+        };
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+            initNavigation();
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadWeather();
+            loadNews();
+            loadCurrencyRates();
+            loadEarthquakes();
+            renderReminders();
+            renderParking();
+            renderJourneyHistory();
+            checkReminders();
+            setInterval(checkReminders, 10000);
+            setInterval(loadEarthquakes, 300000); // Check earthquakes every 5 mins
+            
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        });
+
+        function loadFromStorage() {
+            try {
+                APP.reminders = JSON.parse(localStorage.getItem('sunday_reminders') || '[]');
+                APP.parking = JSON.parse(localStorage.getItem('sunday_parking') || 'null');
+                APP.customPlaces = JSON.parse(localStorage.getItem('sunday_places') || '{}');
+                APP.journeyHistory = JSON.parse(localStorage.getItem('sunday_history') || '[]');
+                APP.alerts = JSON.parse(localStorage.getItem('sunday_alerts') || '[]');
+            } catch (e) { console.log('Storage error:', e); }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('sunday_reminders', JSON.stringify(APP.reminders));
+            localStorage.setItem('sunday_parking', JSON.stringify(APP.parking));
+            localStorage.setItem('sunday_places', JSON.stringify(APP.customPlaces));
+            localStorage.setItem('sunday_history', JSON.stringify(APP.journeyHistory));
+            localStorage.setItem('sunday_alerts', JSON.stringify(APP.alerts));
+        }
+
+        // ==================== NAVIGATION ====================
+        function initNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchPage(tab.dataset.page));
+            });
+        }
+
+        function switchPage(pageName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.page === pageName);
+            });
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.toggle('active', page.id === `page-${pageName}`);
+            });
+        }
+
+        // ==================== CLOCK ====================
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+
+        // ==================== WEATHER ====================
+        async function loadWeather() {
+            const mainLoc = Object.entries(VIP_LOCATIONS)[0];
+            await updateWeather(mainLoc[0], mainLoc[1].lat, mainLoc[1].lon);
+            loadMonitoredLocations();
+        }
+
+        async function updateWeather(name, lat, lon) {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability&timezone=auto`;
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                const temp = Math.round(data.current.temperature_2m);
+                const code = data.current.weather_code;
+                const wind = Math.round(data.current.wind_speed_10m);
+                const humidity = data.current.relative_humidity_2m;
+                const rainProb = data.hourly.precipitation_probability[0] || 0;
+                const cond = getWeatherCondition(code);
+                
+                document.getElementById('weatherLocation').textContent = name;
+                document.getElementById('weatherTemp').textContent = temp;
+                document.getElementById('weatherIcon').textContent = cond.icon;
+                document.getElementById('weatherCondition').textContent = cond.text;
+                document.getElementById('weatherWind').textContent = wind;
+                document.getElementById('weatherHumidity').textContent = humidity;
+                document.getElementById('weatherRain').textContent = rainProb;
+                document.getElementById('dashTemp').textContent = temp + '°';
+                document.getElementById('dashWeather').innerHTML = `
+                    <div class="weather-icon">${cond.icon}</div>
+                    <div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name} - ${cond.text}</div></div>
+                `;
+            } catch (e) { console.log('Weather error:', e); }
+        }
+
+        function getWeatherCondition(code) {
+            if (code === 0) return { icon: '☀️', text: 'Clear Sky' };
+            if (code <= 3) return { icon: '⛅', text: 'Partly Cloudy' };
+            if (code >= 95) return { icon: '⛈️', text: 'Thunderstorm' };
+            if (code >= 71) return { icon: '❄️', text: 'Snow' };
+            if (code >= 61) return { icon: '🌧️', text: 'Rain' };
+            if (code >= 51) return { icon: '🌦️', text: 'Drizzle' };
+            return { icon: '☁️', text: 'Cloudy' };
+        }
+
+        async function loadMonitoredLocations() {
+            const container = document.getElementById('monitoredLocations');
+            container.innerHTML = '';
+            for (const [name, coords] of Object.entries(ALL_LOCATIONS)) {
+                try {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    const temp = Math.round(data.current.temperature_2m);
+                    const cond = getWeatherCondition(data.current.weather_code);
+                    container.innerHTML += `
+                        <div class="location-card" onclick="updateWeather('${name}', ${coords.lat}, ${coords.lon})">
+                            <div class="location-info"><span style="font-size:20px">${cond.icon}</span><span class="location-name">${name}</span></div>
+                            <span class="location-temp">${temp}°</span>
+                        </div>
+                    `;
+                } catch (e) {}
+            }
+        }
+
+        document.getElementById('weatherSearch')?.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.trim();
+                if (query) {
+                    try {
+                        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en`;
+                        const res = await fetch(url);
+                        const data = await res.json();
+                        if (data.results?.length) {
+                            const r = data.results[0];
+                            await updateWeather(r.name, r.latitude, r.longitude);
+                            showToast(`Weather: ${r.name}`);
+                        } else { showToast('City not found', true); }
+                    } catch (e) { showToast('Search failed', true); }
+                }
+            }
+        });
+
+        // ==================== CURRENCY RATES ====================
+        async function loadCurrencyRates() {
+            const container = document.getElementById('currencyRates');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch('https://api.exchangerate-api.com/v4/latest/MYR');
+                const data = await res.json();
+                const rates = data.rates;
+                
+                container.innerHTML = CURRENCIES.map(c => {
+                    const rate = rates[c.code];
+                    const myrRate = rate ? (1 / rate).toFixed(4) : '--';
+                    return `
+                        <div class="rate-card">
+                            <div class="rate-pair">
+                                <span class="rate-flag">${c.flag}</span>
+                                <div class="rate-info">
+                                    <span class="rate-code">${c.code}/MYR</span>
+                                    <span class="rate-name">${c.name}</span>
+                                </div>
+                            </div>
+                            <span class="rate-value">${myrRate}</span>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load rates</div></div>';
+            }
+        }
+
+        // ==================== NEWS ====================
+        async function loadNews() {
+            const dashNews = document.getElementById('dashNews');
+            const newsList = document.getElementById('newsList');
+            dashNews.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            newsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.thestar.com.my/rss/news/nation');
+                const data = await res.json();
+                let news = data.items?.slice(0, 5) || [];
+                
+                if (news.length === 0) {
+                    news = [{ title: 'Weather monitoring active', link: '#' }, { title: 'Stay safe and hydrated', link: '#' }];
+                }
+                
+                dashNews.innerHTML = news.slice(0, 2).map(n => `
+                    <div class="news-item" onclick="window.open('${n.link}', '_blank')">
+                        <span class="news-source">NEWS</span>
+                        <div class="news-title">${n.title}</div>
+                    </div>
+                `).join('');
+                
+                newsList.innerHTML = news.map(n => `
+                    <div class="news-item" onclick="window.open('${n.link}', '_blank')">
+                        <span class="news-source">NEWS</span>
+                        <div class="news-title">${n.title}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                dashNews.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load news</div></div>';
+                newsList.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load news</div></div>';
+            }
+        }
+
+        // ==================== EARTHQUAKE MONITORING ====================
+        async function loadEarthquakes() {
+            const container = document.getElementById('earthquakeAlerts');
+            
+            try {
+                const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson');
+                const data = await res.json();
+                const quakes = data.features.slice(0, 10);
+                
+                document.getElementById('dashAlerts').textContent = quakes.length;
+                
+                if (quakes.length === 0) {
+                    container.innerHTML = '<div class="alert-card info"><div class="alert-header"><span class="alert-icon">✅</span><span class="alert-title">No Recent Earthquakes</span></div><div class="alert-body">No significant earthquakes in the last 24 hours.</div></div>';
+                    return;
+                }
+                
+                container.innerHTML = quakes.map(q => {
+                    const mag = q.properties.mag;
+                    const place = q.properties.place;
+                    const time = new Date(q.properties.time).toLocaleString();
+                    const alertClass = mag >= 6 ? 'danger' : mag >= 5 ? 'warning' : 'info';
+                    const icon = mag >= 6 ? '🚨' : mag >= 5 ? '⚠️' : '🌍';
+                    
+                    return `
+                        <div class="alert-card ${alertClass}">
+                            <div class="alert-header">
+                                <span class="alert-icon">${icon}</span>
+                                <span class="alert-title">M${mag.toFixed(1)} Earthquake</span>
+                                <span class="alert-time">${time}</span>
+                            </div>
+                            <div class="alert-body">📍 ${place}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Update dashboard preview
+                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => {
+                    const mag = q.properties.mag;
+                    const alertClass = mag >= 6 ? 'danger' : mag >= 5 ? 'warning' : 'info';
+                    return `
+                        <div class="alert-card ${alertClass}">
+                            <div class="alert-header">
+                                <span class="alert-icon">${mag >= 6 ? '🚨' : '🌍'}</span>
+                                <span class="alert-title">M${mag.toFixed(1)} - ${q.properties.place?.split(',')[0] || 'Unknown'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('') || '<div class="alert-card info"><div class="alert-header"><span class="alert-icon">✅</span><span class="alert-title">All Clear</span></div></div>';
+                
+            } catch (e) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load earthquake data</div></div>';
+            }
+        }
+
+        // ==================== JOURNEY TRACKING WITH MAP ====================
+        function startJourney() {
+            if (!navigator.geolocation) { showToast('GPS not supported', true); return; }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    
+                    APP.journey = {
+                        startTime: Date.now(),
+                        startLat: lat, startLon: lon,
+                        lastLat: lat, lastLon: lon,
+                        totalKm: 0,
+                        waypoints: [{ name: 'Start', lat, lon, time: Date.now(), type: 'start' }],
+                        currentStop: null
+                    };
+                    
+                    APP.journeyPath = [[lat, lon]];
+                    
+                    // Initialize map
+                    document.getElementById('activeJourneyCard').style.display = 'block';
+                    document.getElementById('startJourneyCard').style.display = 'none';
+                    
+                    setTimeout(() => {
+                        APP.journeyMap = L.map('journeyMap').setView([lat, lon], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap'
+                        }).addTo(APP.journeyMap);
+                        
+                        // Add start marker
+                        L.marker([lat, lon]).addTo(APP.journeyMap).bindPopup('🚩 Start').openPopup();
+                        
+                        // Add path line
+                        APP.journeyLine = L.polyline(APP.journeyPath, { color: '#00d4ff', weight: 4 }).addTo(APP.journeyMap);
+                    }, 100);
+                    
+                    // Start tracking
+                    APP.watchId = navigator.geolocation.watchPosition(
+                        trackMovement,
+                        (err) => { document.getElementById('gpsText').textContent = 'GPS Error'; },
+                        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+                    );
+                    
+                    document.getElementById('gpsDot').classList.add('active');
+                    document.getElementById('gpsText').textContent = 'GPS Tracking';
+                    renderJourneyTimeline();
+                    showToast('Journey started! 🚗');
+                },
+                (err) => showToast('GPS Error: ' + err.message, true),
+                { enableHighAccuracy: true }
+            );
+        }
+
+        function trackMovement(position) {
+            if (!APP.journey) return;
+            
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const now = Date.now();
+            const dist = calculateDistance(APP.journey.lastLat, APP.journey.lastLon, lat, lon);
+            
+            document.getElementById('gpsText').textContent = `GPS Active (±${Math.round(position.coords.accuracy)}m)`;
+            
+            // Update map
+            if (APP.journeyMap) {
+                APP.journeyPath.push([lat, lon]);
+                APP.journeyLine.setLatLngs(APP.journeyPath);
+                APP.journeyMap.panTo([lat, lon]);
+            }
+            
+            if (dist > 0.02) { // Moving
+                if (APP.journey.currentStop) {
+                    const stopDuration = Math.round((now - APP.journey.currentStop.startTime) / 60000);
+                    if (stopDuration >= 2) {
+                        APP.journey.waypoints.push({
+                            name: APP.journey.currentStop.name,
+                            lat: APP.journey.currentStop.lat,
+                            lon: APP.journey.currentStop.lon,
+                            startTime: APP.journey.currentStop.startTime,
+                            endTime: now,
+                            duration: stopDuration,
+                            type: 'stop'
+                        });
+                        
+                        // Add marker on map
+                        if (APP.journeyMap) {
+                            L.marker([APP.journey.currentStop.lat, APP.journey.currentStop.lon])
+                                .addTo(APP.journeyMap)
+                                .bindPopup(`📍 Stop (${stopDuration} mins)`);
+                        }
+                    }
+                    APP.journey.currentStop = null;
+                    showToast('Moving again... ▶️');
+                }
+                APP.journey.totalKm += dist;
+                APP.journey.lastLat = lat;
+                APP.journey.lastLon = lon;
+            } else {
+                if (!APP.journey.currentStop) {
+                    APP.journey.currentStop = {
+                        name: `Stop ${APP.journey.waypoints.filter(w => w.type === 'stop').length + 1}`,
+                        lat, lon, startTime: now
+                    };
+                    showToast(`Stopped at new location ⏸️`);
+                }
+            }
+            
+            updateJourneyStats();
+            renderJourneyTimeline();
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2)**2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        function updateJourneyStats() {
+            if (!APP.journey) return;
+            const mins = Math.round((Date.now() - APP.journey.startTime) / 60000);
+            const stops = APP.journey.waypoints.filter(w => w.type === 'stop').length + (APP.journey.currentStop ? 1 : 0);
+            document.getElementById('journeyDistance').textContent = APP.journey.totalKm.toFixed(1);
+            document.getElementById('journeyTime').textContent = mins;
+            document.getElementById('journeyStops').textContent = stops;
+        }
+
+        function renderJourneyTimeline() {
+            if (!APP.journey) return;
+            const container = document.getElementById('journeyTimeline');
+            let html = '';
+            
+            APP.journey.waypoints.forEach((wp, i) => {
+                const isLast = i === APP.journey.waypoints.length - 1 && !APP.journey.currentStop;
+                const timeStr = new Date(wp.time || wp.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${isLast ? 'active' : ''}"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">${wp.type === 'start' ? '🚩' : '📍'} ${wp.name}</div>
+                            <div class="timeline-time">${timeStr}${wp.endTime ? ' - ' + new Date(wp.endTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : ''}</div>
+                            ${wp.duration ? `<span class="timeline-duration">${wp.duration} mins</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (APP.journey.currentStop) {
+                const mins = Math.round((Date.now() - APP.journey.currentStop.startTime) / 60000);
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot active"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">📍 ${APP.journey.currentStop.name}</div>
+                            <div class="timeline-time">${new Date(APP.journey.currentStop.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - now</div>
+                            <span class="timeline-duration">${mins}+ mins</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function endJourney() {
+            if (!APP.journey) return;
+            
+            if (APP.watchId) { navigator.geolocation.clearWatch(APP.watchId); APP.watchId = null; }
+            
+            const now = Date.now();
+            if (APP.journey.currentStop) {
+                const stopDuration = Math.round((now - APP.journey.currentStop.startTime) / 60000);
+                APP.journey.waypoints.push({
+                    name: APP.journey.currentStop.name,
+                    lat: APP.journey.currentStop.lat, lon: APP.journey.currentStop.lon,
+                    startTime: APP.journey.currentStop.startTime, endTime: now, duration: stopDuration, type: 'stop'
+                });
+            }
+            
+            const totalMins = Math.round((now - APP.journey.startTime) / 60000);
+            const totalKm = APP.journey.totalKm.toFixed(2);
+            const stops = APP.journey.waypoints.filter(w => w.type === 'stop').length;
+            
+            let summary = `🏁 Journey Complete\n📅 ${new Date().toLocaleDateString()}\n📏 ${totalKm} km | ⏱️ ${totalMins} mins | 🛑 ${stops} stops`;
+            
+            APP.journeyHistory.unshift({ date: new Date().toISOString(), summary, distance: totalKm, duration: totalMins, stops });
+            if (APP.journeyHistory.length > 20) APP.journeyHistory = APP.journeyHistory.slice(0, 20);
+            
+            APP.parking = { type: 'gps', lat: APP.journey.lastLat, lon: APP.journey.lastLon, time: now };
+            saveToStorage();
+            
+            if (APP.journeyMap) { APP.journeyMap.remove(); APP.journeyMap = null; }
+            APP.journey = null;
+            APP.journeyPath = [];
+            
+            document.getElementById('activeJourneyCard').style.display = 'none';
+            document.getElementById('startJourneyCard').style.display = 'block';
+            document.getElementById('gpsDot').classList.remove('active');
+            document.getElementById('gpsText').textContent = 'GPS Ready';
+            document.getElementById('journeyDistance').textContent = '0.0';
+            document.getElementById('journeyTime').textContent = '0';
+            document.getElementById('journeyStops').textContent = '0';
+            
+            renderJourneyHistory();
+            renderParking();
+            showToast(`Journey complete! ${totalKm}km 🏁`);
+        }
+
+        function renderJourneyHistory() {
+            const container = document.getElementById('journeyHistory');
+            if (APP.journeyHistory.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>';
+                return;
+            }
+            container.innerHTML = APP.journeyHistory.slice(0, 5).map(j => `
+                <div class="alert-card info">
+                    <div class="alert-body">${j.summary.replace(/\n/g, '<br>')}</div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== PARKING ====================
+        function saveParking(type, event) {
+            if (type === 'gps') {
+                if (!navigator.geolocation) { showToast('GPS not supported', true); return; }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() };
+                        saveToStorage();
+                        renderParking();
+                        showToast('Parking saved! 🅿️');
+                    },
+                    (err) => showToast('GPS Error: ' + err.message, true),
+                    { enableHighAccuracy: true }
+                );
+            } else if (type === 'photo' && event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        APP.parking = { type: 'photo', data: e.target.result, time: Date.now() };
+                        saveToStorage();
+                        renderParking();
+                        showToast('Photo saved! 📸');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function renderParking() {
+            const container = document.getElementById('parkingDisplay');
+            const mapContainer = document.getElementById('parkingMapContainer');
+            
+            if (!APP.parking) {
+                container.innerHTML = `<div class="parking-display"><div class="parking-icon">🚗</div><div class="parking-location">No location saved</div><div class="parking-time">Save your parking spot</div></div>`;
+                mapContainer.style.display = 'none';
+                return;
+            }
+            
+            const timeAgo = getTimeAgo(APP.parking.time);
+            
+            if (APP.parking.type === 'gps') {
+                container.innerHTML = `
+                    <div class="parking-display">
+                        <div class="parking-icon">📍</div>
+                        <div class="parking-location">GPS Location Saved</div>
+                        <div class="parking-time">Saved ${timeAgo}</div>
+                        <a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success" style="margin:10px 0">🗺️ Open in Google Maps</a>
+                        <button class="btn btn-secondary" onclick="clearParking()">🗑️ Clear</button>
+                    </div>
+                `;
+                
+                // Show map
+                mapContainer.style.display = 'block';
+                setTimeout(() => {
+                    if (APP.parkingMap) APP.parkingMap.remove();
+                    APP.parkingMap = L.map('parkingMap').setView([APP.parking.lat, APP.parking.lon], 17);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.parkingMap);
+                    L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap).bindPopup('🚗 My Car').openPopup();
+                }, 100);
+            } else {
+                mapContainer.style.display = 'none';
+                container.innerHTML = `
+                    <div class="parking-display">
+                        <img src="${APP.parking.data}" class="parking-photo" alt="Parking">
+                        <div class="parking-time">Saved ${timeAgo}</div>
+                        <button class="btn btn-secondary" onclick="clearParking()">🗑️ Clear</button>
+                    </div>
+                `;
+            }
+        }
+
+        function clearParking() {
+            APP.parking = null;
+            if (APP.parkingMap) { APP.parkingMap.remove(); APP.parkingMap = null; }
+            saveToStorage();
+            renderParking();
+        }
+
+        function saveCustomPlace() {
+            const name = document.getElementById('customPlaceName').value.trim();
+            if (!name) { showToast('Enter a name', true); return; }
+            if (!APP.parking || APP.parking.type !== 'gps') { showToast('Save GPS first', true); return; }
+            APP.customPlaces[name] = { lat: APP.parking.lat, lon: APP.parking.lon };
+            saveToStorage();
+            document.getElementById('customPlaceName').value = '';
+            showToast(`"${name}" saved! ⭐`);
+            renderCustomPlaces();
+        }
+
+        function renderCustomPlaces() {
+            const container = document.getElementById('customPlacesList');
+            const places = Object.entries(APP.customPlaces);
+            if (places.length === 0) { container.innerHTML = ''; return; }
+            container.innerHTML = places.map(([name, coords]) => `
+                <div class="location-card">
+                    <div class="location-info"><span style="font-size:18px">⭐</span><span class="location-name">${name}</span></div>
+                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px" onclick="window.open('https://www.google.com/maps?q=${coords.lat},${coords.lon}')">🗺️</button>
+                </div>
+            `).join('');
+        }
+
+        // ==================== REMINDERS ====================
+        function addReminder() {
+            const task = document.getElementById('reminderTask').value.trim();
+            const mins = parseInt(document.getElementById('reminderTime').value);
+            if (!task) { showToast('Enter a task', true); return; }
+            
+            APP.reminders.push({ id: Date.now(), task, triggerTime: Date.now() + (mins * 60000), created: Date.now() });
+            saveToStorage();
+            document.getElementById('reminderTask').value = '';
+            renderReminders();
+            
+            const timeText = mins >= 60 ? `${mins/60} hour${mins > 60 ? 's' : ''}` : `${mins} mins`;
+            showToast(`Reminder set for ${timeText}! ⏰`);
+        }
+
+        function renderReminders() {
+            const container = document.getElementById('reminderList');
+            const active = APP.reminders.filter(r => r.triggerTime > Date.now());
+            document.getElementById('reminderBadge').textContent = active.length;
+            document.getElementById('dashReminders').textContent = active.length;
+            
+            if (active.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-text">No active reminders</div></div>';
+                return;
+            }
+            container.innerHTML = active.map(r => `
+                <div class="reminder-item">
+                    <div class="reminder-icon">⏰</div>
+                    <div class="reminder-content">
+                        <div class="reminder-task">${r.task}</div>
+                        <div class="reminder-time">In ${getTimeUntil(r.triggerTime)}</div>
+                    </div>
+                    <button class="reminder-delete" onclick="deleteReminder(${r.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteReminder(id) {
+            APP.reminders = APP.reminders.filter(r => r.id !== id);
+            saveToStorage();
+            renderReminders();
+        }
+
+        function checkReminders() {
+            const now = Date.now();
+            const triggered = APP.reminders.filter(r => r.triggerTime <= now);
+            triggered.forEach(r => {
+                showToast(`⏰ ${r.task}`, false, 8000);
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Sunday Reminder', { body: r.task, icon: 'https://cdn-icons-png.flaticon.com/512/869/869869.png' });
+                }
+            });
+            if (triggered.length > 0) {
+                APP.reminders = APP.reminders.filter(r => r.triggerTime > now);
+                saveToStorage();
+                renderReminders();
+            }
+        }
+
+        // ==================== CHAT ====================
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            addChatMessage(text, 'user');
+            input.value = '';
+            setTimeout(() => addChatMessage(processChat(text), 'bot'), 300);
+        }
+
+        function quickChat(text) { document.getElementById('chatInput').value = text; sendChat(); }
+
+        function addChatMessage(text, type) {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${text}</div></div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function processChat(text) {
+            const lower = text.toLowerCase();
+            for (const [cat, data] of Object.entries(MEDICAL_DB)) {
+                if (data.keywords.some(kw => lower.includes(kw))) return data.reply;
+            }
+            if (lower.includes('weather')) return '🌤️ Check the Weather tab!';
+            if (lower.match(/^(hi|hello|hey)/)) return `Hello! 👋 How can I help?`;
+            if (lower.includes('help')) return 'I can help with:<br>• 🌤️ Weather<br>• 🗺️ Journey<br>• 🅿️ Parking<br>• ⏰ Reminders<br>• 🌍 Earthquakes<br>• 🩺 Health tips';
+            return "I'm here to help! 😊";
+        }
+
+        // ==================== UTILITIES ====================
+        function getTimeAgo(timestamp) {
+            const secs = Math.floor((Date.now() - timestamp) / 1000);
+            if (secs < 60) return 'just now';
+            if (secs < 3600) return `${Math.floor(secs / 60)} mins ago`;
+            if (secs < 86400) return `${Math.floor(secs / 3600)} hours ago`;
+            return `${Math.floor(secs / 86400)} days ago`;
+        }
+
+        function getTimeUntil(timestamp) {
+            const secs = Math.floor((timestamp - Date.now()) / 1000);
+            if (secs < 60) return `${secs} secs`;
+            if (secs < 3600) return `${Math.floor(secs / 60)} mins`;
+            return `${Math.floor(secs / 3600)} hours`;
+        }
+
+        function showToast(message, isError = false, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('.toast-icon').textContent = isError ? '❌' : '✅';
+            toast.querySelector('.toast-message').textContent = message;
+            toast.classList.toggle('error', isError);
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
+    </script>
+</body>
+</html>
