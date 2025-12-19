@@ -1143,6 +1143,7 @@
             if (code === 0) return { icon: '☀️', text: 'Clear Sky' };
             if (code <= 3) return { icon: '⛅', text: 'Partly Cloudy' };
             if (code >= 95) return { icon: '⛈️', text: 'Thunderstorm' };
+            if (code >= 80) return { icon: '🌦️', text: 'Rain Showers' };
             if (code >= 71) return { icon: '❄️', text: 'Snow' };
             if (code >= 61) return { icon: '🌧️', text: 'Rain' };
             if (code >= 51) return { icon: '🌦️', text: 'Drizzle' };
