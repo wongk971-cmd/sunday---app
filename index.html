@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
     <meta name="theme-color" content="#0f0f1a">
-    <title>Sunday V7 - Pro Tracker</title>
+    <title>Sunday V8 - Ultimate</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
@@ -240,8 +240,6 @@
         .btn-sm { padding: 10px 16px; font-size: 12px; }
 
         /* ==================== MAP STYLES ==================== */
-        
-        /* Small Map (in card) */
         .map-small-container {
             width: 100%;
             height: 200px;
@@ -550,12 +548,21 @@
         .alert-card {
             padding: 12px; border-radius: var(--radius-md);
             margin-bottom: 10px; border-left: 4px solid;
+            background: var(--glass);
         }
         .alert-card.danger { background: rgba(255, 71, 87, 0.1); border-color: var(--accent-danger); }
         .alert-card.warning { background: rgba(255, 165, 0, 0.1); border-color: var(--accent-warning); }
         .alert-card.info { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-primary); }
-        .alert-title { font-weight: 600; font-size: 13px; }
-        .alert-body { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
+        .alert-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .alert-title { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .alert-time { font-size: 10px; color: var(--text-muted); }
+        .alert-body { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* Group Header */
+        .group-header {
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
+            margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+        }
 
         .chat-messages {
             height: 250px; overflow-y: auto;
@@ -578,6 +585,17 @@
         .chat-message.bot .chat-bubble { background: var(--glass); }
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input-area .btn { width: auto; padding: 14px 18px; }
+        
+        /* Briefing Style */
+        .briefing-card {
+            border-left: 3px solid var(--accent-primary);
+            background: rgba(0, 212, 255, 0.05);
+            margin-bottom: 15px; padding: 12px; border-radius: var(--radius-md);
+        }
+        .briefing-title { font-weight: 700; color: var(--accent-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .briefing-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .briefing-row:last-child { border-bottom: none; }
+        .briefing-footer { margin-top: 8px; font-size: 11px; color: var(--accent-success); font-style: italic; }
 
         .command-list { margin-top: 15px; padding: 15px; background: var(--glass); border-radius: var(--radius-md); }
         .command-title { font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 10px; }
@@ -680,7 +698,7 @@
                 <div class="logo-icon">☀️</div>
                 <div class="logo-text">
                     <h1>Sunday</h1>
-                    <span>AI ASSISTANT V7</span>
+                    <span>AI ASSISTANT V8</span>
                 </div>
             </div>
             <div class="header-time">
@@ -700,6 +718,12 @@
         </nav>
 
         <div class="page active" id="page-dashboard">
+            <div id="dailyBriefing" class="briefing-card" style="display:none">
+                <div class="briefing-title">🔔 Morning Update</div>
+                <div id="briefingContent"></div>
+                <div class="briefing-footer">Don't forget to drink some water! 💧</div>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-item"><div class="stat-value" id="dashTemp">--°</div><div class="stat-label">Temp</div></div>
                 <div class="stat-item"><div class="stat-value" id="dashAlerts">0</div><div class="stat-label">Alerts</div></div>
@@ -716,7 +740,7 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><div class="card-title">🚨 Alerts</div></div>
+                <div class="card-header"><div class="card-title">🚨 Recent Alerts</div></div>
                 <div id="dashAlertsPreview"></div>
             </div>
 
@@ -728,7 +752,7 @@
 
         <div class="page" id="page-weather">
             <div class="input-group">
-                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search city...">
+                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search any city...">
             </div>
             <div class="card">
                 <div class="card-header">
@@ -856,7 +880,14 @@
 
         <div class="page" id="page-alerts">
             <div class="card">
-                <div class="card-header"><div class="card-title">🌍 Earthquakes</div><span class="badge live">● LIVE</span></div>
+                <div class="card-header"><div class="card-title">🌍 Global Weather Watch</div><span class="badge live">● LIVE</span></div>
+                <div id="globalWeatherAlerts">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><div class="card-title">🚨 Earthquake Monitor</div></div>
                 <div id="earthquakeAlerts"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
@@ -864,19 +895,18 @@
         <div class="page" id="page-chat">
             <div class="card">
                 <div class="card-header"><div class="card-title">💬 Chat</div></div>
+                
+                <div id="chatBriefing" class="briefing-card" style="display:none; margin: 15px;">
+                    <div class="briefing-title">🔔 Morning Update</div>
+                    <div id="chatBriefingContent"></div>
+                </div>
+
                 <div class="chat-messages" id="chatMessages">
-                    <div class="chat-message bot"><div class="chat-bubble">Hi! 👋 Try "weather tokyo" or "remind me in 30 mins to call"</div></div>
+                    <div class="chat-message bot"><div class="chat-bubble">Hi! 👋 I'm Sunday. I monitor weather and earthquakes for you.</div></div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" class="input-field" id="chatInput" placeholder="Type..." onkeypress="if(event.key==='Enter')sendChat()">
                     <button class="btn btn-primary" onclick="sendChat()">➤</button>
-                </div>
-                <div class="command-list">
-                    <div class="command-title">📋 Commands</div>
-                    <div class="command-item"><code>weather [city]</code></div>
-                    <div class="command-item"><code>remind me in [time] to [task]</code></div>
-                    <div class="command-item"><code>find my car</code></div>
-                    <div class="command-item"><code>start journey</code></div>
                 </div>
             </div>
         </div>
@@ -914,7 +944,6 @@
                 <button class="map-btn" onclick="document.getElementById('journeyPhotoInput').click()">📷</button>
                 <button class="map-btn map-btn-end" onclick="endJourney()">🏁</button>
                 <button class="map-btn" onclick="centerMapOnUser()">📍</button>
-                
                 <input type="file" id="journeyPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="addJourneyPhoto(event)">
             </div>
         </div>
@@ -966,38 +995,41 @@
 
         const LOCATIONS = {
             'Johor Jaya': { lat: 1.5360, lon: 103.7930 },
+            'Iskandar Puteri': { lat: 1.4190, lon: 103.6350 },
             'Singapore': { lat: 1.3521, lon: 103.8198 },
             'Tokyo': { lat: 35.6895, lon: 139.6917 },
             'London': { lat: 51.5074, lon: -0.1278 }
         };
 
+        // For Global Rain Alerts
+        const GLOBAL_MONITOR = [
+            {n:'Tokyo', lat:35.6895, lon:139.6917}, {n:'New York', lat:40.7128, lon:-74.0060},
+            {n:'London', lat:51.5074, lon:-0.1278}, {n:'Dubai', lat:25.2769, lon:55.2962},
+            {n:'Sydney', lat:-33.8688, lon:151.2093}, {n:'Shanghai', lat:31.2304, lon:121.4737},
+            {n:'Singapore', lat:1.3521, lon:103.8198}, {n:'Paris', lat:48.8566, lon:2.3522}
+        ];
+
         const CURRENCIES = [
             { code: 'USD', flag: '🇺🇸' }, { code: 'SGD', flag: '🇸🇬' },
             { code: 'EUR', flag: '🇪🇺' }, { code: 'GBP', flag: '🇬🇧' },
-            { code: 'JPY', flag: '🇯🇵' }, { code: 'CNY', flag: '🇨🇳' },
-            { code: 'KRW', flag: '🇰🇷' }, { code: 'THB', flag: '🇹🇭' }
+            { code: 'JPY', flag: '🇯🇵' }, { code: 'CNY', flag: '🇨🇳' }
         ];
-
-        const MEDICAL = {
-            stomach: { kw: ['stomach', 'gastric'], reply: '🤢 Ginger tea, avoid spicy food, rest upright.' },
-            fever: { kw: ['fever', 'hot'], reply: '🤒 Drink water, cool towel, Paracetamol.' },
-            headache: { kw: ['headache', 'head'], reply: '🧠 Drink water, dark room, cold compress.' },
-            flu: { kw: ['flu', 'cold', 'cough'], reply: '🤧 Rest, warm soup, Vitamin C.' }
-        };
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             loadStorage();
             initNav();
             updateClock(); setInterval(updateClock, 1000);
-            loadWeather();
+            loadWeather(); // Reverted to V5
             loadNews();
             loadCurrency();
             loadEarthquakes();
+            loadGlobalWeatherAlerts(); // New feature
             renderReminders();
             renderParking();
             renderHistory();
             renderPlaces();
+            generateDailyBriefing(); // New Briefing Feature
             setInterval(checkReminders, 10000);
             setInterval(loadEarthquakes, 300000);
             if ('Notification' in window) Notification.requestPermission();
@@ -1034,7 +1066,36 @@
             document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
         }
 
-        // ==================== WEATHER ====================
+        // ==================== DAILY BRIEFING (LIKE PICTURE) ====================
+        async function generateDailyBriefing() {
+            let content = '';
+            
+            // 1. Weather for VIP zones
+            content += `<div class="briefing-row"><strong>🌥️ Sky Status (VIP Zones):</strong></div>`;
+            for (const [n, c] of Object.entries(LOCATIONS)) {
+                if(n === 'London') break; // Only show first 3
+                try {
+                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json();
+                    const cond = getWeatherCond(d.current.weather_code);
+                    content += `<div class="briefing-row"><span>• ${n}</span><span>${cond.icon} ${d.current.temperature_2m}°C</span></div>`;
+                } catch(e) {}
+            }
+
+            // 2. Currency Rates (Approx)
+            content += `<div class="briefing-row" style="margin-top:10px"><strong>💰 Rates:</strong></div>`;
+            try {
+                const r = await (await fetch('https://api.exchangerate-api.com/v4/latest/SGD')).json();
+                content += `<div class="briefing-row"><span>SGD 1 ≈ RM ${(r.rates.MYR).toFixed(2)}</span></div>`;
+            } catch(e) {}
+            
+            // Show
+            document.getElementById('briefingContent').innerHTML = content;
+            document.getElementById('chatBriefingContent').innerHTML = content;
+            document.getElementById('dailyBriefing').style.display = 'block';
+            document.getElementById('chatBriefing').style.display = 'block';
+        }
+
+        // ==================== WEATHER (V5 LOGIC RESTORED) ====================
         async function loadWeather() {
             await updateWeather('Johor Jaya', 1.536, 103.793);
             const container = document.getElementById('monitoredLocations');
@@ -1050,9 +1111,12 @@
 
         async function updateWeather(name, lat, lon) {
             try {
+                // Using Open-Meteo exactly as V5 did
                 const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`)).json();
                 const temp = Math.round(d.current.temperature_2m);
                 const cond = getWeatherCond(d.current.weather_code);
+                
+                // RESTORED: Directly updating UI elements with the searched name
                 document.getElementById('weatherLocation').textContent = name;
                 document.getElementById('weatherTemp').textContent = temp;
                 document.getElementById('weatherIcon').textContent = cond.icon;
@@ -1071,9 +1135,12 @@
             if (code <= 3) return { icon: '⛅', text: 'Cloudy' };
             if (code >= 95) return { icon: '⛈️', text: 'Storm' };
             if (code >= 61) return { icon: '🌧️', text: 'Rain' };
+            if (code >= 51) return { icon: '🌦️', text: 'Drizzle' };
+            if (code >= 71) return { icon: '❄️', text: 'Snow' };
             return { icon: '☁️', text: 'Cloudy' };
         }
 
+        // RESTORED V5 SEARCH LISTENER
         document.getElementById('weatherSearch')?.addEventListener('keypress', async e => {
             if (e.key === 'Enter' && e.target.value.trim()) {
                 const r = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(e.target.value)}&count=1`)).json();
@@ -1081,13 +1148,85 @@
             }
         });
 
-        // ==================== JOURNEY (ENHANCED) ====================
+        // ==================== GLOBAL WEATHER ALERTS (NEW) ====================
+        async function loadGlobalWeatherAlerts() {
+            const container = document.getElementById('globalWeatherAlerts');
+            let alertsFound = false;
+            let html = '';
+
+            for (const city of GLOBAL_MONITOR) {
+                try {
+                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code`)).json();
+                    const code = d.current.weather_code;
+                    // Check for Rain (>60) or Snow (>70) or Storm (>90)
+                    if (code >= 61) {
+                        alertsFound = true;
+                        let type = 'Rain 🌧️';
+                        let css = 'info';
+                        if (code >= 71) { type = 'Snow ❄️'; css = 'warning'; }
+                        if (code >= 95) { type = 'Storm ⛈️'; css = 'danger'; }
+                        
+                        html += `
+                            <div class="alert-card ${css}">
+                                <div class="alert-header">
+                                    <div class="alert-title">🚨 LIVE ALERT: ${city.n}</div>
+                                </div>
+                                <div class="alert-body">Heavy ${type} detected currently!</div>
+                            </div>
+                        `;
+                    }
+                } catch(e) {}
+            }
+
+            if(!alertsFound) html = '<div class="alert-card info"><div class="alert-body">✅ No global severe weather detected in monitored cities.</div></div>';
+            container.innerHTML = html;
+        }
+
+        // ==================== EARTHQUAKES (UPDATED WITH DATE & LIST) ====================
+        async function loadEarthquakes() {
+            try {
+                const quakes = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features;
+                document.getElementById('dashAlerts').textContent = quakes.length;
+                
+                const container = document.getElementById('earthquakeAlerts');
+                if(!quakes.length) { container.innerHTML = '<div class="alert-card info"><div class="alert-title">✅ No earthquakes</div></div>'; return; }
+
+                let html = '';
+                let todayHeaderAdded = false;
+                let otherHeaderAdded = false;
+                const today = new Date().toDateString();
+
+                quakes.slice(0, 15).forEach(q => {
+                    const d = new Date(q.properties.time);
+                    const isToday = d.toDateString() === today;
+                    const dateStr = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute:'numeric', hour12: true });
+
+                    if(isToday && !todayHeaderAdded) { html += '<div class="group-header">📅 Today</div>'; todayHeaderAdded = true; }
+                    if(!isToday && !otherHeaderAdded) { html += '<div class="group-header">📅 Yesterday / Older</div>'; otherHeaderAdded = true; }
+
+                    html += `
+                        <div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'warning'}">
+                            <div class="alert-header">
+                                <div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)}</div>
+                                <div class="alert-time">${dateStr}</div>
+                            </div>
+                            <div class="alert-body">📍 ${q.properties.place}</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+                // Preview for Dash
+                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
+            } catch(e) {}
+        }
+
+        // ==================== JOURNEY (V7 TRACK LOGIC) ====================
         function startJourney() {
             if (!navigator.geolocation) return showToast('GPS not supported', true);
-
             navigator.geolocation.getCurrentPosition(pos => {
                 const lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy;
-                
                 APP.journey = {
                     startTime: Date.now(),
                     lastLat: lat, lastLon: lon, lastTime: Date.now(),
@@ -1097,96 +1236,61 @@
                     waypoints: [{ name: '🚩 Start', lat, lon, time: Date.now(), type: 'start' }],
                     currentStop: null
                 };
-                
                 APP.pathCoords = [[lat, lon]];
-                
-                // Show active card
                 document.getElementById('startJourneyCard').style.display = 'none';
                 document.getElementById('activeJourneyCard').style.display = 'block';
-                
-                // Init small map
                 setTimeout(() => {
                     APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false, attributionControl: false }).setView([lat, lon], 17);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapSmall);
-                    
                     const icon = L.divIcon({ className: '', html: '<div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(66,133,244,0.8)"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
                     APP.markerSmall = L.marker([lat, lon], { icon }).addTo(APP.mapSmall);
                     APP.pathSmall = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 4 }).addTo(APP.mapSmall);
                     L.marker([lat, lon]).addTo(APP.mapSmall).bindPopup('🚩 Start');
                 }, 100);
-                
-                // Start GPS watch
-                APP.watchId = navigator.geolocation.watchPosition(trackPosition, err => updateGPSStatus('Error', 'bad'), {
-                    enableHighAccuracy: true,
-                    maximumAge: 2000,
-                    timeout: 10000
-                });
-                
-                // Timer
+                APP.watchId = navigator.geolocation.watchPosition(trackPosition, err => updateGPSStatus('Error', 'bad'), { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 });
                 APP.timerInterval = setInterval(updateTimer, 1000);
-                
                 updateGPSStatus(acc);
-                getStreetName(lat, lon);
                 showToast('Journey started! 🚗');
             }, err => showToast('GPS Error: ' + err.message, true), { enableHighAccuracy: true, timeout: 15000 });
         }
 
-        // ==================== CORE TRACKING LOGIC (ENHANCED) ====================
         function trackPosition(pos) {
             if (!APP.journey) return;
-            
             const lat = pos.coords.latitude, lon = pos.coords.longitude;
             const acc = pos.coords.accuracy;
             const alt = pos.coords.altitude || 0;
             const now = Date.now();
-
             const dist = calcDist(APP.journey.lastLat, APP.journey.lastLon, lat, lon);
-            const timeDiff = (now - APP.journey.lastTime) / 1000 / 3600; // hours
-            
+            const timeDiff = (now - APP.journey.lastTime) / 1000 / 3600;
             let speed = timeDiff > 0 ? dist / timeDiff : 0;
-            // Simple anti-drift: ignore impossible speeds (>300km/h)
             if (speed > 300) speed = APP.journey.speed;
-
             APP.journey.speed = speed;
             APP.journey.currentAlt = alt;
-
-            // Speeding Alert (>110km/h)
             if (speed > 110) {
                 if (!APP.journey.overspeedWarning) {
                     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                     showToast('⚠️ Speeding Alert! > 110km/h', true);
                     APP.journey.overspeedWarning = true;
                 }
-            } else {
-                APP.journey.overspeedWarning = false;
-            }
-
+            } else { APP.journey.overspeedWarning = false; }
             const prevMode = APP.journey.mode;
             APP.journey.mode = speed > 15 ? 'driving' : 'walking';
-            
             updateGPSStatus(acc);
-            
             APP.pathCoords.push([lat, lon]);
-            
             if (APP.mapSmall && APP.markerSmall) {
                 APP.markerSmall.setLatLng([lat, lon]);
                 APP.pathSmall.setLatLngs(APP.pathCoords);
                 APP.mapSmall.panTo([lat, lon]);
             }
-            
             if (APP.isFullscreen && APP.mapFull && APP.markerFull) {
                 APP.markerFull.setLatLng([lat, lon]);
                 APP.pathFull.setLatLngs(APP.pathCoords);
                 APP.mapFull.panTo([lat, lon]);
             }
-            
-            if (dist > 0.005) { // Threshold for movement
-                // Mode Switch
+            if (dist > 0.005) {
                 if (prevMode !== APP.journey.mode && APP.journey.totalKm > 0.05) {
                     APP.journey.waypoints.push({ name: APP.journey.mode === 'driving' ? '🚗 Driving Mode' : '🚶 Walking Mode', lat, lon, time: now, type: 'mode', mode: APP.journey.mode });
                 }
-                
-                // End Stop
                 if (APP.journey.currentStop) {
                     const dur = Math.round((now - APP.journey.currentStop.startTime) / 60000);
                     if (dur >= 2) {
@@ -1195,24 +1299,19 @@
                     }
                     APP.journey.currentStop = null;
                 }
-                
                 APP.journey.totalKm += dist;
                 if (APP.journey.mode === 'walking') APP.journey.calories += dist * 65;
                 APP.journey.lastLat = lat; APP.journey.lastLon = lon; APP.journey.lastTime = now;
-                
                 getStreetName(lat, lon);
             } else if (!APP.journey.currentStop && APP.journey.totalKm > 0.01) {
                 APP.journey.currentStop = { lat, lon, startTime: now };
             }
-            
             updateJourneyUI();
         }
 
         function updateJourneyUI() {
             if (!APP.journey) return;
             const j = APP.journey;
-            
-            // Pace Calc
             let pace = "--";
             if (j.speed > 1) {
                 const paceMin = 60 / j.speed;
@@ -1220,8 +1319,6 @@
                 const ps = Math.round((paceMin - pm) * 60);
                 pace = `${pm}'${ps}"`;
             }
-
-            // Small Card
             document.getElementById('jDistance').textContent = j.totalKm.toFixed(2);
             document.getElementById('jSpeed').textContent = j.speed.toFixed(1);
             document.getElementById('jCalories').textContent = Math.round(j.calories);
@@ -1229,7 +1326,6 @@
             document.getElementById('jPace').textContent = pace;
             document.getElementById('journeyModeText').textContent = j.mode === 'driving' ? '🚗 Driving' : '🚶 Walking';
             
-            // Fullscreen
             document.getElementById('fsDistance').textContent = j.totalKm.toFixed(2);
             document.getElementById('fsSpeed').textContent = j.speed.toFixed(1);
             document.getElementById('fsCalories').textContent = Math.round(j.calories);
@@ -1237,7 +1333,6 @@
             document.getElementById('fsPace').textContent = pace;
             document.getElementById('fsModeIcon').textContent = j.mode === 'driving' ? '🚗' : '🚶';
             document.getElementById('fsModeTitle').textContent = j.mode === 'driving' ? 'Driving' : 'Walking';
-            
             renderTimeline();
         }
 
@@ -1259,7 +1354,6 @@
                 else if (acc <= 100) { quality = 'poor'; text = `GPS: Poor (±${Math.round(acc)}m)`; }
                 else { quality = 'bad'; text = `GPS: Weak (±${Math.round(acc)}m)`; }
             } else if (status === 'bad') { quality = 'bad'; text = 'GPS: Error'; }
-            
             document.getElementById('gpsAccuracyDot').className = 'gps-accuracy-dot ' + quality;
             document.getElementById('gpsAccuracyText').textContent = text;
         }
@@ -1295,35 +1389,20 @@
             document.getElementById('fsTimeline').innerHTML = html;
         }
 
-        // ==================== NEW FEATURES ====================
         function addJourneyPhoto(e) {
             if (!APP.journey) return;
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = ev => {
                 const photoData = ev.target.result;
                 const lat = APP.journey.lastLat;
                 const lon = APP.journey.lastLon;
-
-                APP.journey.waypoints.push({
-                    name: '📸 Photo',
-                    lat: lat, lon: lon,
-                    time: Date.now(),
-                    type: 'photo',
-                    photo: photoData
-                });
-
+                APP.journey.waypoints.push({ name: '📸 Photo', lat: lat, lon: lon, time: Date.now(), type: 'photo', photo: photoData });
                 if (APP.mapFull) {
-                    const photoIcon = L.divIcon({
-                        className: 'custom-marker-photo',
-                        html: `<div style="width:30px;height:30px;background:url(${photoData});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`,
-                        iconSize: [30, 30]
-                    });
+                    const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${photoData});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] });
                     L.marker([lat, lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${photoData}" style="width:100px;border-radius:8px">`);
                 }
-
                 renderTimeline();
                 showToast('Photo added! 📸');
             };
@@ -1333,18 +1412,14 @@
         function exportGPX(journeyId) {
             const journey = APP.journeyHistory.find(j => j.id === journeyId);
             if (!journey) return showToast('Error finding journey', true);
-
             let gpx = `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SundayApp"><metadata><name>Journey ${new Date(journey.date).toLocaleDateString()}</name></metadata><trk><name>Sunday Track</name><trkseg>`;
-            
             const points = journey.pathCoords || journey.waypoints; 
             points.forEach(p => {
                 const lat = p.lat || p[0];
                 const lon = p.lon || p[1];
                 gpx += `<trkpt lat="${lat}" lon="${lon}"><time>${new Date(p.time || journey.id).toISOString()}</time></trkpt>`;
             });
-
             gpx += `</trkseg></trk></gpx>`;
-
             const blob = new Blob([gpx], { type: 'application/gpx+xml' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1360,26 +1435,18 @@
             if (!APP.journey) return;
             APP.isFullscreen = true;
             document.getElementById('mapFullscreen').classList.add('active');
-            
             setTimeout(() => {
                 if (APP.mapFull) APP.mapFull.remove();
                 APP.mapFull = L.map('journeyMapFull', { zoomControl: false }).setView([APP.journey.lastLat, APP.journey.lastLon], 17);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapFull);
-                
                 const icon = L.divIcon({ className: '', html: '<div style="width:20px;height:20px;background:#4285F4;border:4px solid white;border-radius:50%;box-shadow:0 0 15px rgba(66,133,244,0.8)"></div>', iconSize: [20, 20], iconAnchor: [10, 10] });
                 APP.markerFull = L.marker([APP.journey.lastLat, APP.journey.lastLon], { icon }).addTo(APP.mapFull);
                 APP.pathFull = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 5 }).addTo(APP.mapFull);
-                
                 L.marker([APP.journey.waypoints[0].lat, APP.journey.waypoints[0].lon]).addTo(APP.mapFull).bindPopup('🚩 Start');
-                
                 APP.journey.waypoints.forEach(w => {
                     if (w.type === 'stop') L.marker([w.lat, w.lon]).addTo(APP.mapFull).bindPopup(`⏸️ ${w.duration} min`);
                     if (w.type === 'photo') {
-                        const photoIcon = L.divIcon({
-                            className: 'custom-marker-photo',
-                            html: `<div style="width:30px;height:30px;background:url(${w.photo});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`,
-                            iconSize: [30, 30]
-                        });
+                        const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${w.photo});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] });
                         L.marker([w.lat, w.lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${w.photo}" style="width:100px;border-radius:8px">`);
                     }
                 });
@@ -1404,14 +1471,11 @@
 
         function endJourney() {
             if (!APP.journey) return;
-            
             if (APP.watchId) navigator.geolocation.clearWatch(APP.watchId);
             if (APP.timerInterval) clearInterval(APP.timerInterval);
-            
             const j = APP.journey;
             const totalMins = Math.round((Date.now() - j.startTime) / 60000);
             const avgSpeed = totalMins > 0 ? (j.totalKm / (totalMins / 60)).toFixed(1) : 0;
-            
             APP.journeyHistory.unshift({
                 id: Date.now(),
                 date: new Date().toISOString(),
@@ -1425,38 +1489,30 @@
                 startLat: j.waypoints[0].lat, startLon: j.waypoints[0].lon,
                 endLat: j.lastLat, endLon: j.lastLon
             });
-            
             if (APP.journeyHistory.length > 30) APP.journeyHistory = APP.journeyHistory.slice(0, 30);
-            
             APP.parking = { type: 'gps', lat: j.lastLat, lon: j.lastLon, time: Date.now() };
             saveStorage();
-            
             if (APP.mapSmall) { APP.mapSmall.remove(); APP.mapSmall = null; }
             if (APP.mapFull) { APP.mapFull.remove(); APP.mapFull = null; }
             APP.journey = null;
             APP.pathCoords = [];
             APP.isFullscreen = false;
-            
             document.getElementById('mapFullscreen').classList.remove('active');
             document.getElementById('activeJourneyCard').style.display = 'none';
             document.getElementById('startJourneyCard').style.display = 'block';
-            
             renderHistory();
             renderParking();
             document.getElementById('dashJourneys').textContent = APP.journeyHistory.length;
-            
             showToast(`Done! ${j.totalKm.toFixed(2)}km, ${Math.round(j.calories)}kcal 🏁`);
         }
 
         function renderHistory() {
             const c = document.getElementById('journeyHistory');
             document.getElementById('dashJourneys').textContent = APP.journeyHistory.length;
-            
             if (!APP.journeyHistory.length) {
                 c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>';
                 return;
             }
-            
             c.innerHTML = APP.journeyHistory.slice(0, 10).map(j => `
                 <div class="history-card" onclick="showHistoryDetail(${j.id})">
                     <div class="history-header">
@@ -1512,7 +1568,6 @@
         function saveParking(type) {
             APP.pendingSaveMode = type;
             if (type === 'photo') { document.getElementById('photoInput').click(); return; }
-            
             navigator.geolocation.getCurrentPosition(pos => {
                 if (type === 'gps') {
                     APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() };
@@ -1534,13 +1589,11 @@
         function renderParking() {
             const c = document.getElementById('parkingDisplay');
             const mc = document.getElementById('parkingMapContainer');
-            
             if (!APP.parking) {
                 c.innerHTML = '<div class="parking-display"><div class="parking-icon">🚗</div><div>No location saved</div></div>';
                 mc.style.display = 'none';
                 return;
             }
-            
             let html = '<div class="parking-display">';
             if (APP.parking.photo) html += `<img src="${APP.parking.photo}" class="parking-photo">`;
             html += `<div style="font-size:14px;font-weight:600">${APP.parking.lat ? '📍 GPS Saved' : '📸 Photo Saved'}</div>`;
@@ -1548,7 +1601,6 @@
             if (APP.parking.lat) html += `<a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success btn-sm" style="margin:10px 0">🗺️ Open Maps</a>`;
             html += `<button class="btn btn-secondary btn-sm" onclick="APP.parking=null;saveStorage();renderParking()">🗑️ Clear</button></div>`;
             c.innerHTML = html;
-            
             if (APP.parking.lat) {
                 mc.style.display = 'block';
                 setTimeout(() => {
@@ -1649,21 +1701,6 @@
             } catch(e) {}
         }
 
-        // ==================== EARTHQUAKES ====================
-        async function loadEarthquakes() {
-            try {
-                const quakes = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features.slice(0, 10);
-                document.getElementById('dashAlerts').textContent = quakes.length;
-                document.getElementById('earthquakeAlerts').innerHTML = quakes.length ? quakes.map(q => `
-                    <div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'warning'}">
-                        <div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)}</div>
-                        <div class="alert-body">📍 ${q.properties.place}</div>
-                    </div>
-                `).join('') : '<div class="alert-card info"><div class="alert-title">✅ No earthquakes</div></div>';
-                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
-            } catch(e) {}
-        }
-
         // ==================== CHAT ====================
         function sendChat() {
             const input = document.getElementById('chatInput');
@@ -1690,7 +1727,6 @@
             if (t.includes('start') && t.includes('journey')) { setTimeout(startJourney, 500); return '🚗 Starting...'; }
             if (t === 'news') return news[0]?.title || 'No news';
             if (t.startsWith('rate ')) { const c = t.split(' ')[1].toUpperCase(); return rates[c] ? `${c}: ${(1/rates[c]).toFixed(4)} MYR` : 'Not found'; }
-            for (const [, d] of Object.entries(MEDICAL)) if (d.kw.some(k => t.includes(k))) return d.reply;
             return 'Try: weather tokyo, remind me in 30 mins to call';
         }
 
@@ -1728,3 +1764,5 @@
     </script>
 </body>
 </html>
+
+      
