@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
     <meta name="theme-color" content="#0f0f1a">
-    <title>Sunday V8 - Ultimate</title>
+    <title>Sunday V9 - Hazard Watch</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
@@ -698,7 +698,7 @@
                 <div class="logo-icon">☀️</div>
                 <div class="logo-text">
                     <h1>Sunday</h1>
-                    <span>AI ASSISTANT V8</span>
+                    <span>AI ASSISTANT V9</span>
                 </div>
             </div>
             <div class="header-time">
@@ -854,6 +854,8 @@
         <div class="page" id="page-tools">
             <div class="card">
                 <div class="card-header"><div class="card-title">⏰ Reminders</div><span class="badge" id="reminderBadge">0</span></div>
+                <button class="btn btn-secondary" onclick="enableNotifications()" style="margin-bottom: 10px;">🔔 Enable Alerts on iPhone</button>
+                
                 <div class="input-group"><input type="text" class="input-field" id="reminderTask" placeholder="What to remind?"></div>
                 <div class="btn-row" style="margin-bottom: 15px;">
                     <select class="input-field" id="reminderTime">
@@ -1001,12 +1003,14 @@
             'London': { lat: 51.5074, lon: -0.1278 }
         };
 
-        // For Global Rain Alerts
+        // For Global Rain Alerts (Matched with Python Script)
         const GLOBAL_MONITOR = [
             {n:'Tokyo', lat:35.6895, lon:139.6917}, {n:'New York', lat:40.7128, lon:-74.0060},
             {n:'London', lat:51.5074, lon:-0.1278}, {n:'Dubai', lat:25.2769, lon:55.2962},
             {n:'Sydney', lat:-33.8688, lon:151.2093}, {n:'Shanghai', lat:31.2304, lon:121.4737},
-            {n:'Singapore', lat:1.3521, lon:103.8198}, {n:'Paris', lat:48.8566, lon:2.3522}
+            {n:'Singapore', lat:1.3521, lon:103.8198}, {n:'Paris', lat:48.8566, lon:2.3522},
+            {n:'Beijing', lat:39.9042, lon:116.4074}, {n:'Seoul', lat:37.5665, lon:126.9780},
+            {n:'Hokkaido', lat:43.2203, lon:142.8635}
         ];
 
         const CURRENCIES = [
@@ -1032,7 +1036,7 @@
             generateDailyBriefing(); // New Briefing Feature
             setInterval(checkReminders, 10000);
             setInterval(loadEarthquakes, 300000);
-            if ('Notification' in window) Notification.requestPermission();
+            // We request permission, but user must click the button in Tools
         });
 
         function loadStorage() {
@@ -1148,7 +1152,7 @@
             }
         });
 
-        // ==================== GLOBAL WEATHER ALERTS (NEW) ====================
+        // ==================== GLOBAL WEATHER ALERTS (PYTHON LOGIC PORTED) ====================
         async function loadGlobalWeatherAlerts() {
             const container = document.getElementById('globalWeatherAlerts');
             let alertsFound = false;
@@ -1156,24 +1160,68 @@
 
             for (const city of GLOBAL_MONITOR) {
                 try {
-                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code`)).json();
-                    const code = d.current.weather_code;
-                    // Check for Rain (>60) or Snow (>70) or Storm (>90)
-                    if (code >= 61) {
+                    // Fetch Current AND Hourly data (needed for python logic features)
+                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code&hourly=weather_code,precipitation&forecast_days=1`)).json();
+                    
+                    const curr = d.current.weather_code;
+                    const hourlyCodes = d.hourly.weather_code;
+                    const hourlyRain = d.hourly.precipitation;
+                    const totalRain = hourlyRain.reduce((a, b) => a + b, 0);
+
+                    let msg = "";
+                    let type = "info";
+
+                    // --- 1. LIVE CHECKS (Priority) ---
+                    // Thunderstorm: 95, 96, 99
+                    if ([95, 96, 99].includes(curr)) { 
+                        msg = "⚡ LIVE ALERT: Heavy Thunderstorm occurring RIGHT NOW!"; 
+                        type = "danger"; 
+                    }
+                    // Snow: 71, 73, 75, 85, 86
+                    else if ([71, 73, 75, 85, 86].includes(curr)) { 
+                        msg = "❄️ LIVE ALERT: It is SNOWING right now! 🥶"; 
+                        type = "warning"; 
+                    }
+                    // Heavy Rain: 63, 65, 80, 81, 82
+                    else if ([63, 65, 80, 81, 82].includes(curr)) { 
+                        msg = "🌧 LIVE ALERT: Heavy Rain detected currently!"; 
+                        type = "info"; 
+                    }
+
+                    // --- 2. FUTURE CHECKS (If no live alert) ---
+                    if (!msg) {
+                        // Future Storm: 96, 99
+                        if (hourlyCodes.some(c => [96, 99].includes(c))) {
+                            msg = "🌪️ FUTURE WARNING: Extreme storm (hail/tornado risk) predicted in next 24h.";
+                            type = "danger";
+                        }
+                        // Flood Risk: > 50mm rain
+                        else if (totalRain >= 50.0) {
+                            msg = `🌊 FLOOD RISK: Heavy continuous rain predicted (${totalRain.toFixed(1)}mm).`;
+                            type = "danger";
+                        }
+                        // Future Snow: 71, 75
+                        else if (hourlyCodes.some(c => [71, 75].includes(c))) {
+                            msg = "❄️ SNOW FORECAST: Snowfall expected within 24 hours.";
+                            type = "warning";
+                        }
+                    }
+
+                    if (msg) {
                         alertsFound = true;
-                        let type = 'Rain 🌧️';
-                        let css = 'info';
-                        if (code >= 71) { type = 'Snow ❄️'; css = 'warning'; }
-                        if (code >= 95) { type = 'Storm ⛈️'; css = 'danger'; }
-                        
                         html += `
-                            <div class="alert-card ${css}">
+                            <div class="alert-card ${type}">
                                 <div class="alert-header">
-                                    <div class="alert-title">🚨 LIVE ALERT: ${city.n}</div>
+                                    <div class="alert-title">🚨 ${city.n}</div>
                                 </div>
-                                <div class="alert-body">Heavy ${type} detected currently!</div>
+                                <div class="alert-body">${msg}</div>
                             </div>
                         `;
+                        // Trigger Browser Notification if supported
+                        if("Notification" in window && Notification.permission === "granted") {
+                            new Notification(`Sunday Alert: ${city.n}`, { body: msg });
+                        }
+                        showToast(`🚨 Alert in ${city.n}`, true);
                     }
                 } catch(e) {}
             }
@@ -1199,7 +1247,7 @@
                 quakes.slice(0, 15).forEach(q => {
                     const d = new Date(q.properties.time);
                     const isToday = d.toDateString() === today;
-                    const dateStr = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute:'numeric', hour12: true });
+                    const dateStr = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute:'numeric', hour12: true });
 
                     if(isToday && !todayHeaderAdded) { html += '<div class="group-header">📅 Today</div>'; todayHeaderAdded = true; }
                     if(!isToday && !otherHeaderAdded) { html += '<div class="group-header">📅 Yesterday / Older</div>'; otherHeaderAdded = true; }
@@ -1220,6 +1268,22 @@
                 // Preview for Dash
                 document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
             } catch(e) {}
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function enableNotifications() {
+            if (!("Notification" in window)) {
+                showToast("❌ Notifications not supported", true);
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    showToast("✅ Notifications Allowed!");
+                    new Notification("Sunday", { body: "Test: I can warn you about rain now!" });
+                } else {
+                    showToast("❌ Permission denied", true);
+                }
+            });
         }
 
         // ==================== JOURNEY (V7 TRACK LOGIC) ====================
@@ -1764,4 +1828,3 @@
     </script>
 </body>
 </html>
-      
