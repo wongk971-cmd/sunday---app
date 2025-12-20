@@ -7,15 +7,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
     <meta name="theme-color" content="#0f0f1a">
-    <title>Sunday Assistant V3</title>
+    <title>Sunday V7 - Pro Tracker</title>
     
-    <!-- App Icon for iPhone Home Screen -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
-    <!-- Leaflet Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -73,19 +71,13 @@
             margin-bottom: 20px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .logo { display: flex; align-items: center; gap: 12px; }
 
         .logo-icon {
             width: 45px; height: 45px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 22px;
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
         }
@@ -99,41 +91,29 @@
 
         /* Navigation */
         .nav-tabs {
-            display: flex;
-            gap: 6px;
-            padding: 6px;
+            display: flex; gap: 6px; padding: 6px;
             background: var(--glass);
             border-radius: var(--radius-lg);
             border: 1px solid var(--glass-border);
             margin-bottom: 20px;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
         .nav-tabs::-webkit-scrollbar { display: none; }
 
         .nav-tab {
-            flex: 1;
-            min-width: 60px;
-            padding: 10px 6px;
-            border: none;
-            background: transparent;
+            flex: 1; min-width: 55px; padding: 10px 6px;
+            border: none; background: transparent;
             color: var(--text-secondary);
             font-family: 'Outfit', sans-serif;
-            font-size: 10px;
-            font-weight: 500;
+            font-size: 9px; font-weight: 500;
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
         }
 
         .nav-tab.active {
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
         }
 
         .nav-tab .icon { font-size: 18px; }
@@ -157,418 +137,457 @@
         }
 
         .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 15px;
         }
 
         .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 600;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 16px; font-weight: 600;
         }
 
         .badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: 500;
+            padding: 5px 10px; border-radius: 15px;
+            font-size: 11px; font-weight: 500;
             background: var(--glass);
         }
 
-        .badge.live {
-            background: rgba(255, 71, 87, 0.2);
-            color: var(--accent-danger);
-            animation: blink 1.5s ease-in-out infinite;
-        }
+        .badge.live { background: rgba(255, 71, 87, 0.2); color: var(--accent-danger); animation: pulse 2s infinite; }
+        .badge.tracking { background: rgba(0, 255, 136, 0.2); color: var(--accent-success); }
 
-        .badge.tracking {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--accent-success);
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* Stats Grid */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 8px; margin-bottom: 15px;
         }
 
         .stat-item {
             background: var(--glass);
-            padding: 15px 10px;
+            padding: 12px 8px;
             border-radius: var(--radius-md);
             text-align: center;
         }
 
-        .stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent-primary);
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--accent-primary); }
+        .stat-label { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
 
         /* Weather */
-        .weather-main {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 10px 0;
-        }
-
+        .weather-main { display: flex; align-items: center; gap: 20px; padding: 10px 0; }
         .weather-icon { font-size: 50px; }
         .weather-temp { font-size: 38px; font-weight: 700; }
         .weather-condition { color: var(--text-secondary); font-size: 14px; }
 
         .weather-details {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; margin-top: 15px;
         }
 
         .weather-detail {
             background: var(--glass);
-            padding: 12px;
-            border-radius: var(--radius-md);
+            padding: 12px; border-radius: var(--radius-md);
             text-align: center;
         }
 
         .weather-detail .value { font-size: 16px; font-weight: 600; color: var(--accent-primary); }
-        .weather-detail .label { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+        .weather-detail .label { font-size: 10px; color: var(--text-muted); }
 
         /* Location List */
         .location-list { display: flex; flex-direction: column; gap: 8px; }
 
         .location-card {
             background: var(--glass);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 12px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: space-between;
             cursor: pointer;
         }
-
-        .location-card:active { background: rgba(255, 255, 255, 0.1); }
 
         .location-info { display: flex; align-items: center; gap: 10px; }
         .location-name { font-weight: 500; font-size: 14px; }
         .location-temp { font-size: 18px; font-weight: 600; color: var(--accent-primary); }
 
-        /* Input */
-        .input-group { margin-bottom: 12px; }
-        .input-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
-
+        /* Input & Buttons */
         .input-field {
-            width: 100%;
-            padding: 14px 16px;
+            width: 100%; padding: 14px 16px;
             background: var(--bg-secondary);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
             font-family: 'Outfit', sans-serif;
             font-size: 15px;
-            -webkit-appearance: none;
         }
 
-        .input-field:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-        }
+        .input-field:focus { outline: none; border-color: var(--accent-primary); }
 
-        select.input-field { cursor: pointer; }
-
-        /* Buttons */
         .btn {
-            padding: 14px 24px;
-            border: none;
+            padding: 14px 24px; border: none;
             border-radius: var(--radius-md);
             font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 14px; font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
             width: 100%;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; }
+        .btn-secondary { background: var(--glass); color: var(--text-primary); border: 1px solid var(--glass-border); }
+        .btn-danger { background: linear-gradient(135deg, var(--accent-danger), #ff6b6b); color: white; }
+        .btn-success { background: linear-gradient(135deg, var(--accent-success), #00d68f); color: #0f0f1a; }
 
-        .btn-secondary {
-            background: var(--glass);
-            color: var(--text-primary);
-            border: 1px solid var(--glass-border);
-        }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .btn-sm { padding: 10px 16px; font-size: 12px; }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--accent-danger), #ff6b6b);
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--accent-success), #00d68f);
-            color: #0f0f1a;
-        }
-
-        .btn-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        /* Map */
-        .map-container {
+        /* ==================== MAP STYLES ==================== */
+        
+        /* Small Map (in card) */
+        .map-small-container {
             width: 100%;
-            height: 250px;
+            height: 200px;
             border-radius: var(--radius-md);
             overflow: hidden;
             margin-bottom: 15px;
-            background: var(--bg-secondary);
+            position: relative;
+            cursor: pointer;
         }
 
-        #journeyMap, #parkingMap {
-            width: 100%;
-            height: 100%;
+        .map-small-container::after {
+            content: '🔍 Tap to Zoom';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 1000;
+        }
+
+        #journeyMapSmall, #parkingMap { width: 100%; height: 100%; }
+
+        /* Fullscreen Map */
+        .map-fullscreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 2000;
+            background: var(--bg-primary);
+            display: none;
+        }
+
+        .map-fullscreen.active { display: block; }
+
+        #journeyMapFull { width: 100%; height: 100%; }
+
+        /* Map Top Bar */
+        .map-top-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(180deg, rgba(15, 15, 26, 0.95) 0%, transparent 100%);
+            padding: 50px 20px 40px;
+            z-index: 2001;
+        }
+
+        .map-status-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .map-mode-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .map-mode-info { flex: 1; }
+        .map-mode-title { font-size: 20px; font-weight: 700; }
+        .map-street { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+
+        .map-close-btn {
+            width: 40px; height: 40px;
+            background: var(--glass);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .map-live-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .map-stat {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 5px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-stat .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .map-stat .label { font-size: 9px; color: var(--text-muted); }
+
+        /* Map Bottom Bar */
+        .map-bottom-bar {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(0deg, rgba(15, 15, 26, 0.98) 0%, transparent 100%);
+            padding: 40px 20px 40px;
+            z-index: 2001;
+        }
+
+        .map-duration {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .map-duration-label { font-size: 12px; color: var(--text-muted); }
+        .map-duration-time {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-success);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .map-btn {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-btn-end {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--accent-danger), #ff6b6b);
+            font-size: 28px;
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+        }
+
+        /* Timeline Panel */
+        .timeline-panel {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: var(--bg-card);
+            border-radius: 24px 24px 0 0;
+            max-height: 50%;
+            z-index: 2002;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-panel.show { transform: translateY(0); }
+
+        .timeline-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-header h3 { font-size: 16px; }
+        .timeline-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+
+        .timeline-content {
+            padding: 20px;
+            max-height: calc(50vh - 60px);
+            overflow-y: auto;
         }
 
         /* Timeline */
-        .timeline {
-            position: relative;
-            padding-left: 25px;
-            margin: 15px 0;
-        }
+        .timeline { position: relative; padding-left: 25px; }
 
         .timeline::before {
-            content: '';
-            position: absolute;
-            left: 8px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
+            content: ''; position: absolute;
+            left: 8px; top: 0; bottom: 0; width: 2px;
             background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), transparent);
         }
 
-        .timeline-item {
-            position: relative;
-            padding-bottom: 15px;
-        }
+        .timeline-item { position: relative; padding-bottom: 15px; }
 
         .timeline-dot {
-            position: absolute;
-            left: -21px;
-            top: 5px;
-            width: 10px;
-            height: 10px;
+            position: absolute; left: -21px; top: 5px;
+            width: 12px; height: 12px;
             background: var(--accent-primary);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
         }
 
-        .timeline-dot.active {
-            animation: dotPulse 1.5s ease-in-out infinite;
-        }
+        .timeline-dot.walking { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
+        .timeline-dot.driving { background: var(--accent-warning); box-shadow: 0 0 10px var(--accent-warning); }
+        .timeline-dot.resting { background: var(--accent-secondary); box-shadow: 0 0 10px var(--accent-secondary); }
+        .timeline-dot.active { animation: dotPulse 1.5s ease-in-out infinite; }
 
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-        }
+        @keyframes dotPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
 
-        .timeline-content {
+        .timeline-card {
             background: var(--glass);
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: var(--radius-md);
         }
 
-        .timeline-title { font-weight: 600; font-size: 13px; }
-        .timeline-time { font-size: 11px; color: var(--text-muted); }
-        .timeline-duration {
+        .timeline-title { font-weight: 600; font-size: 14px; }
+        .timeline-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .timeline-badge {
             display: inline-block;
-            padding: 2px 8px;
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--accent-success);
+            padding: 3px 10px;
             border-radius: 10px;
             font-size: 10px;
-            margin-top: 5px;
+            margin-top: 6px;
+        }
+        .timeline-badge.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
+        .timeline-badge.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
+        .timeline-badge.resting { background: rgba(123, 44, 191, 0.15); color: var(--accent-secondary); }
+
+        /* Custom Map Marker */
+        .custom-marker {
+            width: 20px; height: 20px;
+            background: #4285F4;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.8);
         }
 
-        /* Parking */
-        .parking-display { text-align: center; padding: 25px 15px; }
-        .parking-icon { font-size: 50px; margin-bottom: 12px; }
-        .parking-location { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-        .parking-time { color: var(--text-muted); font-size: 12px; margin-bottom: 15px; }
+        .custom-marker-photo {
+            /* Photo marker style */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* History Card */
+        .history-card {
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .history-date { font-size: 12px; color: var(--accent-primary); }
+        .history-mode { font-size: 11px; padding: 3px 8px; border-radius: 10px; }
+        .history-mode.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
+        .history-mode.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
+
+        .history-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+        .history-stat { font-size: 12px; color: var(--text-secondary); }
+        .history-stat span { color: var(--text-primary); font-weight: 600; }
+
+        /* Other Styles */
+        .parking-display { text-align: center; padding: 20px; }
+        .parking-icon { font-size: 50px; margin-bottom: 10px; }
         .parking-photo { max-width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; }
 
-        /* Reminders */
-        .reminder-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
+        .place-card {
             background: var(--glass);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .place-photo { width: 100%; height: 100px; object-fit: cover; }
+        .place-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .place-name { font-weight: 600; }
+
+        .reminder-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; background: var(--glass);
             border-radius: var(--radius-md);
             margin-bottom: 10px;
         }
-
         .reminder-icon {
             width: 38px; height: 38px;
             background: linear-gradient(135deg, var(--accent-warning), #ff8c42);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
         }
-
         .reminder-content { flex: 1; }
         .reminder-task { font-weight: 500; font-size: 13px; }
         .reminder-time { font-size: 11px; color: var(--text-muted); }
-        .reminder-delete { background: none; border: none; color: var(--text-muted); padding: 8px; font-size: 14px; cursor: pointer; }
+        .reminder-delete { background: none; border: none; color: var(--text-muted); cursor: pointer; }
 
-        /* Currency */
         .rate-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px;
-            background: var(--glass);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px; background: var(--glass);
             border-radius: var(--radius-md);
             margin-bottom: 8px;
         }
-
         .rate-pair { display: flex; align-items: center; gap: 10px; }
-        .rate-flag { font-size: 22px; }
-        .rate-info { display: flex; flex-direction: column; }
+        .rate-flag { font-size: 20px; }
         .rate-code { font-weight: 600; font-size: 13px; }
-        .rate-name { font-size: 10px; color: var(--text-muted); }
-        .rate-value { font-size: 18px; font-weight: 600; color: var(--accent-success); font-family: 'JetBrains Mono', monospace; }
+        .rate-value { font-size: 16px; font-weight: 600; color: var(--accent-success); }
 
-        /* Alerts */
         .alert-card {
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin-bottom: 10px;
-            border-left: 4px solid;
+            padding: 12px; border-radius: var(--radius-md);
+            margin-bottom: 10px; border-left: 4px solid;
         }
+        .alert-card.danger { background: rgba(255, 71, 87, 0.1); border-color: var(--accent-danger); }
+        .alert-card.warning { background: rgba(255, 165, 0, 0.1); border-color: var(--accent-warning); }
+        .alert-card.info { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-primary); }
+        .alert-title { font-weight: 600; font-size: 13px; }
+        .alert-body { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
 
-        .alert-card.danger {
-            background: rgba(255, 71, 87, 0.1);
-            border-color: var(--accent-danger);
-        }
-
-        .alert-card.warning {
-            background: rgba(255, 165, 0, 0.1);
-            border-color: var(--accent-warning);
-        }
-
-        .alert-card.info {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: var(--accent-primary);
-        }
-
-        .alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .alert-icon { font-size: 20px; }
-        .alert-title { font-weight: 600; font-size: 14px; }
-        .alert-time { margin-left: auto; font-size: 10px; color: var(--text-muted); }
-        .alert-body { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
-
-        /* Chat */
         .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background: var(--bg-secondary);
+            height: 250px; overflow-y: auto;
+            padding: 15px; background: var(--bg-secondary);
             border-radius: var(--radius-lg);
             margin-bottom: 12px;
         }
-
         .chat-message { margin-bottom: 12px; }
         .chat-message.user { text-align: right; }
-
         .chat-bubble {
-            display: inline-block;
-            max-width: 85%;
+            display: inline-block; max-width: 85%;
             padding: 10px 14px;
             border-radius: var(--radius-md);
             font-size: 13px;
-            line-height: 1.5;
         }
-
         .chat-message.user .chat-bubble {
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
         }
-
         .chat-message.bot .chat-bubble { background: var(--glass); }
-
         .chat-input-area { display: flex; gap: 10px; }
-        .chat-input-area input { flex: 1; }
         .chat-input-area .btn { width: auto; padding: 14px 18px; }
 
-        .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .command-list { margin-top: 15px; padding: 15px; background: var(--glass); border-radius: var(--radius-md); }
+        .command-title { font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 10px; }
+        .command-item { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
+        .command-item code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; color: var(--accent-primary); }
 
-        .quick-btn {
-            padding: 8px 12px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .quick-btn:active { background: var(--accent-primary); color: var(--bg-primary); }
-
-        /* Empty State */
-        .empty-state { text-align: center; padding: 30px 15px; }
-        .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
-        .empty-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .empty-state { text-align: center; padding: 30px; }
+        .empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.4; }
         .empty-text { color: var(--text-muted); font-size: 12px; }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            padding: 14px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-success);
-            border-radius: var(--radius-md);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateY(-150%);
-            transition: transform 0.4s ease;
-        }
-
-        .toast.show { transform: translateY(0); }
-        .toast.error { border-color: var(--accent-danger); }
-        .toast-icon { font-size: 18px; }
-        .toast-message { font-size: 13px; }
-
-        /* Loading */
         .loading { display: flex; justify-content: center; padding: 30px; }
         .spinner {
             width: 30px; height: 30px;
@@ -577,66 +596,91 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* GPS Status */
-        .gps-status {
+        .toast {
+            position: fixed; top: 20px; left: 20px; right: 20px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-success);
+            border-radius: var(--radius-md);
+            z-index: 5000;
+            display: flex; align-items: center; gap: 10px;
+            transform: translateY(-150%);
+            transition: transform 0.4s ease;
+        }
+        .toast.show { transform: translateY(0); }
+        .toast.error { border-color: var(--accent-danger); }
+
+        .modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 4000;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: 100%; max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+        .modal-body { padding: 20px; }
+
+        .fitness-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
+        .fitness-item { background: var(--glass); padding: 15px; border-radius: var(--radius-md); text-align: center; }
+        .fitness-icon { font-size: 24px; margin-bottom: 8px; }
+        .fitness-value { font-size: 20px; font-weight: 700; color: var(--accent-success); }
+        .fitness-label { font-size: 10px; color: var(--text-muted); }
+
+        .news-item { padding: 12px; background: var(--glass); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
+        .news-source { display: inline-block; padding: 2px 8px; background: var(--accent-primary); color: var(--bg-primary); border-radius: 10px; font-size: 9px; margin-bottom: 5px; }
+        .news-title { font-size: 13px; font-weight: 500; }
+
+        .input-group { margin-bottom: 12px; }
+
+        /* GPS Accuracy Indicator */
+        .gps-accuracy {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             background: var(--glass);
-            border-radius: var(--radius-md);
-            margin-bottom: 15px;
-            font-size: 12px;
+            border-radius: 20px;
+            font-size: 11px;
         }
 
-        .gps-dot {
+        .gps-accuracy-dot {
             width: 8px; height: 8px;
             border-radius: 50%;
-            background: var(--text-muted);
         }
 
-        .gps-dot.active {
-            background: var(--accent-success);
-            animation: dotPulse 1.5s ease-in-out infinite;
-        }
-
-        /* News */
-        .news-item {
-            padding: 12px;
-            background: var(--glass);
-            border-radius: var(--radius-md);
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-
-        .news-item:active { background: rgba(255, 255, 255, 0.08); }
-        .news-source {
-            display: inline-block;
-            padding: 2px 8px;
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-        .news-title { font-size: 13px; font-weight: 500; line-height: 1.4; }
+        .gps-accuracy-dot.excellent { background: var(--accent-success); box-shadow: 0 0 8px var(--accent-success); }
+        .gps-accuracy-dot.good { background: var(--accent-primary); }
+        .gps-accuracy-dot.poor { background: var(--accent-warning); }
+        .gps-accuracy-dot.bad { background: var(--accent-danger); }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
 
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
             <div class="logo">
                 <div class="logo-icon">☀️</div>
                 <div class="logo-text">
                     <h1>Sunday</h1>
-                    <span>AI ASSISTANT V3</span>
+                    <span>AI ASSISTANT V7</span>
                 </div>
             </div>
             <div class="header-time">
@@ -645,7 +689,6 @@
             </div>
         </header>
 
-        <!-- Navigation -->
         <nav class="nav-tabs">
             <button class="nav-tab active" data-page="dashboard"><span class="icon">🏠</span><span>Home</span></button>
             <button class="nav-tab" data-page="weather"><span class="icon">🌤️</span><span>Weather</span></button>
@@ -656,66 +699,37 @@
             <button class="nav-tab" data-page="chat"><span class="icon">💬</span><span>Chat</span></button>
         </nav>
 
-        <!-- ==================== DASHBOARD ==================== -->
         <div class="page active" id="page-dashboard">
             <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value" id="dashTemp">--°</div>
-                    <div class="stat-label">Temp</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="dashAlerts">0</div>
-                    <div class="stat-label">Alerts</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="dashReminders">0</div>
-                    <div class="stat-label">Reminders</div>
-                </div>
+                <div class="stat-item"><div class="stat-value" id="dashTemp">--°</div><div class="stat-label">Temp</div></div>
+                <div class="stat-item"><div class="stat-value" id="dashAlerts">0</div><div class="stat-label">Alerts</div></div>
+                <div class="stat-item"><div class="stat-value" id="dashJourneys">0</div><div class="stat-label">Journeys</div></div>
+                <div class="stat-item"><div class="stat-value" id="dashReminders">0</div><div class="stat-label">Reminders</div></div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🌤️ Weather</div>
-                    <span class="badge live">● LIVE</span>
-                </div>
+                <div class="card-header"><div class="card-title">🌤️ Weather</div><span class="badge live">● LIVE</span></div>
                 <div class="weather-main" id="dashWeather">
                     <div class="weather-icon">☀️</div>
-                    <div>
-                        <div class="weather-temp">--°C</div>
-                        <div class="weather-condition">Loading...</div>
-                    </div>
+                    <div><div class="weather-temp">--°C</div><div class="weather-condition">Loading...</div></div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🚨 Recent Alerts</div>
-                </div>
-                <div id="dashAlertsPreview">
-                    <div class="alert-card info">
-                        <div class="alert-header">
-                            <span class="alert-icon">✅</span>
-                            <span class="alert-title">All Clear</span>
-                        </div>
-                        <div class="alert-body">No alerts at the moment.</div>
-                    </div>
-                </div>
+                <div class="card-header"><div class="card-title">🚨 Alerts</div></div>
+                <div id="dashAlertsPreview"></div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📰 News</div>
-                </div>
+                <div class="card-header"><div class="card-title">📰 News</div></div>
                 <div id="dashNews"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
-        <!-- ==================== WEATHER ==================== -->
         <div class="page" id="page-weather">
             <div class="input-group">
-                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search any city...">
+                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search city...">
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div>
@@ -723,381 +737,297 @@
                 </div>
                 <div class="weather-main">
                     <div class="weather-icon" id="weatherIcon">☀️</div>
-                    <div>
-                        <div class="weather-temp"><span id="weatherTemp">--</span>°C</div>
-                        <div class="weather-condition" id="weatherCondition">Loading...</div>
-                    </div>
+                    <div><div class="weather-temp"><span id="weatherTemp">--</span>°C</div><div class="weather-condition" id="weatherCondition">Loading...</div></div>
                 </div>
                 <div class="weather-details">
-                    <div class="weather-detail">
-                        <div class="value" id="weatherWind">--</div>
-                        <div class="label">Wind km/h</div>
-                    </div>
-                    <div class="weather-detail">
-                        <div class="value" id="weatherHumidity">--</div>
-                        <div class="label">Humidity %</div>
-                    </div>
-                    <div class="weather-detail">
-                        <div class="value" id="weatherRain">--</div>
-                        <div class="label">Rain %</div>
-                    </div>
+                    <div class="weather-detail"><div class="value" id="weatherWind">--</div><div class="label">Wind</div></div>
+                    <div class="weather-detail"><div class="value" id="weatherHumidity">--</div><div class="label">Humidity</div></div>
+                    <div class="weather-detail"><div class="value" id="weatherRain">--</div><div class="label">Rain %</div></div>
                 </div>
             </div>
-
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🌍 Monitored Locations</div>
-                </div>
-                <div class="location-list" id="monitoredLocations">
-                    <div class="loading"><div class="spinner"></div></div>
-                </div>
+                <div class="card-header"><div class="card-title">🌍 Locations</div></div>
+                <div class="location-list" id="monitoredLocations"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
-        <!-- ==================== JOURNEY ==================== -->
         <div class="page" id="page-journey">
-            <div class="gps-status">
-                <div class="gps-dot" id="gpsDot"></div>
-                <span id="gpsText">GPS Ready</span>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value" id="journeyDistance">0.0</div>
-                    <div class="stat-label">km</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="journeyTime">0</div>
-                    <div class="stat-label">mins</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="journeyStops">0</div>
-                    <div class="stat-label">stops</div>
-                </div>
-            </div>
-
-            <!-- Active Journey -->
             <div class="card" id="activeJourneyCard" style="display: none;">
                 <div class="card-header">
-                    <div class="card-title">🚗 Active Journey</div>
-                    <span class="badge tracking">● TRACKING</span>
+                    <div class="card-title">🚗 <span id="journeyModeText">Tracking</span></div>
+                    <span class="badge tracking">● LIVE</span>
                 </div>
-                <div class="map-container">
-                    <div id="journeyMap"></div>
+                
+                <div class="gps-accuracy" id="gpsAccuracy">
+                    <div class="gps-accuracy-dot good" id="gpsAccuracyDot"></div>
+                    <span id="gpsAccuracyText">GPS: Good</span>
                 </div>
-                <div class="timeline" id="journeyTimeline"></div>
-                <button class="btn btn-danger" onclick="endJourney()">🏁 End Journey</button>
+                
+                <div class="stats-grid" style="margin-top: 15px; grid-template-columns: repeat(3, 1fr);">
+                    <div class="stat-item"><div class="stat-value" id="jDistance">0.0</div><div class="stat-label">km</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jSpeed">0</div><div class="stat-label">km/h</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jTime">0</div><div class="stat-label">min</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jPace">--</div><div class="stat-label">min/km</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jAlt">0</div><div class="stat-label">m (Alt)</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jCalories">0</div><div class="stat-label">kcal</div></div>
+                </div>
+                
+                <div class="map-small-container" onclick="openFullscreenMap()">
+                    <div id="journeyMapSmall"></div>
+                </div>
+                
+                <div class="timeline" id="timelinePreview" style="max-height: 150px; overflow: hidden;"></div>
+                
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="openFullscreenMap()">🗺️ Full Map</button>
+                    <button class="btn btn-danger" onclick="endJourney()">🏁 End</button>
+                </div>
             </div>
 
-            <!-- Start Journey -->
             <div class="card" id="startJourneyCard">
-                <div class="card-header">
-                    <div class="card-title">🚀 Start Journey</div>
-                </div>
+                <div class="card-header"><div class="card-title">🚀 Start Journey</div></div>
                 <div class="empty-state">
                     <div class="empty-icon">🗺️</div>
-                    <div class="empty-title">Ready to Track?</div>
-                    <div class="empty-text">I'll track your route on map and record all stops.</div>
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Track Your Movement</div>
+                    <div class="empty-text">Mini-map tracking + Tap to zoom<br>Auto-detects walking/driving & tracks calories</div>
                 </div>
                 <button class="btn btn-primary" onclick="startJourney()">📍 Start Journey</button>
             </div>
 
-            <!-- History -->
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📜 Journey History</div>
-                </div>
+                <div class="card-header"><div class="card-title">📜 History</div></div>
                 <div id="journeyHistory"></div>
             </div>
         </div>
 
-        <!-- ==================== PARKING ==================== -->
         <div class="page" id="page-parking">
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🚗 My Car Location</div>
-                </div>
+                <div class="card-header"><div class="card-title">🚗 My Car</div></div>
                 <div id="parkingDisplay">
                     <div class="parking-display">
                         <div class="parking-icon">🚗</div>
-                        <div class="parking-location">No location saved</div>
-                        <div class="parking-time">Save your parking spot</div>
+                        <div style="font-size: 14px;">No location saved</div>
                     </div>
                 </div>
-                <div class="map-container" id="parkingMapContainer" style="display: none;">
+                <div class="map-small-container" id="parkingMapContainer" style="display: none;">
                     <div id="parkingMap"></div>
                 </div>
-                <div class="btn-row">
-                    <button class="btn btn-primary" onclick="saveParking('gps')">📍 Save GPS</button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
+                <div class="btn-row-3">
+                    <button class="btn btn-primary btn-sm" onclick="saveParking('gps')">📍 GPS</button>
+                    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
+                    <button class="btn btn-secondary btn-sm" onclick="saveParking('both')">📍+📸</button>
                 </div>
-                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="saveParking('photo', event)">
+                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
             </div>
-
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">⭐ Saved Places</div>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="input-field" id="customPlaceName" placeholder="Name this place (e.g., Home)">
-                </div>
+                <div class="card-header"><div class="card-title">⭐ Saved Places</div></div>
+                <div class="input-group"><input type="text" class="input-field" id="customPlaceName" placeholder="Name this place"></div>
                 <button class="btn btn-secondary" onclick="saveCustomPlace()">💾 Save Place</button>
                 <div id="customPlacesList" style="margin-top: 15px;"></div>
             </div>
         </div>
 
-        <!-- ==================== TOOLS ==================== -->
         <div class="page" id="page-tools">
-            <!-- Reminders -->
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">⏰ Reminders</div>
-                    <span class="badge" id="reminderBadge">0</span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="input-field" id="reminderTask" placeholder="What to remind?">
-                </div>
+                <div class="card-header"><div class="card-title">⏰ Reminders</div><span class="badge" id="reminderBadge">0</span></div>
+                <div class="input-group"><input type="text" class="input-field" id="reminderTask" placeholder="What to remind?"></div>
                 <div class="btn-row" style="margin-bottom: 15px;">
                     <select class="input-field" id="reminderTime">
                         <option value="10">10 mins</option>
-                        <option value="15">15 mins</option>
                         <option value="30">30 mins</option>
-                        <option value="45">45 mins</option>
                         <option value="60">1 hour</option>
-                        <option value="90">1.5 hours</option>
                         <option value="120">2 hours</option>
-                        <option value="180">3 hours</option>
-                        <option value="240">4 hours</option>
-                        <option value="360">6 hours</option>
                         <option value="480">8 hours</option>
-                        <option value="720">12 hours</option>
                         <option value="1440">24 hours</option>
                     </select>
                     <button class="btn btn-primary" onclick="addReminder()">⏰ Set</button>
                 </div>
                 <div id="reminderList"></div>
             </div>
-
-            <!-- Currency Rates -->
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">💱 Currency Rates (vs MYR)</div>
-                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px;font-size:11px" onclick="loadCurrencyRates()">🔄</button>
-                </div>
+                <div class="card-header"><div class="card-title">💱 Currency (vs MYR)</div></div>
                 <div id="currencyRates"><div class="loading"><div class="spinner"></div></div></div>
             </div>
-
-            <!-- News -->
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📰 News</div>
-                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px;font-size:11px" onclick="loadNews()">🔄</button>
-                </div>
+                <div class="card-header"><div class="card-title">📰 News</div></div>
                 <div id="newsList"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
-        <!-- ==================== ALERTS ==================== -->
         <div class="page" id="page-alerts">
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🌍 Earthquake Monitor</div>
-                    <span class="badge live">● LIVE</span>
-                </div>
+                <div class="card-header"><div class="card-title">🌍 Earthquakes</div><span class="badge live">● LIVE</span></div>
                 <div id="earthquakeAlerts"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">⛈️ Weather Alerts</div>
-                </div>
-                <div id="weatherAlerts">
-                    <div class="alert-card info">
-                        <div class="alert-header">
-                            <span class="alert-icon">✅</span>
-                            <span class="alert-title">All Clear</span>
-                        </div>
-                        <div class="alert-body">No severe weather in monitored areas.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📜 Alert History</div>
-                </div>
-                <div id="alertHistory"></div>
             </div>
         </div>
 
-        <!-- ==================== CHAT ==================== -->
         <div class="page" id="page-chat">
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">💬 Ask Sunday</div>
-                </div>
+                <div class="card-header"><div class="card-title">💬 Chat</div></div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="chat-message bot">
-                        <div class="chat-bubble">Hello! 👋 I'm Sunday. Ask me about health tips or anything!</div>
-                    </div>
+                    <div class="chat-message bot"><div class="chat-bubble">Hi! 👋 Try "weather tokyo" or "remind me in 30 mins to call"</div></div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" class="input-field" id="chatInput" placeholder="Type message..." onkeypress="if(event.key==='Enter')sendChat()">
+                    <input type="text" class="input-field" id="chatInput" placeholder="Type..." onkeypress="if(event.key==='Enter')sendChat()">
                     <button class="btn btn-primary" onclick="sendChat()">➤</button>
                 </div>
-                <div class="quick-btns">
-                    <button class="quick-btn" onclick="quickChat('headache')">🤕 Headache</button>
-                    <button class="quick-btn" onclick="quickChat('fever')">🤒 Fever</button>
-                    <button class="quick-btn" onclick="quickChat('stomach pain')">🤢 Stomach</button>
-                    <button class="quick-btn" onclick="quickChat('flu')">🤧 Flu</button>
+                <div class="command-list">
+                    <div class="command-title">📋 Commands</div>
+                    <div class="command-item"><code>weather [city]</code></div>
+                    <div class="command-item"><code>remind me in [time] to [task]</code></div>
+                    <div class="command-item"><code>find my car</code></div>
+                    <div class="command-item"><code>start journey</code></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <span class="toast-icon">✅</span>
-        <span class="toast-message">Success!</span>
+    <div class="map-fullscreen" id="mapFullscreen">
+        <div id="journeyMapFull"></div>
+        
+        <div class="map-top-bar">
+            <div class="map-status-row">
+                <div class="map-mode-icon" id="fsModeIcon">🚶</div>
+                <div class="map-mode-info">
+                    <div class="map-mode-title" id="fsModeTitle">Walking</div>
+                    <div class="map-street" id="fsStreet">Detecting location...</div>
+                </div>
+                <button class="map-close-btn" onclick="closeFullscreenMap()">✕</button>
+            </div>
+            <div class="map-live-stats" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="map-stat"><div class="value" id="fsDistance">0.0</div><div class="label">km</div></div>
+                <div class="map-stat"><div class="value" id="fsSpeed">0</div><div class="label">km/h</div></div>
+                <div class="map-stat"><div class="value" id="fsTime">0</div><div class="label">min</div></div>
+                <div class="map-stat"><div class="value" id="fsPace">--</div><div class="label">Pace</div></div>
+                <div class="map-stat"><div class="value" id="fsAlt">0</div><div class="label">Alt (m)</div></div>
+                <div class="map-stat"><div class="value" id="fsCalories">0</div><div class="label">kcal</div></div>
+            </div>
+        </div>
+
+        <div class="map-bottom-bar">
+            <div class="map-duration">
+                <div class="map-duration-label">Duration</div>
+                <div class="map-duration-time" id="fsDuration">00:00</div>
+            </div>
+            <div class="map-controls">
+                <button class="map-btn" onclick="toggleTimelinePanel()">📋</button>
+                <button class="map-btn" onclick="document.getElementById('journeyPhotoInput').click()">📷</button>
+                <button class="map-btn map-btn-end" onclick="endJourney()">🏁</button>
+                <button class="map-btn" onclick="centerMapOnUser()">📍</button>
+                
+                <input type="file" id="journeyPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="addJourneyPhoto(event)">
+            </div>
+        </div>
+
+        <div class="timeline-panel" id="timelinePanel">
+            <div class="timeline-header">
+                <h3>📜 Timeline</h3>
+                <button class="timeline-close" onclick="toggleTimelinePanel()">×</button>
+            </div>
+            <div class="timeline-content">
+                <div class="timeline" id="fsTimeline"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span class="toast-icon">✅</span><span class="toast-message">Success!</span></div>
+
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📜 Journey Details</div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="historyModalBody"></div>
+        </div>
     </div>
 
     <script>
-        // ==================== APP STATE ====================
+        // ==================== STATE ====================
         const APP = {
             journey: null,
             watchId: null,
-            journeyMap: null,
-            journeyPath: [],
-            journeyMarkers: [],
+            mapSmall: null,
+            mapFull: null,
+            markerSmall: null,
+            markerFull: null,
+            pathSmall: null,
+            pathFull: null,
+            pathCoords: [],
             parkingMap: null,
             reminders: [],
             parking: null,
             customPlaces: {},
             journeyHistory: [],
-            alerts: [],
-            earthquakeCheckInterval: null
+            pendingPhoto: null,
+            timerInterval: null,
+            isFullscreen: false
         };
 
-        // ==================== LOCATIONS ====================
-        const VIP_LOCATIONS = {
+        const LOCATIONS = {
             'Johor Jaya': { lat: 1.5360, lon: 103.7930 },
-            'Iskandar Puteri': { lat: 1.4190, lon: 103.6350 },
-            'Ulu Tiram': { lat: 1.5973, lon: 103.8205 }
-        };
-
-        const GLOBAL_LOCATIONS = {
             'Singapore': { lat: 1.3521, lon: 103.8198 },
             'Tokyo': { lat: 35.6895, lon: 139.6917 },
-            'London': { lat: 51.5074, lon: -0.1278 },
-            'Dubai': { lat: 25.2769, lon: 55.2962 },
-            'Sydney': { lat: -33.8688, lon: 151.2093 },
-            'Seoul': { lat: 37.5665, lon: 126.9780 }
+            'London': { lat: 51.5074, lon: -0.1278 }
         };
 
-        const ALL_LOCATIONS = { ...VIP_LOCATIONS, ...GLOBAL_LOCATIONS };
-
-        // ==================== CURRENCIES ====================
         const CURRENCIES = [
-            { code: 'USD', name: 'US Dollar', flag: '🇺🇸' },
-            { code: 'SGD', name: 'Singapore Dollar', flag: '🇸🇬' },
-            { code: 'EUR', name: 'Euro', flag: '🇪🇺' },
-            { code: 'GBP', name: 'British Pound', flag: '🇬🇧' },
-            { code: 'JPY', name: 'Japanese Yen', flag: '🇯🇵' },
-            { code: 'CNY', name: 'Chinese Yuan', flag: '🇨🇳' },
-            { code: 'KRW', name: 'Korean Won', flag: '🇰🇷' },
-            { code: 'AUD', name: 'Australian Dollar', flag: '🇦🇺' },
-            { code: 'THB', name: 'Thai Baht', flag: '🇹🇭' },
-            { code: 'IDR', name: 'Indonesian Rupiah', flag: '🇮🇩' },
-            { code: 'INR', name: 'Indian Rupee', flag: '🇮🇳' },
-            { code: 'PHP', name: 'Philippine Peso', flag: '🇵🇭' },
-            { code: 'VND', name: 'Vietnamese Dong', flag: '🇻🇳' },
-            { code: 'AED', name: 'UAE Dirham', flag: '🇦🇪' },
-            { code: 'SAR', name: 'Saudi Riyal', flag: '🇸🇦' },
-            { code: 'CHF', name: 'Swiss Franc', flag: '🇨🇭' },
-            { code: 'CAD', name: 'Canadian Dollar', flag: '🇨🇦' },
-            { code: 'NZD', name: 'New Zealand Dollar', flag: '🇳🇿' },
-            { code: 'HKD', name: 'Hong Kong Dollar', flag: '🇭🇰' },
-            { code: 'TWD', name: 'Taiwan Dollar', flag: '🇹🇼' }
+            { code: 'USD', flag: '🇺🇸' }, { code: 'SGD', flag: '🇸🇬' },
+            { code: 'EUR', flag: '🇪🇺' }, { code: 'GBP', flag: '🇬🇧' },
+            { code: 'JPY', flag: '🇯🇵' }, { code: 'CNY', flag: '🇨🇳' },
+            { code: 'KRW', flag: '🇰🇷' }, { code: 'THB', flag: '🇹🇭' }
         ];
 
-        // ==================== MEDICAL DATABASE ====================
-        const MEDICAL_DB = {
-            stomach: {
-                keywords: ['stomach', 'gastric', 'tummy', 'nausea', 'vomit'],
-                reply: '🤢 <b>Stomach Care:</b><br>1. Sip warm ginger tea<br>2. Avoid spicy/oily food<br>3. Rest upright<br>4. Try peppermint tea<br><br>⚠️ See doctor if pain persists 24+ hours'
-            },
-            fever: {
-                keywords: ['fever', 'hot', 'temperature', 'chills'],
-                reply: '🤒 <b>Fever Care:</b><br>1. Drink lots of water<br>2. Cool towel on forehead<br>3. Take Paracetamol if needed<br>4. Rest well<br><br>⚠️ See doctor if fever > 39°C'
-            },
-            headache: {
-                keywords: ['headache', 'migraine', 'head', 'dizzy'],
-                reply: '🧠 <b>Headache Relief:</b><br>1. Drink water<br>2. Rest in dark room<br>3. Cold compress<br>4. Gentle massage<br><br>⚠️ See doctor if frequent'
-            },
-            flu: {
-                keywords: ['flu', 'cold', 'sneeze', 'cough', 'runny'],
-                reply: '🤧 <b>Flu Care:</b><br>1. Rest and stay warm<br>2. Warm soup and tea<br>3. Vitamin C<br>4. Honey for throat<br><br>⚠️ See doctor if worsens'
-            }
+        const MEDICAL = {
+            stomach: { kw: ['stomach', 'gastric'], reply: '🤢 Ginger tea, avoid spicy food, rest upright.' },
+            fever: { kw: ['fever', 'hot'], reply: '🤒 Drink water, cool towel, Paracetamol.' },
+            headache: { kw: ['headache', 'head'], reply: '🧠 Drink water, dark room, cold compress.' },
+            flu: { kw: ['flu', 'cold', 'cough'], reply: '🤧 Rest, warm soup, Vitamin C.' }
         };
 
-        // ==================== INITIALIZATION ====================
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            initNavigation();
-            updateClock();
-            setInterval(updateClock, 1000);
+            loadStorage();
+            initNav();
+            updateClock(); setInterval(updateClock, 1000);
             loadWeather();
             loadNews();
-            loadCurrencyRates();
+            loadCurrency();
             loadEarthquakes();
             renderReminders();
             renderParking();
-            renderJourneyHistory();
-            checkReminders();
+            renderHistory();
+            renderPlaces();
             setInterval(checkReminders, 10000);
-            setInterval(loadEarthquakes, 300000); // Check earthquakes every 5 mins
-            
-            // Request notification permission
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
-            }
+            setInterval(loadEarthquakes, 300000);
+            if ('Notification' in window) Notification.requestPermission();
         });
 
-        function loadFromStorage() {
+        function loadStorage() {
             try {
-                APP.reminders = JSON.parse(localStorage.getItem('sunday_reminders') || '[]');
-                APP.parking = JSON.parse(localStorage.getItem('sunday_parking') || 'null');
-                APP.customPlaces = JSON.parse(localStorage.getItem('sunday_places') || '{}');
-                APP.journeyHistory = JSON.parse(localStorage.getItem('sunday_history') || '[]');
-                APP.alerts = JSON.parse(localStorage.getItem('sunday_alerts') || '[]');
-            } catch (e) { console.log('Storage error:', e); }
+                APP.reminders = JSON.parse(localStorage.getItem('sun_rem') || '[]');
+                APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null');
+                APP.customPlaces = JSON.parse(localStorage.getItem('sun_places') || '{}');
+                APP.journeyHistory = JSON.parse(localStorage.getItem('sun_hist') || '[]');
+            } catch(e) {}
         }
 
-        function saveToStorage() {
-            localStorage.setItem('sunday_reminders', JSON.stringify(APP.reminders));
-            localStorage.setItem('sunday_parking', JSON.stringify(APP.parking));
-            localStorage.setItem('sunday_places', JSON.stringify(APP.customPlaces));
-            localStorage.setItem('sunday_history', JSON.stringify(APP.journeyHistory));
-            localStorage.setItem('sunday_alerts', JSON.stringify(APP.alerts));
+        function saveStorage() {
+            localStorage.setItem('sun_rem', JSON.stringify(APP.reminders));
+            localStorage.setItem('sun_park', JSON.stringify(APP.parking));
+            localStorage.setItem('sun_places', JSON.stringify(APP.customPlaces));
+            localStorage.setItem('sun_hist', JSON.stringify(APP.journeyHistory));
         }
 
-        // ==================== NAVIGATION ====================
-        function initNavigation() {
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', () => switchPage(tab.dataset.page));
-            });
+        function initNav() {
+            document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+                t.classList.add('active');
+                document.getElementById('page-' + t.dataset.page).classList.add('active');
+            }));
         }
 
-        function switchPage(pageName) {
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.page === pageName);
-            });
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.toggle('active', page.id === `page-${pageName}`);
-            });
-        }
-
-        // ==================== CLOCK ====================
         function updateClock() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -1106,590 +1036,632 @@
 
         // ==================== WEATHER ====================
         async function loadWeather() {
-            const mainLoc = Object.entries(VIP_LOCATIONS)[0];
-            await updateWeather(mainLoc[0], mainLoc[1].lat, mainLoc[1].lon);
-            loadMonitoredLocations();
+            await updateWeather('Johor Jaya', 1.536, 103.793);
+            const container = document.getElementById('monitoredLocations');
+            container.innerHTML = '';
+            for (const [n, c] of Object.entries(LOCATIONS)) {
+                try {
+                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json();
+                    const cond = getWeatherCond(d.current.weather_code);
+                    container.innerHTML += `<div class="location-card" onclick="updateWeather('${n}',${c.lat},${c.lon})"><div class="location-info"><span style="font-size:20px">${cond.icon}</span><span class="location-name">${n}</span></div><span class="location-temp">${Math.round(d.current.temperature_2m)}°</span></div>`;
+                } catch(e) {}
+            }
         }
 
         async function updateWeather(name, lat, lon) {
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability&timezone=auto`;
-                const res = await fetch(url);
-                const data = await res.json();
-                
-                const temp = Math.round(data.current.temperature_2m);
-                const code = data.current.weather_code;
-                const wind = Math.round(data.current.wind_speed_10m);
-                const humidity = data.current.relative_humidity_2m;
-                const rainProb = data.hourly.precipitation_probability[0] || 0;
-                const cond = getWeatherCondition(code);
-                
+                const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`)).json();
+                const temp = Math.round(d.current.temperature_2m);
+                const cond = getWeatherCond(d.current.weather_code);
                 document.getElementById('weatherLocation').textContent = name;
                 document.getElementById('weatherTemp').textContent = temp;
                 document.getElementById('weatherIcon').textContent = cond.icon;
                 document.getElementById('weatherCondition').textContent = cond.text;
-                document.getElementById('weatherWind').textContent = wind;
-                document.getElementById('weatherHumidity').textContent = humidity;
-                document.getElementById('weatherRain').textContent = rainProb;
+                document.getElementById('weatherWind').textContent = Math.round(d.current.wind_speed_10m);
+                document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m;
+                document.getElementById('weatherRain').textContent = d.hourly.precipitation_probability[0] || 0;
                 document.getElementById('dashTemp').textContent = temp + '°';
-                document.getElementById('dashWeather').innerHTML = `
-                    <div class="weather-icon">${cond.icon}</div>
-                    <div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name} - ${cond.text}</div></div>
-                `;
-            } catch (e) { console.log('Weather error:', e); }
+                document.getElementById('dashWeather').innerHTML = `<div class="weather-icon">${cond.icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name}</div></div>`;
+                return `${cond.icon} ${name}: ${temp}°C`;
+            } catch(e) { return 'Error'; }
         }
 
-        function getWeatherCondition(code) {
-            if (code === 0) return { icon: '☀️', text: 'Clear Sky' };
-            if (code <= 3) return { icon: '⛅', text: 'Partly Cloudy' };
-            if (code >= 95) return { icon: '⛈️', text: 'Thunderstorm' };
-            if (code >= 80) return { icon: '🌦️', text: 'Rain Showers' };
-            if (code >= 71) return { icon: '❄️', text: 'Snow' };
+        function getWeatherCond(code) {
+            if (code === 0) return { icon: '☀️', text: 'Clear' };
+            if (code <= 3) return { icon: '⛅', text: 'Cloudy' };
+            if (code >= 95) return { icon: '⛈️', text: 'Storm' };
             if (code >= 61) return { icon: '🌧️', text: 'Rain' };
-            if (code >= 51) return { icon: '🌦️', text: 'Drizzle' };
             return { icon: '☁️', text: 'Cloudy' };
         }
 
-        async function loadMonitoredLocations() {
-            const container = document.getElementById('monitoredLocations');
-            container.innerHTML = '';
-            for (const [name, coords] of Object.entries(ALL_LOCATIONS)) {
-                try {
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`;
-                    const res = await fetch(url);
-                    const data = await res.json();
-                    const temp = Math.round(data.current.temperature_2m);
-                    const cond = getWeatherCondition(data.current.weather_code);
-                    container.innerHTML += `
-                        <div class="location-card" onclick="updateWeather('${name}', ${coords.lat}, ${coords.lon})">
-                            <div class="location-info"><span style="font-size:20px">${cond.icon}</span><span class="location-name">${name}</span></div>
-                            <span class="location-temp">${temp}°</span>
-                        </div>
-                    `;
-                } catch (e) {}
-            }
-        }
-
-        document.getElementById('weatherSearch')?.addEventListener('keypress', async (e) => {
-            if (e.key === 'Enter') {
-                const query = e.target.value.trim();
-                if (query) {
-                    try {
-                        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en`;
-                        const res = await fetch(url);
-                        const data = await res.json();
-                        if (data.results?.length) {
-                            const r = data.results[0];
-                            await updateWeather(r.name, r.latitude, r.longitude);
-                            showToast(`Weather: ${r.name}`);
-                        } else { showToast('City not found', true); }
-                    } catch (e) { showToast('Search failed', true); }
-                }
+        document.getElementById('weatherSearch')?.addEventListener('keypress', async e => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                const r = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(e.target.value)}&count=1`)).json();
+                if (r.results?.length) await updateWeather(r.results[0].name, r.results[0].latitude, r.results[0].longitude);
             }
         });
 
-        // ==================== CURRENCY RATES ====================
-        async function loadCurrencyRates() {
-            const container = document.getElementById('currencyRates');
-            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            
-            try {
-                const res = await fetch('https://api.exchangerate-api.com/v4/latest/MYR');
-                const data = await res.json();
-                const rates = data.rates;
-                
-                container.innerHTML = CURRENCIES.map(c => {
-                    const rate = rates[c.code];
-                    const myrRate = rate ? (1 / rate).toFixed(4) : '--';
-                    return `
-                        <div class="rate-card">
-                            <div class="rate-pair">
-                                <span class="rate-flag">${c.flag}</span>
-                                <div class="rate-info">
-                                    <span class="rate-code">${c.code}/MYR</span>
-                                    <span class="rate-name">${c.name}</span>
-                                </div>
-                            </div>
-                            <span class="rate-value">${myrRate}</span>
-                        </div>
-                    `;
-                }).join('');
-            } catch (e) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load rates</div></div>';
-            }
-        }
-
-        // ==================== NEWS ====================
-        async function loadNews() {
-            const dashNews = document.getElementById('dashNews');
-            const newsList = document.getElementById('newsList');
-            dashNews.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            newsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            
-            try {
-                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.thestar.com.my/rss/news/nation');
-                const data = await res.json();
-                let news = data.items?.slice(0, 5) || [];
-                
-                if (news.length === 0) {
-                    news = [{ title: 'Weather monitoring active', link: '#' }, { title: 'Stay safe and hydrated', link: '#' }];
-                }
-                
-                dashNews.innerHTML = news.slice(0, 2).map(n => `
-                    <div class="news-item" onclick="window.open('${n.link}', '_blank')">
-                        <span class="news-source">NEWS</span>
-                        <div class="news-title">${n.title}</div>
-                    </div>
-                `).join('');
-                
-                newsList.innerHTML = news.map(n => `
-                    <div class="news-item" onclick="window.open('${n.link}', '_blank')">
-                        <span class="news-source">NEWS</span>
-                        <div class="news-title">${n.title}</div>
-                    </div>
-                `).join('');
-            } catch (e) {
-                dashNews.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load news</div></div>';
-                newsList.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load news</div></div>';
-            }
-        }
-
-        // ==================== EARTHQUAKE MONITORING ====================
-        async function loadEarthquakes() {
-            const container = document.getElementById('earthquakeAlerts');
-            
-            try {
-                const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson');
-                const data = await res.json();
-                const quakes = data.features.slice(0, 10);
-                
-                document.getElementById('dashAlerts').textContent = quakes.length;
-                
-                if (quakes.length === 0) {
-                    container.innerHTML = '<div class="alert-card info"><div class="alert-header"><span class="alert-icon">✅</span><span class="alert-title">No Recent Earthquakes</span></div><div class="alert-body">No significant earthquakes in the last 24 hours.</div></div>';
-                    return;
-                }
-                
-                container.innerHTML = quakes.map(q => {
-                    const mag = q.properties.mag;
-                    const place = q.properties.place;
-                    const time = new Date(q.properties.time).toLocaleString();
-                    const alertClass = mag >= 6 ? 'danger' : mag >= 5 ? 'warning' : 'info';
-                    const icon = mag >= 6 ? '🚨' : mag >= 5 ? '⚠️' : '🌍';
-                    
-                    return `
-                        <div class="alert-card ${alertClass}">
-                            <div class="alert-header">
-                                <span class="alert-icon">${icon}</span>
-                                <span class="alert-title">M${mag.toFixed(1)} Earthquake</span>
-                                <span class="alert-time">${time}</span>
-                            </div>
-                            <div class="alert-body">📍 ${place}</div>
-                        </div>
-                    `;
-                }).join('');
-                
-                // Update dashboard preview
-                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => {
-                    const mag = q.properties.mag;
-                    const alertClass = mag >= 6 ? 'danger' : mag >= 5 ? 'warning' : 'info';
-                    return `
-                        <div class="alert-card ${alertClass}">
-                            <div class="alert-header">
-                                <span class="alert-icon">${mag >= 6 ? '🚨' : '🌍'}</span>
-                                <span class="alert-title">M${mag.toFixed(1)} - ${q.properties.place?.split(',')[0] || 'Unknown'}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('') || '<div class="alert-card info"><div class="alert-header"><span class="alert-icon">✅</span><span class="alert-title">All Clear</span></div></div>';
-                
-            } catch (e) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load earthquake data</div></div>';
-            }
-        }
-
-        // ==================== JOURNEY TRACKING WITH MAP ====================
+        // ==================== JOURNEY (ENHANCED) ====================
         function startJourney() {
-            if (!navigator.geolocation) { showToast('GPS not supported', true); return; }
+            if (!navigator.geolocation) return showToast('GPS not supported', true);
 
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
+            navigator.geolocation.getCurrentPosition(pos => {
+                const lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy;
+                
+                APP.journey = {
+                    startTime: Date.now(),
+                    lastLat: lat, lastLon: lon, lastTime: Date.now(),
+                    totalKm: 0, calories: 0, speed: 0, mode: 'walking',
+                    currentAlt: pos.coords.altitude || 0,
+                    overspeedWarning: false,
+                    waypoints: [{ name: '🚩 Start', lat, lon, time: Date.now(), type: 'start' }],
+                    currentStop: null
+                };
+                
+                APP.pathCoords = [[lat, lon]];
+                
+                // Show active card
+                document.getElementById('startJourneyCard').style.display = 'none';
+                document.getElementById('activeJourneyCard').style.display = 'block';
+                
+                // Init small map
+                setTimeout(() => {
+                    APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false, attributionControl: false }).setView([lat, lon], 17);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapSmall);
                     
-                    APP.journey = {
-                        startTime: Date.now(),
-                        startLat: lat, startLon: lon,
-                        lastLat: lat, lastLon: lon,
-                        totalKm: 0,
-                        waypoints: [{ name: 'Start', lat, lon, time: Date.now(), type: 'start' }],
-                        currentStop: null
-                    };
-                    
-                    APP.journeyPath = [[lat, lon]];
-                    
-                    // Initialize map
-                    document.getElementById('activeJourneyCard').style.display = 'block';
-                    document.getElementById('startJourneyCard').style.display = 'none';
-                    
-                    setTimeout(() => {
-                        APP.journeyMap = L.map('journeyMap').setView([lat, lon], 15);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '© OpenStreetMap'
-                        }).addTo(APP.journeyMap);
-                        
-                        // Add start marker
-                        L.marker([lat, lon]).addTo(APP.journeyMap).bindPopup('🚩 Start').openPopup();
-                        
-                        // Add path line
-                        APP.journeyLine = L.polyline(APP.journeyPath, { color: '#00d4ff', weight: 4 }).addTo(APP.journeyMap);
-                    }, 100);
-                    
-                    // Start tracking
-                    APP.watchId = navigator.geolocation.watchPosition(
-                        trackMovement,
-                        (err) => { document.getElementById('gpsText').textContent = 'GPS Error'; },
-                        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
-                    );
-                    
-                    document.getElementById('gpsDot').classList.add('active');
-                    document.getElementById('gpsText').textContent = 'GPS Tracking';
-                    renderJourneyTimeline();
-                    showToast('Journey started! 🚗');
-                },
-                (err) => showToast('GPS Error: ' + err.message, true),
-                { enableHighAccuracy: true }
-            );
+                    const icon = L.divIcon({ className: '', html: '<div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(66,133,244,0.8)"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
+                    APP.markerSmall = L.marker([lat, lon], { icon }).addTo(APP.mapSmall);
+                    APP.pathSmall = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 4 }).addTo(APP.mapSmall);
+                    L.marker([lat, lon]).addTo(APP.mapSmall).bindPopup('🚩 Start');
+                }, 100);
+                
+                // Start GPS watch
+                APP.watchId = navigator.geolocation.watchPosition(trackPosition, err => updateGPSStatus('Error', 'bad'), {
+                    enableHighAccuracy: true,
+                    maximumAge: 2000,
+                    timeout: 10000
+                });
+                
+                // Timer
+                APP.timerInterval = setInterval(updateTimer, 1000);
+                
+                updateGPSStatus(acc);
+                getStreetName(lat, lon);
+                showToast('Journey started! 🚗');
+            }, err => showToast('GPS Error: ' + err.message, true), { enableHighAccuracy: true, timeout: 15000 });
         }
 
-        function trackMovement(position) {
+        // ==================== CORE TRACKING LOGIC (ENHANCED) ====================
+        function trackPosition(pos) {
             if (!APP.journey) return;
             
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+            const lat = pos.coords.latitude, lon = pos.coords.longitude;
+            const acc = pos.coords.accuracy;
+            const alt = pos.coords.altitude || 0;
             const now = Date.now();
-            const dist = calculateDistance(APP.journey.lastLat, APP.journey.lastLon, lat, lon);
+
+            const dist = calcDist(APP.journey.lastLat, APP.journey.lastLon, lat, lon);
+            const timeDiff = (now - APP.journey.lastTime) / 1000 / 3600; // hours
             
-            document.getElementById('gpsText').textContent = `GPS Active (±${Math.round(position.coords.accuracy)}m)`;
+            let speed = timeDiff > 0 ? dist / timeDiff : 0;
+            // Simple anti-drift: ignore impossible speeds (>300km/h)
+            if (speed > 300) speed = APP.journey.speed;
+
+            APP.journey.speed = speed;
+            APP.journey.currentAlt = alt;
+
+            // Speeding Alert (>110km/h)
+            if (speed > 110) {
+                if (!APP.journey.overspeedWarning) {
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                    showToast('⚠️ Speeding Alert! > 110km/h', true);
+                    APP.journey.overspeedWarning = true;
+                }
+            } else {
+                APP.journey.overspeedWarning = false;
+            }
+
+            const prevMode = APP.journey.mode;
+            APP.journey.mode = speed > 15 ? 'driving' : 'walking';
             
-            // Update map
-            if (APP.journeyMap) {
-                APP.journeyPath.push([lat, lon]);
-                APP.journeyLine.setLatLngs(APP.journeyPath);
-                APP.journeyMap.panTo([lat, lon]);
+            updateGPSStatus(acc);
+            
+            APP.pathCoords.push([lat, lon]);
+            
+            if (APP.mapSmall && APP.markerSmall) {
+                APP.markerSmall.setLatLng([lat, lon]);
+                APP.pathSmall.setLatLngs(APP.pathCoords);
+                APP.mapSmall.panTo([lat, lon]);
             }
             
-            if (dist > 0.02) { // Moving
+            if (APP.isFullscreen && APP.mapFull && APP.markerFull) {
+                APP.markerFull.setLatLng([lat, lon]);
+                APP.pathFull.setLatLngs(APP.pathCoords);
+                APP.mapFull.panTo([lat, lon]);
+            }
+            
+            if (dist > 0.005) { // Threshold for movement
+                // Mode Switch
+                if (prevMode !== APP.journey.mode && APP.journey.totalKm > 0.05) {
+                    APP.journey.waypoints.push({ name: APP.journey.mode === 'driving' ? '🚗 Driving Mode' : '🚶 Walking Mode', lat, lon, time: now, type: 'mode', mode: APP.journey.mode });
+                }
+                
+                // End Stop
                 if (APP.journey.currentStop) {
-                    const stopDuration = Math.round((now - APP.journey.currentStop.startTime) / 60000);
-                    if (stopDuration >= 2) {
-                        APP.journey.waypoints.push({
-                            name: APP.journey.currentStop.name,
-                            lat: APP.journey.currentStop.lat,
-                            lon: APP.journey.currentStop.lon,
-                            startTime: APP.journey.currentStop.startTime,
-                            endTime: now,
-                            duration: stopDuration,
-                            type: 'stop'
-                        });
-                        
-                        // Add marker on map
-                        if (APP.journeyMap) {
-                            L.marker([APP.journey.currentStop.lat, APP.journey.currentStop.lon])
-                                .addTo(APP.journeyMap)
-                                .bindPopup(`📍 Stop (${stopDuration} mins)`);
-                        }
+                    const dur = Math.round((now - APP.journey.currentStop.startTime) / 60000);
+                    if (dur >= 2) {
+                        APP.journey.waypoints.push({ name: `⏸️ Stopped ${dur}min`, lat: APP.journey.currentStop.lat, lon: APP.journey.currentStop.lon, duration: dur, type: 'stop', time: APP.journey.currentStop.startTime });
+                        if(APP.mapFull) L.marker([APP.journey.currentStop.lat, APP.journey.currentStop.lon]).addTo(APP.mapFull).bindPopup(`Stopped ${dur} min`);
                     }
                     APP.journey.currentStop = null;
-                    showToast('Moving again... ▶️');
                 }
+                
                 APP.journey.totalKm += dist;
-                APP.journey.lastLat = lat;
-                APP.journey.lastLon = lon;
-            } else {
-                if (!APP.journey.currentStop) {
-                    APP.journey.currentStop = {
-                        name: `Stop ${APP.journey.waypoints.filter(w => w.type === 'stop').length + 1}`,
-                        lat, lon, startTime: now
-                    };
-                    showToast(`Stopped at new location ⏸️`);
-                }
+                if (APP.journey.mode === 'walking') APP.journey.calories += dist * 65;
+                APP.journey.lastLat = lat; APP.journey.lastLon = lon; APP.journey.lastTime = now;
+                
+                getStreetName(lat, lon);
+            } else if (!APP.journey.currentStop && APP.journey.totalKm > 0.01) {
+                APP.journey.currentStop = { lat, lon, startTime: now };
             }
             
-            updateJourneyStats();
-            renderJourneyTimeline();
+            updateJourneyUI();
         }
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2)**2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2)**2;
+        function updateJourneyUI() {
+            if (!APP.journey) return;
+            const j = APP.journey;
+            
+            // Pace Calc
+            let pace = "--";
+            if (j.speed > 1) {
+                const paceMin = 60 / j.speed;
+                const pm = Math.floor(paceMin);
+                const ps = Math.round((paceMin - pm) * 60);
+                pace = `${pm}'${ps}"`;
+            }
+
+            // Small Card
+            document.getElementById('jDistance').textContent = j.totalKm.toFixed(2);
+            document.getElementById('jSpeed').textContent = j.speed.toFixed(1);
+            document.getElementById('jCalories').textContent = Math.round(j.calories);
+            document.getElementById('jAlt').textContent = Math.round(j.currentAlt || 0);
+            document.getElementById('jPace').textContent = pace;
+            document.getElementById('journeyModeText').textContent = j.mode === 'driving' ? '🚗 Driving' : '🚶 Walking';
+            
+            // Fullscreen
+            document.getElementById('fsDistance').textContent = j.totalKm.toFixed(2);
+            document.getElementById('fsSpeed').textContent = j.speed.toFixed(1);
+            document.getElementById('fsCalories').textContent = Math.round(j.calories);
+            document.getElementById('fsAlt').textContent = Math.round(j.currentAlt || 0);
+            document.getElementById('fsPace').textContent = pace;
+            document.getElementById('fsModeIcon').textContent = j.mode === 'driving' ? '🚗' : '🚶';
+            document.getElementById('fsModeTitle').textContent = j.mode === 'driving' ? 'Driving' : 'Walking';
+            
+            renderTimeline();
+        }
+
+        function updateTimer() {
+            if (!APP.journey) return;
+            const secs = Math.floor((Date.now() - APP.journey.startTime) / 1000);
+            const mins = Math.floor(secs / 60), s = secs % 60;
+            const str = `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('jTime').textContent = mins;
+            document.getElementById('fsTime').textContent = mins;
+            document.getElementById('fsDuration').textContent = str;
+        }
+
+        function updateGPSStatus(acc, status) {
+            let quality = 'good', text = 'GPS: Good';
+            if (typeof acc === 'number') {
+                if (acc <= 10) { quality = 'excellent'; text = `GPS: Excellent (±${Math.round(acc)}m)`; }
+                else if (acc <= 30) { quality = 'good'; text = `GPS: Good (±${Math.round(acc)}m)`; }
+                else if (acc <= 100) { quality = 'poor'; text = `GPS: Poor (±${Math.round(acc)}m)`; }
+                else { quality = 'bad'; text = `GPS: Weak (±${Math.round(acc)}m)`; }
+            } else if (status === 'bad') { quality = 'bad'; text = 'GPS: Error'; }
+            
+            document.getElementById('gpsAccuracyDot').className = 'gps-accuracy-dot ' + quality;
+            document.getElementById('gpsAccuracyText').textContent = text;
+        }
+
+        async function getStreetName(lat, lon) {
+            try {
+                const d = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18`)).json();
+                const street = d.address?.road || d.address?.suburb || 'Unknown';
+                document.getElementById('fsStreet').textContent = street;
+            } catch(e) {}
+        }
+
+        function calcDist(lat1, lon1, lat2, lon2) {
+            const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
-        function updateJourneyStats() {
+        function renderTimeline() {
             if (!APP.journey) return;
-            const mins = Math.round((Date.now() - APP.journey.startTime) / 60000);
-            const stops = APP.journey.waypoints.filter(w => w.type === 'stop').length + (APP.journey.currentStop ? 1 : 0);
-            document.getElementById('journeyDistance').textContent = APP.journey.totalKm.toFixed(1);
-            document.getElementById('journeyTime').textContent = mins;
-            document.getElementById('journeyStops').textContent = stops;
+            const html = APP.journey.waypoints.map((w, i) => `
+                <div class="timeline-item">
+                    <div class="timeline-dot ${w.mode || ''} ${i === APP.journey.waypoints.length - 1 ? 'active' : ''}"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-title">${w.name}</div>
+                        <div class="timeline-time">${new Date(w.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+                        ${w.duration ? `<span class="timeline-badge resting">${w.duration} min</span>` : ''}
+                        ${w.photo ? `<img src="${w.photo}" style="width:100%;margin-top:5px;border-radius:8px">` : ''}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('timelinePreview').innerHTML = `<div class="timeline">${html}</div>`;
+            document.getElementById('fsTimeline').innerHTML = html;
         }
 
-        function renderJourneyTimeline() {
+        // ==================== NEW FEATURES ====================
+        function addJourneyPhoto(e) {
             if (!APP.journey) return;
-            const container = document.getElementById('journeyTimeline');
-            let html = '';
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const photoData = ev.target.result;
+                const lat = APP.journey.lastLat;
+                const lon = APP.journey.lastLon;
+
+                APP.journey.waypoints.push({
+                    name: '📸 Photo',
+                    lat: lat, lon: lon,
+                    time: Date.now(),
+                    type: 'photo',
+                    photo: photoData
+                });
+
+                if (APP.mapFull) {
+                    const photoIcon = L.divIcon({
+                        className: 'custom-marker-photo',
+                        html: `<div style="width:30px;height:30px;background:url(${photoData});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`,
+                        iconSize: [30, 30]
+                    });
+                    L.marker([lat, lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${photoData}" style="width:100px;border-radius:8px">`);
+                }
+
+                renderTimeline();
+                showToast('Photo added! 📸');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function exportGPX(journeyId) {
+            const journey = APP.journeyHistory.find(j => j.id === journeyId);
+            if (!journey) return showToast('Error finding journey', true);
+
+            let gpx = `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SundayApp"><metadata><name>Journey ${new Date(journey.date).toLocaleDateString()}</name></metadata><trk><name>Sunday Track</name><trkseg>`;
             
-            APP.journey.waypoints.forEach((wp, i) => {
-                const isLast = i === APP.journey.waypoints.length - 1 && !APP.journey.currentStop;
-                const timeStr = new Date(wp.time || wp.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                html += `
-                    <div class="timeline-item">
-                        <div class="timeline-dot ${isLast ? 'active' : ''}"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">${wp.type === 'start' ? '🚩' : '📍'} ${wp.name}</div>
-                            <div class="timeline-time">${timeStr}${wp.endTime ? ' - ' + new Date(wp.endTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : ''}</div>
-                            ${wp.duration ? `<span class="timeline-duration">${wp.duration} mins</span>` : ''}
-                        </div>
-                    </div>
-                `;
+            const points = journey.pathCoords || journey.waypoints; 
+            points.forEach(p => {
+                const lat = p.lat || p[0];
+                const lon = p.lon || p[1];
+                gpx += `<trkpt lat="${lat}" lon="${lon}"><time>${new Date(p.time || journey.id).toISOString()}</time></trkpt>`;
             });
+
+            gpx += `</trkseg></trk></gpx>`;
+
+            const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `journey_${journeyId}.gpx`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('GPX Downloaded! 📂');
+        }
+
+        function openFullscreenMap() {
+            if (!APP.journey) return;
+            APP.isFullscreen = true;
+            document.getElementById('mapFullscreen').classList.add('active');
             
-            if (APP.journey.currentStop) {
-                const mins = Math.round((Date.now() - APP.journey.currentStop.startTime) / 60000);
-                html += `
-                    <div class="timeline-item">
-                        <div class="timeline-dot active"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">📍 ${APP.journey.currentStop.name}</div>
-                            <div class="timeline-time">${new Date(APP.journey.currentStop.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - now</div>
-                            <span class="timeline-duration">${mins}+ mins</span>
-                        </div>
-                    </div>
-                `;
+            setTimeout(() => {
+                if (APP.mapFull) APP.mapFull.remove();
+                APP.mapFull = L.map('journeyMapFull', { zoomControl: false }).setView([APP.journey.lastLat, APP.journey.lastLon], 17);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapFull);
+                
+                const icon = L.divIcon({ className: '', html: '<div style="width:20px;height:20px;background:#4285F4;border:4px solid white;border-radius:50%;box-shadow:0 0 15px rgba(66,133,244,0.8)"></div>', iconSize: [20, 20], iconAnchor: [10, 10] });
+                APP.markerFull = L.marker([APP.journey.lastLat, APP.journey.lastLon], { icon }).addTo(APP.mapFull);
+                APP.pathFull = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 5 }).addTo(APP.mapFull);
+                
+                L.marker([APP.journey.waypoints[0].lat, APP.journey.waypoints[0].lon]).addTo(APP.mapFull).bindPopup('🚩 Start');
+                
+                APP.journey.waypoints.forEach(w => {
+                    if (w.type === 'stop') L.marker([w.lat, w.lon]).addTo(APP.mapFull).bindPopup(`⏸️ ${w.duration} min`);
+                    if (w.type === 'photo') {
+                        const photoIcon = L.divIcon({
+                            className: 'custom-marker-photo',
+                            html: `<div style="width:30px;height:30px;background:url(${w.photo});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`,
+                            iconSize: [30, 30]
+                        });
+                        L.marker([w.lat, w.lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${w.photo}" style="width:100px;border-radius:8px">`);
+                    }
+                });
+            }, 100);
+        }
+
+        function closeFullscreenMap() {
+            APP.isFullscreen = false;
+            document.getElementById('mapFullscreen').classList.remove('active');
+            document.getElementById('timelinePanel').classList.remove('show');
+        }
+
+        function centerMapOnUser() {
+            if (APP.journey && APP.mapFull) {
+                APP.mapFull.setView([APP.journey.lastLat, APP.journey.lastLon], 17);
             }
-            
-            container.innerHTML = html;
+        }
+
+        function toggleTimelinePanel() {
+            document.getElementById('timelinePanel').classList.toggle('show');
         }
 
         function endJourney() {
             if (!APP.journey) return;
             
-            if (APP.watchId) { navigator.geolocation.clearWatch(APP.watchId); APP.watchId = null; }
+            if (APP.watchId) navigator.geolocation.clearWatch(APP.watchId);
+            if (APP.timerInterval) clearInterval(APP.timerInterval);
             
-            const now = Date.now();
-            if (APP.journey.currentStop) {
-                const stopDuration = Math.round((now - APP.journey.currentStop.startTime) / 60000);
-                APP.journey.waypoints.push({
-                    name: APP.journey.currentStop.name,
-                    lat: APP.journey.currentStop.lat, lon: APP.journey.currentStop.lon,
-                    startTime: APP.journey.currentStop.startTime, endTime: now, duration: stopDuration, type: 'stop'
-                });
-            }
+            const j = APP.journey;
+            const totalMins = Math.round((Date.now() - j.startTime) / 60000);
+            const avgSpeed = totalMins > 0 ? (j.totalKm / (totalMins / 60)).toFixed(1) : 0;
             
-            const totalMins = Math.round((now - APP.journey.startTime) / 60000);
-            const totalKm = APP.journey.totalKm.toFixed(2);
-            const stops = APP.journey.waypoints.filter(w => w.type === 'stop').length;
+            APP.journeyHistory.unshift({
+                id: Date.now(),
+                date: new Date().toISOString(),
+                distance: parseFloat(j.totalKm.toFixed(2)),
+                duration: totalMins,
+                calories: Math.round(j.calories),
+                avgSpeed: parseFloat(avgSpeed),
+                mode: avgSpeed > 12 ? 'driving' : 'walking',
+                waypoints: j.waypoints,
+                pathCoords: APP.pathCoords, // Saving path for GPX
+                startLat: j.waypoints[0].lat, startLon: j.waypoints[0].lon,
+                endLat: j.lastLat, endLon: j.lastLon
+            });
             
-            let summary = `🏁 Journey Complete\n📅 ${new Date().toLocaleDateString()}\n📏 ${totalKm} km | ⏱️ ${totalMins} mins | 🛑 ${stops} stops`;
+            if (APP.journeyHistory.length > 30) APP.journeyHistory = APP.journeyHistory.slice(0, 30);
             
-            APP.journeyHistory.unshift({ date: new Date().toISOString(), summary, distance: totalKm, duration: totalMins, stops });
-            if (APP.journeyHistory.length > 20) APP.journeyHistory = APP.journeyHistory.slice(0, 20);
+            APP.parking = { type: 'gps', lat: j.lastLat, lon: j.lastLon, time: Date.now() };
+            saveStorage();
             
-            APP.parking = { type: 'gps', lat: APP.journey.lastLat, lon: APP.journey.lastLon, time: now };
-            saveToStorage();
-            
-            if (APP.journeyMap) { APP.journeyMap.remove(); APP.journeyMap = null; }
+            if (APP.mapSmall) { APP.mapSmall.remove(); APP.mapSmall = null; }
+            if (APP.mapFull) { APP.mapFull.remove(); APP.mapFull = null; }
             APP.journey = null;
-            APP.journeyPath = [];
+            APP.pathCoords = [];
+            APP.isFullscreen = false;
             
+            document.getElementById('mapFullscreen').classList.remove('active');
             document.getElementById('activeJourneyCard').style.display = 'none';
             document.getElementById('startJourneyCard').style.display = 'block';
-            document.getElementById('gpsDot').classList.remove('active');
-            document.getElementById('gpsText').textContent = 'GPS Ready';
-            document.getElementById('journeyDistance').textContent = '0.0';
-            document.getElementById('journeyTime').textContent = '0';
-            document.getElementById('journeyStops').textContent = '0';
             
-            renderJourneyHistory();
+            renderHistory();
             renderParking();
-            showToast(`Journey complete! ${totalKm}km 🏁`);
+            document.getElementById('dashJourneys').textContent = APP.journeyHistory.length;
+            
+            showToast(`Done! ${j.totalKm.toFixed(2)}km, ${Math.round(j.calories)}kcal 🏁`);
         }
 
-        function renderJourneyHistory() {
-            const container = document.getElementById('journeyHistory');
-            if (APP.journeyHistory.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>';
+        function renderHistory() {
+            const c = document.getElementById('journeyHistory');
+            document.getElementById('dashJourneys').textContent = APP.journeyHistory.length;
+            
+            if (!APP.journeyHistory.length) {
+                c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>';
                 return;
             }
-            container.innerHTML = APP.journeyHistory.slice(0, 5).map(j => `
-                <div class="alert-card info">
-                    <div class="alert-body">${j.summary.replace(/\n/g, '<br>')}</div>
+            
+            c.innerHTML = APP.journeyHistory.slice(0, 10).map(j => `
+                <div class="history-card" onclick="showHistoryDetail(${j.id})">
+                    <div class="history-header">
+                        <span class="history-date">${new Date(j.date).toLocaleDateString()}</span>
+                        <span class="history-mode ${j.mode}">${j.mode === 'driving' ? '🚗' : '🚶'}</span>
+                    </div>
+                    <div class="history-stats">
+                        <div class="history-stat">📏 <span>${j.distance}km</span></div>
+                        <div class="history-stat">⏱️ <span>${j.duration}min</span></div>
+                        <div class="history-stat">🔥 <span>${j.calories}kcal</span></div>
+                    </div>
                 </div>
             `).join('');
         }
 
+        function showHistoryDetail(id) {
+            const j = APP.journeyHistory.find(x => x.id === id);
+            if (!j) return;
+            document.getElementById('historyModalBody').innerHTML = `
+                <div class="fitness-grid">
+                    <div class="fitness-item"><div class="fitness-icon">${j.mode === 'driving' ? '🚗' : '🚶'}</div><div class="fitness-value">${j.distance}</div><div class="fitness-label">km</div></div>
+                    <div class="fitness-item"><div class="fitness-icon">⏱️</div><div class="fitness-value">${j.duration}</div><div class="fitness-label">min</div></div>
+                    <div class="fitness-item"><div class="fitness-icon">🔥</div><div class="fitness-value">${j.calories}</div><div class="fitness-label">kcal</div></div>
+                    <div class="fitness-item"><div class="fitness-icon">⚡</div><div class="fitness-value">${j.avgSpeed}</div><div class="fitness-label">km/h</div></div>
+                </div>
+                <div class="btn-row">
+                    <a href="https://www.google.com/maps/dir/${j.startLat},${j.startLon}/${j.endLat},${j.endLon}" target="_blank" class="btn btn-primary">🗺️ View Route</a>
+                    <button class="btn btn-secondary" onclick="exportGPX(${j.id})">📂 Export GPX</button>
+                </div>
+            `;
+            document.getElementById('historyModal').classList.add('show');
+        }
+
+        function closeModal() { document.getElementById('historyModal').classList.remove('show'); }
+
         // ==================== PARKING ====================
-        function saveParking(type, event) {
-            if (type === 'gps') {
-                if (!navigator.geolocation) { showToast('GPS not supported', true); return; }
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() };
-                        saveToStorage();
-                        renderParking();
-                        showToast('Parking saved! 🅿️');
-                    },
-                    (err) => showToast('GPS Error: ' + err.message, true),
-                    { enableHighAccuracy: true }
-                );
-            } else if (type === 'photo' && event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        APP.parking = { type: 'photo', data: e.target.result, time: Date.now() };
-                        saveToStorage();
-                        renderParking();
-                        showToast('Photo saved! 📸');
-                    };
-                    reader.readAsDataURL(file);
+        function handlePhoto(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                APP.pendingPhoto = ev.target.result;
+                if (APP.pendingSaveMode === 'both') completeBothSave();
+                else {
+                    APP.parking = { type: 'photo', photo: APP.pendingPhoto, time: Date.now() };
+                    saveStorage(); renderParking();
+                    showToast('Photo saved! 📸');
                 }
-            }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveParking(type) {
+            APP.pendingSaveMode = type;
+            if (type === 'photo') { document.getElementById('photoInput').click(); return; }
+            
+            navigator.geolocation.getCurrentPosition(pos => {
+                if (type === 'gps') {
+                    APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() };
+                    saveStorage(); renderParking();
+                    showToast('GPS saved! 🅿️');
+                } else {
+                    APP.pendingGPS = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                    document.getElementById('photoInput').click();
+                }
+            }, err => showToast('GPS Error', true), { enableHighAccuracy: true });
+        }
+
+        function completeBothSave() {
+            APP.parking = { type: 'both', lat: APP.pendingGPS.lat, lon: APP.pendingGPS.lon, photo: APP.pendingPhoto, time: Date.now() };
+            saveStorage(); renderParking();
+            showToast('GPS + Photo saved! 🅿️📸');
         }
 
         function renderParking() {
-            const container = document.getElementById('parkingDisplay');
-            const mapContainer = document.getElementById('parkingMapContainer');
+            const c = document.getElementById('parkingDisplay');
+            const mc = document.getElementById('parkingMapContainer');
             
             if (!APP.parking) {
-                container.innerHTML = `<div class="parking-display"><div class="parking-icon">🚗</div><div class="parking-location">No location saved</div><div class="parking-time">Save your parking spot</div></div>`;
-                mapContainer.style.display = 'none';
+                c.innerHTML = '<div class="parking-display"><div class="parking-icon">🚗</div><div>No location saved</div></div>';
+                mc.style.display = 'none';
                 return;
             }
             
-            const timeAgo = getTimeAgo(APP.parking.time);
+            let html = '<div class="parking-display">';
+            if (APP.parking.photo) html += `<img src="${APP.parking.photo}" class="parking-photo">`;
+            html += `<div style="font-size:14px;font-weight:600">${APP.parking.lat ? '📍 GPS Saved' : '📸 Photo Saved'}</div>`;
+            html += `<div style="font-size:12px;color:var(--text-muted);margin:5px 0">${getTimeAgo(APP.parking.time)}</div>`;
+            if (APP.parking.lat) html += `<a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success btn-sm" style="margin:10px 0">🗺️ Open Maps</a>`;
+            html += `<button class="btn btn-secondary btn-sm" onclick="APP.parking=null;saveStorage();renderParking()">🗑️ Clear</button></div>`;
+            c.innerHTML = html;
             
-            if (APP.parking.type === 'gps') {
-                container.innerHTML = `
-                    <div class="parking-display">
-                        <div class="parking-icon">📍</div>
-                        <div class="parking-location">GPS Location Saved</div>
-                        <div class="parking-time">Saved ${timeAgo}</div>
-                        <a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success" style="margin:10px 0">🗺️ Open in Google Maps</a>
-                        <button class="btn btn-secondary" onclick="clearParking()">🗑️ Clear</button>
-                    </div>
-                `;
-                
-                // Show map
-                mapContainer.style.display = 'block';
+            if (APP.parking.lat) {
+                mc.style.display = 'block';
                 setTimeout(() => {
                     if (APP.parkingMap) APP.parkingMap.remove();
-                    APP.parkingMap = L.map('parkingMap').setView([APP.parking.lat, APP.parking.lon], 17);
+                    APP.parkingMap = L.map('parkingMap', { zoomControl: false }).setView([APP.parking.lat, APP.parking.lon], 17);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.parkingMap);
-                    L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap).bindPopup('🚗 My Car').openPopup();
+                    L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap).bindPopup('🚗').openPopup();
                 }, 100);
-            } else {
-                mapContainer.style.display = 'none';
-                container.innerHTML = `
-                    <div class="parking-display">
-                        <img src="${APP.parking.data}" class="parking-photo" alt="Parking">
-                        <div class="parking-time">Saved ${timeAgo}</div>
-                        <button class="btn btn-secondary" onclick="clearParking()">🗑️ Clear</button>
-                    </div>
-                `;
-            }
-        }
-
-        function clearParking() {
-            APP.parking = null;
-            if (APP.parkingMap) { APP.parkingMap.remove(); APP.parkingMap = null; }
-            saveToStorage();
-            renderParking();
+            } else mc.style.display = 'none';
         }
 
         function saveCustomPlace() {
             const name = document.getElementById('customPlaceName').value.trim();
-            if (!name) { showToast('Enter a name', true); return; }
-            if (!APP.parking || APP.parking.type !== 'gps') { showToast('Save GPS first', true); return; }
-            APP.customPlaces[name] = { lat: APP.parking.lat, lon: APP.parking.lon };
-            saveToStorage();
+            if (!name || !APP.parking?.lat) return showToast('Save GPS first', true);
+            APP.customPlaces[name] = { lat: APP.parking.lat, lon: APP.parking.lon, photo: APP.parking.photo || null };
+            saveStorage();
             document.getElementById('customPlaceName').value = '';
             showToast(`"${name}" saved! ⭐`);
-            renderCustomPlaces();
+            renderPlaces();
         }
 
-        function renderCustomPlaces() {
-            const container = document.getElementById('customPlacesList');
-            const places = Object.entries(APP.customPlaces);
-            if (places.length === 0) { container.innerHTML = ''; return; }
-            container.innerHTML = places.map(([name, coords]) => `
-                <div class="location-card">
-                    <div class="location-info"><span style="font-size:18px">⭐</span><span class="location-name">${name}</span></div>
-                    <button class="btn btn-secondary" style="width:auto;padding:8px 12px" onclick="window.open('https://www.google.com/maps?q=${coords.lat},${coords.lon}')">🗺️</button>
+        function renderPlaces() {
+            const c = document.getElementById('customPlacesList');
+            const p = Object.entries(APP.customPlaces);
+            if (!p.length) { c.innerHTML = ''; return; }
+            c.innerHTML = p.map(([n, d]) => `
+                <div class="place-card">
+                    ${d.photo ? `<img src="${d.photo}" class="place-photo">` : ''}
+                    <div class="place-info">
+                        <div class="place-name">⭐ ${n}</div>
+                        <button class="btn btn-secondary btn-sm" style="width:auto" onclick="window.open('https://www.google.com/maps?q=${d.lat},${d.lon}')">🗺️</button>
+                    </div>
                 </div>
             `).join('');
         }
 
         // ==================== REMINDERS ====================
-        function addReminder() {
-            const task = document.getElementById('reminderTask').value.trim();
-            const mins = parseInt(document.getElementById('reminderTime').value);
-            if (!task) { showToast('Enter a task', true); return; }
-            
-            APP.reminders.push({ id: Date.now(), task, triggerTime: Date.now() + (mins * 60000), created: Date.now() });
-            saveToStorage();
+        function addReminder(task, mins) {
+            task = task || document.getElementById('reminderTask').value.trim();
+            mins = mins || parseInt(document.getElementById('reminderTime').value);
+            if (!task) return showToast('Enter task', true);
+            APP.reminders.push({ id: Date.now(), task, triggerTime: Date.now() + mins * 60000 });
+            saveStorage();
             document.getElementById('reminderTask').value = '';
             renderReminders();
-            
-            const timeText = mins >= 60 ? `${mins/60} hour${mins > 60 ? 's' : ''}` : `${mins} mins`;
-            showToast(`Reminder set for ${timeText}! ⏰`);
+            showToast(`Reminder: ${mins} mins ⏰`);
+            return `✅ ${task} in ${mins} mins`;
         }
 
         function renderReminders() {
-            const container = document.getElementById('reminderList');
             const active = APP.reminders.filter(r => r.triggerTime > Date.now());
             document.getElementById('reminderBadge').textContent = active.length;
             document.getElementById('dashReminders').textContent = active.length;
-            
-            if (active.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-text">No active reminders</div></div>';
-                return;
-            }
-            container.innerHTML = active.map(r => `
+            document.getElementById('reminderList').innerHTML = active.length ? active.map(r => `
                 <div class="reminder-item">
                     <div class="reminder-icon">⏰</div>
                     <div class="reminder-content">
                         <div class="reminder-task">${r.task}</div>
-                        <div class="reminder-time">In ${getTimeUntil(r.triggerTime)}</div>
+                        <div class="reminder-time">${getTimeUntil(r.triggerTime)}</div>
                     </div>
-                    <button class="reminder-delete" onclick="deleteReminder(${r.id})">✕</button>
+                    <button class="reminder-delete" onclick="APP.reminders=APP.reminders.filter(x=>x.id!==${r.id});saveStorage();renderReminders()">✕</button>
                 </div>
-            `).join('');
-        }
-
-        function deleteReminder(id) {
-            APP.reminders = APP.reminders.filter(r => r.id !== id);
-            saveToStorage();
-            renderReminders();
+            `).join('') : '<div class="empty-state"><div class="empty-text">No reminders</div></div>';
         }
 
         function checkReminders() {
             const now = Date.now();
-            const triggered = APP.reminders.filter(r => r.triggerTime <= now);
-            triggered.forEach(r => {
+            APP.reminders.filter(r => r.triggerTime <= now).forEach(r => {
                 showToast(`⏰ ${r.task}`, false, 8000);
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('Sunday Reminder', { body: r.task, icon: 'https://cdn-icons-png.flaticon.com/512/869/869869.png' });
-                }
+                if (Notification.permission === 'granted') new Notification('Sunday', { body: r.task });
             });
-            if (triggered.length > 0) {
-                APP.reminders = APP.reminders.filter(r => r.triggerTime > now);
-                saveToStorage();
-                renderReminders();
-            }
+            APP.reminders = APP.reminders.filter(r => r.triggerTime > now);
+            saveStorage(); renderReminders();
+        }
+
+        // ==================== CURRENCY ====================
+        let rates = {};
+        async function loadCurrency() {
+            try {
+                rates = (await (await fetch('https://api.exchangerate-api.com/v4/latest/MYR')).json()).rates;
+                document.getElementById('currencyRates').innerHTML = CURRENCIES.map(c => `
+                    <div class="rate-card">
+                        <div class="rate-pair"><span class="rate-flag">${c.flag}</span><div class="rate-code">${c.code}/MYR</div></div>
+                        <span class="rate-value">${(1/rates[c.code]).toFixed(4)}</span>
+                    </div>
+                `).join('');
+            } catch(e) {}
+        }
+
+        // ==================== NEWS ====================
+        let news = [];
+        async function loadNews() {
+            try {
+                news = (await (await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.thestar.com.my/rss/news/nation')).json()).items?.slice(0, 5) || [];
+                const html = news.map(n => `<div class="news-item" onclick="window.open('${n.link}')"><span class="news-source">NEWS</span><div class="news-title">${n.title}</div></div>`).join('');
+                document.getElementById('dashNews').innerHTML = html;
+                document.getElementById('newsList').innerHTML = html;
+            } catch(e) {}
+        }
+
+        // ==================== EARTHQUAKES ====================
+        async function loadEarthquakes() {
+            try {
+                const quakes = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features.slice(0, 10);
+                document.getElementById('dashAlerts').textContent = quakes.length;
+                document.getElementById('earthquakeAlerts').innerHTML = quakes.length ? quakes.map(q => `
+                    <div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'warning'}">
+                        <div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)}</div>
+                        <div class="alert-body">📍 ${q.properties.place}</div>
+                    </div>
+                `).join('') : '<div class="alert-card info"><div class="alert-title">✅ No earthquakes</div></div>';
+                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
+            } catch(e) {}
         }
 
         // ==================== CHAT ====================
@@ -1697,53 +1669,61 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
-            addChatMessage(text, 'user');
+            addMsg(text, 'user');
             input.value = '';
-            setTimeout(() => addChatMessage(processChat(text), 'bot'), 300);
+            processCmd(text).then(r => addMsg(r, 'bot'));
         }
 
-        function quickChat(text) { document.getElementById('chatInput').value = text; sendChat(); }
-
-        function addChatMessage(text, type) {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${text}</div></div>`;
-            container.scrollTop = container.scrollHeight;
+        function addMsg(text, type) {
+            const c = document.getElementById('chatMessages');
+            c.innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${text}</div></div>`;
+            c.scrollTop = c.scrollHeight;
         }
 
-        function processChat(text) {
-            const lower = text.toLowerCase();
-            for (const [cat, data] of Object.entries(MEDICAL_DB)) {
-                if (data.keywords.some(kw => lower.includes(kw))) return data.reply;
-            }
-            if (lower.includes('weather')) return '🌤️ Check the Weather tab!';
-            if (lower.match(/^(hi|hello|hey)/)) return `Hello! 👋 How can I help?`;
-            if (lower.includes('help')) return 'I can help with:<br>• 🌤️ Weather<br>• 🗺️ Journey<br>• 🅿️ Parking<br>• ⏰ Reminders<br>• 🌍 Earthquakes<br>• 🩺 Health tips';
-            return "I'm here to help! 😊";
+        async function processCmd(text) {
+            const t = text.toLowerCase();
+            if (t.startsWith('weather ')) { return await updateWeather(text.slice(8), 0, 0); }
+            if (t === 'weather') { switchPage('weather'); return '🌤️ Weather page'; }
+            const m = t.match(/remind.*?(\d+)\s*(min|hour|h|m).*?(?:to)?\s*(.+)/i);
+            if (m) { let mins = parseInt(m[1]); if (m[2]?.startsWith('h')) mins *= 60; return addReminder(m[3], mins); }
+            if (t.includes('car') || t.includes('parking')) { switchPage('parking'); return APP.parking?.lat ? '🚗 Opening parking...' : '❌ No parking saved'; }
+            if (t.includes('start') && t.includes('journey')) { setTimeout(startJourney, 500); return '🚗 Starting...'; }
+            if (t === 'news') return news[0]?.title || 'No news';
+            if (t.startsWith('rate ')) { const c = t.split(' ')[1].toUpperCase(); return rates[c] ? `${c}: ${(1/rates[c]).toFixed(4)} MYR` : 'Not found'; }
+            for (const [, d] of Object.entries(MEDICAL)) if (d.kw.some(k => t.includes(k))) return d.reply;
+            return 'Try: weather tokyo, remind me in 30 mins to call';
         }
 
-        // ==================== UTILITIES ====================
-        function getTimeAgo(timestamp) {
-            const secs = Math.floor((Date.now() - timestamp) / 1000);
-            if (secs < 60) return 'just now';
-            if (secs < 3600) return `${Math.floor(secs / 60)} mins ago`;
-            if (secs < 86400) return `${Math.floor(secs / 3600)} hours ago`;
-            return `${Math.floor(secs / 86400)} days ago`;
+        function switchPage(name) {
+            document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+            document.querySelector(`[data-page="${name}"]`).classList.add('active');
+            document.getElementById('page-' + name).classList.add('active');
         }
 
-        function getTimeUntil(timestamp) {
-            const secs = Math.floor((timestamp - Date.now()) / 1000);
-            if (secs < 60) return `${secs} secs`;
-            if (secs < 3600) return `${Math.floor(secs / 60)} mins`;
-            return `${Math.floor(secs / 3600)} hours`;
+        // ==================== UTILS ====================
+        function getTimeAgo(t) {
+            const s = Math.floor((Date.now() - t) / 1000);
+            if (s < 60) return 'just now';
+            if (s < 3600) return `${Math.floor(s/60)} mins ago`;
+            if (s < 86400) return `${Math.floor(s/3600)} hours ago`;
+            return `${Math.floor(s/86400)} days ago`;
         }
 
-        function showToast(message, isError = false, duration = 3000) {
-            const toast = document.getElementById('toast');
-            toast.querySelector('.toast-icon').textContent = isError ? '❌' : '✅';
-            toast.querySelector('.toast-message').textContent = message;
-            toast.classList.toggle('error', isError);
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), duration);
+        function getTimeUntil(t) {
+            const s = Math.floor((t - Date.now()) / 1000);
+            if (s < 60) return `${s}s`;
+            if (s < 3600) return `${Math.floor(s/60)}m`;
+            return `${Math.floor(s/3600)}h`;
+        }
+
+        function showToast(msg, err = false, dur = 3000) {
+            const t = document.getElementById('toast');
+            t.querySelector('.toast-icon').textContent = err ? '❌' : '✅';
+            t.querySelector('.toast-message').textContent = msg;
+            t.classList.toggle('error', err);
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), dur);
         }
     </script>
 </body>
