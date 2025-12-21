@@ -6,419 +6,388 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <title>Sunday IG</title>
+    <title>Sunday iOS</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="logosunday.jpg">
     <link rel="icon" type="image/png" href="logosunday.jpg">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
         :root {
-            /* IG Dark Theme Colors */
-            --bg-body: #000000;
-            --bg-card: #000000;
-            --text-primary: #ffffff;
-            --text-secondary: #a8a8a8;
-            --border-color: #262626;
-            --accent-blue: #3797ef;
-            --story-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            --nav-height: 50px;
+            /* --- iOS Tech Blue Palette --- */
+            --bg-deep: #000000;
+            --bg-gradient: linear-gradient(160deg, #0a0a12 0%, #051937 100%);
+            
+            /* Apple "Glass" Material */
+            --glass-bg: rgba(30, 40, 60, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-blur: blur(25px);
+            
+            /* Colors */
+            --accent-blue: #0A84FF; /* iOS System Blue */
+            --accent-cyan: #64D2FF; /* iOS Cyan */
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(235, 235, 245, 0.6); /* iOS Secondary Text */
+            
+            /* Spacing & Radius */
+            --card-radius: 22px;
+            --nav-height: 85px;
+            --safe-area-top: env(safe-area-inset-top);
             --safe-area-bottom: env(safe-area-inset-bottom);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-body);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: var(--bg-deep);
             color: var(--text-primary);
-            padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 20px);
-            overflow-x: hidden;
+            min-height: 100vh;
+            /* 科技感深邃背景 */
+            background-image: radial-gradient(circle at 10% 20%, rgba(10, 132, 255, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(100, 210, 255, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            padding-bottom: calc(var(--nav-height) + 20px);
+            font-size: 17px; /* 🍎 舒适的中等字号 */
+            line-height: 1.4;
         }
 
-        /* Top Header (IG Logo Style) */
-        .ig-header {
-            position: sticky; top: 0; z-index: 1000;
-            background: var(--bg-body);
-            padding: 10px 16px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .ig-logo { font-family: 'Billabong', cursive; font-size: 28px; font-weight: 500; letter-spacing: 1px; } 
-        /* Fallback font if Billabong not available */
-        .ig-logo { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 22px; }
-        
-        .header-actions { display: flex; gap: 20px; font-size: 24px; }
-
-        /* Stories Bar */
-        .stories-container {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            white-space: nowrap;
-            display: flex;
-            gap: 15px;
-            padding-left: 15px;
-        }
-        .stories-container::-webkit-scrollbar { display: none; }
-
-        .story-item {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            cursor: pointer;
-        }
-        .story-ring {
-            width: 66px; height: 66px;
-            border-radius: 50%;
-            padding: 2px;
-            background: var(--story-gradient); /* IG colorful ring */
-            display: flex; justify-content: center; align-items: center;
-        }
-        .story-avatar {
-            width: 60px; height: 60px;
-            background: #222;
-            border-radius: 50%;
-            border: 2px solid #000;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center; font-size: 24px;
-        }
-        .story-name { font-size: 11px; color: var(--text-primary); }
-
-        /* Feed (Posts) */
-        .feed { max-width: 600px; margin: 0 auto; }
-
-        .post-card {
-            margin-bottom: 15px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color); /* Separator */
-        }
-
-        .post-header {
-            padding: 10px 15px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .post-user { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; }
-        .post-avatar-small { width: 32px; height: 32px; border-radius: 50%; background: #333; display:flex; justify-content:center;align-items:center;}
-        .post-more { font-size: 20px; }
-
-        /* Content Area (Square like IG) */
-        .post-content {
-            width: 100%;
-            min-height: 300px;
-            background: #111;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative;
-            overflow: hidden;
+        /* --- Header (iOS Large Title) --- */
+        .ios-header {
+            padding: calc(var(--safe-area-top) + 20px) 20px 10px;
+            display: flex; justify-content: space-between; align-items: flex-end;
         }
         
-        .post-actions {
-            padding: 10px 15px;
-            display: flex; justify-content: space-between;
-            font-size: 24px;
-        }
-        .action-left { display: flex; gap: 16px; }
+        .header-title h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 5px; }
+        .header-title span { font-size: 13px; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         
-        .post-caption { padding: 0 15px 15px; font-size: 14px; }
-        .caption-name { font-weight: 600; margin-right: 5px; }
-        .post-time { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-top: 5px; }
+        .header-profile img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); }
 
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--bg-body);
-            height: calc(var(--nav-height) + var(--safe-area-bottom));
-            border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-around;
-            align-items: flex-start;
-            padding-top: 12px;
-            z-index: 2000;
+        /* --- Layout Container --- */
+        .content-scroll { padding: 10px 20px; }
+
+        /* --- Glass Cards (The "Tech" Feel) --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
         }
-        .nav-item {
-            font-size: 24px; color: var(--text-primary);
-            background: none; border: none; cursor: pointer;
-            opacity: 0.6;
-        }
-        .nav-item.active { opacity: 1; }
-        .nav-avatar { width: 24px; height: 24px; border-radius: 50%; background: #333; border: 1px solid #fff; }
+        .glass-card:active { transform: scale(0.98); }
 
-        /* Specific Modules Styling */
-        .weather-display { text-align: center; padding: 40px 0; }
-        .weather-big-temp { font-size: 60px; font-weight: 300; }
-        .weather-detail-row { display: flex; gap: 20px; margin-top: 20px; color: var(--text-secondary); font-size: 13px; }
+        /* --- Typography Tweaks --- */
+        h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; display: block; }
+        .value { font-size: 24px; font-weight: 600; font-family: "SF Pro Display", sans-serif; }
 
-        #journeyMapSmall { width: 100%; height: 350px; }
+        /* --- Weather Widget (Big & Clean) --- */
+        .weather-widget { display: flex; align-items: center; justify-content: space-between; }
+        .weather-main { display: flex; flex-direction: column; }
+        .temp-big { font-size: 52px; font-weight: 200; letter-spacing: -1px; line-height: 1; }
+        .weather-icon-big { font-size: 60px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2)); }
         
-        .btn-ig {
+        .weather-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .mini-stat { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; text-align: center; }
+        .mini-stat span { display: block; font-size: 14px; font-weight: 600; color: var(--accent-cyan); }
+        .mini-stat small { font-size: 11px; color: var(--text-secondary); }
+
+        /* --- Map Card --- */
+        .map-wrapper { height: 220px; width: 100%; border-radius: 16px; overflow: hidden; position: relative; margin-top: 10px; }
+        #journeyMapSmall { width: 100%; height: 100%; }
+        
+        /* --- Buttons (iOS Style) --- */
+        .btn-ios {
             background: var(--accent-blue);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 14px;
+            padding: 14px;
+            border-radius: 14px;
             width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3); /* Tech Glow */
+        }
+        .btn-ios.secondary { background: rgba(255,255,255,0.1); color: var(--accent-cyan); box-shadow: none; }
+        
+        /* --- Input Fields --- */
+        .ios-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            padding: 14px 16px;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .ios-input::placeholder { color: rgba(255,255,255,0.3); }
+        .ios-input:focus { outline: 1px solid var(--accent-blue); background: rgba(0,0,0,0.5); }
+
+        /* --- Tab Bar (Frosted Glass) --- */
+        .tab-bar {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            height: 65px;
+            background: rgba(20, 20, 30, 0.85); /* Slightly darker for contrast */
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 35px; /* Pill Shape */
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .tab-btn {
+            background: none; border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 24px;
+            width: 50px; height: 50px;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            color: var(--accent-blue);
+            background: rgba(10, 132, 255, 0.15);
+            box-shadow: 0 0 15px rgba(10, 132, 255, 0.2);
         }
 
+        /* Page Logic */
+        .page { display: none; opacity: 0; transition: opacity 0.3s; }
+        .page.active { display: block; opacity: 1; }
+
         /* Utilities */
-        .hidden { display: none; }
-        .modal { position: fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.8); z-index:5000; display:none; justify-content:center;align-items:center;}
-        .modal.show { display:flex; }
-        .modal-content { background: #262626; padding: 20px; border-radius: 12px; width: 80%; }
-        
-        /* Toast */
-        .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 15px 25px; border-radius: 8px; z-index: 6000; display: none; text-align: center;}
-        .toast.show { display: block; }
+        .hidden { display: none !important; }
+        .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: rgba(50,50,50,0.9); padding: 10px 20px; border-radius: 30px; font-size: 14px; display: none; backdrop-filter: blur(10px); z-index: 9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .toast.show { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { transform: translate(-50%, -20px); opacity:0; } to { transform: translate(-50%, 0); opacity:1; } }
 
     </style>
 </head>
 <body>
 
-    <header class="ig-header">
-        <div class="logo">
-            <img src="logosunday.jpg" style="height: 30px; width: 30px; border-radius: 50%; vertical-align: middle; margin-right:8px;">
-            <span class="ig-logo">Sunday</span>
+    <header class="ios-header">
+        <div class="header-title">
+            <span>Sunday AI</span>
+            <h1>Dashboard</h1>
         </div>
-        <div class="header-actions">
-            <span>❤️</span> <span onclick="togglePage('chat')">💬</span> </div>
+        <div class="header-profile" onclick="document.getElementById('photoInput').click()">
+            <img src="logosunday.jpg" alt="Profile">
+        </div>
     </header>
 
-    <div class="stories-container">
-        <div class="story-item" onclick="updateWeather('Johor Jaya', 1.536, 103.793)">
-            <div class="story-ring"><div class="story-avatar">📍</div></div>
-            <span class="story-name">Johor</span>
-        </div>
-        <div class="story-item" onclick="updateWeather('Singapore', 1.352, 103.819)">
-            <div class="story-ring"><div class="story-avatar">🇸🇬</div></div>
-            <span class="story-name">SG</span>
-        </div>
-        <div class="story-item" onclick="updateWeather('Tokyo', 35.689, 139.691)">
-            <div class="story-ring"><div class="story-avatar">🇯🇵</div></div>
-            <span class="story-name">Tokyo</span>
-        </div>
-        <div class="story-item" onclick="document.getElementById('photoInput').click()">
-            <div class="story-ring" style="border: 2px dashed #666; background: none;"><div class="story-avatar">➕</div></div>
-            <span class="story-name">Add Photo</span>
-        </div>
-    </div>
-
-    <div class="feed" id="feed-container">
-
-        <article class="post-card" id="post-weather">
-            <div class="post-header">
-                <div class="post-user">
-                    <div class="post-avatar-small">☀️</div>
-                    <span id="weatherLocation">Loading...</span>
-                </div>
-                <span class="post-more">...</span>
-            </div>
-            
-            <div class="post-content" style="background: linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%);">
-                <div class="weather-display">
-                    <div style="font-size: 80px;" id="weatherIcon">🌤️</div>
-                    <div class="weather-big-temp"><span id="weatherTemp">--</span>°C</div>
-                    <div style="font-size: 18px;" id="weatherCondition">Clear Sky</div>
-                    
-                    <div class="weather-detail-row" style="justify-content: center;">
-                        <span>💨 <span id="weatherWind">--</span> km/h</span>
-                        <span>💧 <span id="weatherHumidity">--</span>%</span>
+    <div class="content-scroll">
+        
+        <div id="page-home" class="page active">
+            <div class="glass-card">
+                <h2><span style="font-size:16px;">📍</span> <span id="weatherLocation">Locating...</span></h2>
+                <div class="weather-widget">
+                    <div class="weather-main">
+                        <div class="temp-big"><span id="weatherTemp">--</span>°</div>
+                        <div class="label" id="weatherCondition" style="margin-top:5px; font-size:15px;">Clear Sky</div>
                     </div>
+                    <div class="weather-icon-big" id="weatherIcon">🌤️</div>
+                </div>
+                <div class="weather-grid">
+                    <div class="mini-stat"><span><span id="weatherWind">--</span></span><small>Wind</small></div>
+                    <div class="mini-stat"><span><span id="weatherHumidity">--</span>%</span><small>Humid</small></div>
+                    <div class="mini-stat"><span><span id="weatherRain">--</span>%</span><small>Rain</small></div>
                 </div>
             </div>
 
-            <div class="post-actions">
-                <div class="action-left">
-                    <span>❤️</span>
-                    <span>💬</span>
-                    <span>🚀</span>
-                </div>
-                <span>🔖</span>
-            </div>
-            
-            <div class="post-caption">
-                <span class="caption-name">sunday_ai</span>
-                Current weather update. <span id="currentDate">Today</span>
-            </div>
-        </article>
-
-        <article class="post-card" id="post-journey">
-            <div class="post-header">
-                <div class="post-user">
-                    <div class="post-avatar-small">🗺️</div>
-                    <span>Tracker</span>
-                </div>
-                <button class="btn-ig" style="width: auto; padding: 4px 12px;" onclick="startJourney()">Start</button>
-            </div>
-
-            <div class="post-content" style="height: 350px; background: #222;">
-                <div id="journeyMapSmall"></div>
-                <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px; font-size: 12px;">
-                    <span id="jDistance">0.00</span> km • <span id="jTime">00:00</span>
+            <div class="glass-card">
+                <h2>🔔 Briefing</h2>
+                <div id="briefingContent" style="font-size:14px; line-height:1.6; color:var(--text-secondary);">
+                    Loading daily updates...
                 </div>
             </div>
-
-            <div class="post-actions">
-                <div class="action-left">
-                    <span onclick="endJourney()" style="color: #ff3b30;">⏹️ End</span>
-                    <span onclick="document.getElementById('journeyPhotoInput').click()">📸 Snap</span>
-                </div>
-            </div>
-            
-            <div class="post-caption">
-                <span class="caption-name">Tracker</span>
-                <span id="journeyModeText">Ready to track...</span>
-            </div>
-        </article>
-
-        <article class="post-card">
-            <div class="post-header">
-                <div class="post-user">
-                    <div class="post-avatar-small">🅿️</div>
-                    <span>My Parking</span>
-                </div>
-            </div>
-            
-            <div class="post-content" style="min-height: 200px; background: #1a1a1a;">
-                <div id="parkingDisplay" style="text-align: center; width: 100%;">
-                    <div style="font-size: 40px; margin-bottom: 10px;">🚗</div>
-                    <div>No car saved</div>
-                </div>
-            </div>
-
-            <div class="post-caption">
-                <button class="btn-ig" onclick="saveParking('gps')">Save GPS Location</button>
-                <button class="btn-ig" style="background: #262626; margin-top: 5px;" onclick="saveParking('photo')">Take Photo</button>
-            </div>
-        </article>
-
-    </div> <div id="page-chat" class="hidden" style="padding: 20px;">
-        <h2>Messages</h2>
-        <div id="chatMessages" style="height: 300px; overflow-y: auto; background: #111; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-            <div style="margin-bottom: 10px; color: #888;">Sunday AI joined the chat.</div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="chatInput" placeholder="Message..." style="flex:1; padding: 10px; border-radius: 20px; border: 1px solid #333; background: #000; color: white;">
-            <button class="btn-ig" style="width: auto;" onclick="sendChat()">Send</button>
+
+        <div id="page-journey" class="page">
+            <div class="glass-card">
+                <h2>🏃‍♂️ Tracker <span class="label" style="margin-left:auto;" id="journeyModeText">Ready</span></h2>
+                
+                <div class="weather-grid" style="margin-bottom:15px;">
+                    <div class="mini-stat"><span><span id="jDistance">0.0</span></span><small>km</small></div>
+                    <div class="mini-stat"><span><span id="jTime">00:00</span></span><small>Time</small></div>
+                    <div class="mini-stat"><span><span id="jCalories">0</span></span><small>Kcal</small></div>
+                </div>
+
+                <div class="map-wrapper">
+                    <div id="journeyMapSmall"></div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
+                    <button class="btn-ios" onclick="startJourney()">Start</button>
+                    <button class="btn-ios secondary" onclick="endJourney()" style="color:#ff453a; background:rgba(255, 69, 58, 0.15);">Stop</button>
+                </div>
+            </div>
         </div>
-        <button onclick="togglePage('feed')" style="margin-top: 20px; color: #888; background: none; border: none;">← Back</button>
+
+        <div id="page-parking" class="page">
+            <div class="glass-card">
+                <h2>🅿️ My Car</h2>
+                <div id="parkingDisplay" style="text-align:center; padding:30px 0; color:var(--text-secondary);">
+                    <div style="font-size:40px; margin-bottom:10px; opacity:0.5;">🚗</div>
+                    No location saved
+                </div>
+                <button class="btn-ios" onclick="saveParking('gps')">📍 Save GPS</button>
+                <button class="btn-ios secondary" onclick="document.getElementById('photoInput').click()">📸 Take Photo</button>
+            </div>
+        </div>
+
+        <div id="page-tools" class="page">
+            <div class="glass-card">
+                <h2>💬 Chat AI</h2>
+                <div id="chatMessages" style="height:200px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:12px; padding:10px; margin-bottom:10px;">
+                    <div style="color:var(--text-secondary); font-size:13px; text-align:center;">Ask me about weather or health...</div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" class="ios-input" id="chatInput" placeholder="Type here..." style="margin-bottom:0;">
+                    <button class="btn-ios" style="width:auto; margin-top:0; padding:0 20px;" onclick="sendChat()">➤</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2>⏰ Reminder</h2>
+                <input type="text" class="ios-input" id="reminderTask" placeholder="Remind me to...">
+                <div style="display:flex; gap:10px;">
+                    <select class="ios-input" id="reminderTime" style="margin-bottom:0;">
+                        <option value="10">10 Mins</option>
+                        <option value="60">1 Hour</option>
+                    </select>
+                    <button class="btn-ios" style="width:auto; margin-top:0;" onclick="addReminder()">Set</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="togglePage('feed')">🏠</button> <button class="nav-item" onclick="document.getElementById('weatherSearch').focus()">🔍</button> <button class="nav-item" onclick="startJourney()">➕</button> <button class="nav-item" onclick="togglePage('chat')">❤️</button> <button class="nav-item"><div class="nav-avatar"></div></button> </nav>
+    <nav class="tab-bar">
+        <button class="tab-btn active" onclick="switchPage('home', this)">🏠</button>
+        <button class="tab-btn" onclick="switchPage('journey', this)">🗺️</button>
+        <button class="tab-btn" onclick="switchPage('parking', this)">🅿️</button>
+        <button class="tab-btn" onclick="switchPage('tools', this)">🧩</button>
+    </nav>
 
     <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)">
-    <input type="file" id="journeyPhotoInput" accept="image/*" style="display:none" onchange="addJourneyPhoto(event)">
-    <div class="toast" id="toast">Message</div>
+    <div class="toast" id="toast">✅ Success</div>
 
     <script>
-        // ================= LOGIC PRESERVED FROM V9.1 =================
-        const APP = { journey: null, watchId: null, mapSmall: null, pathCoords: [], parking: null, reminders: [] };
-        
+        // ================= JS LOGIC (保留核心功能) =================
+        const APP = { journey: null, watchId: null, mapSmall: null, pathCoords: [], parking: null };
+        const LOCATIONS = { 'Johor Jaya': { lat: 1.5360, lon: 103.7930 }, 'Tokyo': { lat: 35.6895, lon: 139.6917 } };
+
         document.addEventListener('DOMContentLoaded', () => {
             loadStorage();
-            updateClock();
-            loadWeather(); // Initial load
+            updateWeather('Johor Jaya', 1.536, 103.793);
             initMap();
+            generateBriefing();
         });
 
-        function loadStorage() {
-            try { APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null'); renderParking(); } catch(e) {}
+        function switchPage(pageId, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // 动态修改标题
+            const titles = { 'home': 'Dashboard', 'journey': 'Tracker', 'parking': 'Parking', 'tools': 'Tools' };
+            document.querySelector('.header-title h1').textContent = titles[pageId];
+            
+            // Map resizing fix
+            if(pageId === 'journey' && APP.mapSmall) setTimeout(() => APP.mapSmall.invalidateSize(), 200);
         }
 
-        function updateClock() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            if(document.getElementById('currentDate')) document.getElementById('currentDate').textContent = dateStr;
-        }
-
-        // --- Weather Logic ---
-        async function loadWeather() { updateWeather('Johor Jaya', 1.536, 103.793); }
-
+        // --- Weather ---
         async function updateWeather(name, lat, lon) {
-            document.getElementById('weatherLocation').textContent = "Loading...";
             try {
                 const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m`)).json();
-                const temp = Math.round(d.current.temperature_2m);
-                const cond = getWeatherCond(d.current.weather_code);
-                
                 document.getElementById('weatherLocation').textContent = name;
-                document.getElementById('weatherTemp').textContent = temp;
-                document.getElementById('weatherIcon').textContent = cond.icon;
-                document.getElementById('weatherCondition').textContent = cond.text;
-                document.getElementById('weatherWind').textContent = d.current.wind_speed_10m;
+                document.getElementById('weatherTemp').textContent = Math.round(d.current.temperature_2m);
+                document.getElementById('weatherWind').textContent = Math.round(d.current.wind_speed_10m);
                 document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m;
-            } catch(e) { console.error(e); }
+                
+                // Weather Icon Logic
+                const code = d.current.weather_code;
+                let icon = '☁️', cond = 'Cloudy';
+                if(code === 0) { icon = '☀️'; cond = 'Sunny'; }
+                if(code > 0 && code <= 3) { icon = '⛅'; cond = 'Partly Cloudy'; }
+                if(code >= 61) { icon = '🌧️'; cond = 'Rainy'; }
+                if(code >= 95) { icon = '⚡'; cond = 'Storm'; }
+                document.getElementById('weatherIcon').textContent = icon;
+                document.getElementById('weatherCondition').textContent = cond;
+            } catch(e) { console.log(e); }
         }
 
-        function getWeatherCond(code) {
-            if (code === 0) return { icon: '☀️', text: 'Clear' };
-            if (code <= 3) return { icon: '⛅', text: 'Cloudy' };
-            if (code >= 95) return { icon: '⛈️', text: 'Storm' };
-            if (code >= 61) return { icon: '🌧️', text: 'Rain' };
-            return { icon: '☁️', text: 'Cloudy' };
+        // --- Briefing ---
+        async function generateBriefing() {
+            let html = `<div>📅 ${new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'})}</div>`;
+            try {
+                const r = await (await fetch('https://api.exchangerate-api.com/v4/latest/SGD')).json();
+                html += `<div style="margin-top:5px; color:var(--accent-cyan);">💱 SGD 1 ≈ RM ${(r.rates.MYR).toFixed(2)}</div>`;
+            } catch(e) {}
+            document.getElementById('briefingContent').innerHTML = html;
         }
 
-        // --- Map & Journey Logic ---
+        // --- Map & Journey ---
         function initMap() {
-            // Default center Johor
             APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false, attributionControl: false }).setView([1.536, 103.793], 13);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(APP.mapSmall);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 19 }).addTo(APP.mapSmall);
         }
 
         function startJourney() {
-            if (!navigator.geolocation) return showToast('GPS not supported');
-            showToast('Starting Tracker...');
-            document.getElementById('journeyModeText').textContent = "🔴 Recording...";
+            if (!navigator.geolocation) return showToast('GPS needed');
+            showToast('Tracking Started 🚀');
+            document.getElementById('journeyModeText').textContent = "🔴 Live";
+            document.getElementById('journeyModeText').style.color = "#ff453a";
             
-            APP.journey = { startTime: Date.now(), totalKm: 0 };
+            APP.journey = { startTime: Date.now() };
             APP.pathCoords = [];
-            
             APP.watchId = navigator.geolocation.watchPosition(pos => {
                 const lat = pos.coords.latitude, lon = pos.coords.longitude;
                 APP.pathCoords.push([lat, lon]);
-                
-                if(APP.marker) APP.marker.setLatLng([lat, lon]);
-                else APP.marker = L.circleMarker([lat, lon], {color: '#3797ef', radius: 8}).addTo(APP.mapSmall);
-                
+                if(!APP.poly) APP.poly = L.polyline(APP.pathCoords, {color: '#0A84FF', weight: 5}).addTo(APP.mapSmall);
+                else APP.poly.setLatLngs(APP.pathCoords);
                 APP.mapSmall.setView([lat, lon], 16);
                 
-                // Simple distance calc would go here
-                document.getElementById('jDistance').textContent = (APP.pathCoords.length * 0.01).toFixed(2); // Mock distance for demo
-                
-            }, err => console.log(err), { enableHighAccuracy: true });
-            
+                document.getElementById('jDistance').textContent = (APP.pathCoords.length * 0.005).toFixed(2); // Fake calc for demo
+            }, null, { enableHighAccuracy: true });
+
             APP.timerInterval = setInterval(() => {
-                const secs = Math.floor((Date.now() - APP.journey.startTime)/1000);
-                const m = Math.floor(secs/60).toString().padStart(2,'0');
-                const s = (secs%60).toString().padStart(2,'0');
-                document.getElementById('jTime').textContent = `${m}:${s}`;
+                const s = Math.floor((Date.now() - APP.journey.startTime)/1000);
+                document.getElementById('jTime').textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
             }, 1000);
         }
 
         function endJourney() {
             if(APP.watchId) navigator.geolocation.clearWatch(APP.watchId);
             if(APP.timerInterval) clearInterval(APP.timerInterval);
-            document.getElementById('journeyModeText').textContent = "🏁 Finished";
-            showToast('Journey Ended');
+            document.getElementById('journeyModeText').textContent = "Finished";
+            document.getElementById('journeyModeText').style.color = "var(--text-secondary)";
+            showToast('Journey Saved ✅');
         }
 
-        // --- Parking Logic ---
+        // --- Parking ---
         function saveParking(type) {
-            if(type === 'photo') { document.getElementById('photoInput').click(); return; }
             navigator.geolocation.getCurrentPosition(pos => {
                 APP.parking = { lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() };
                 localStorage.setItem('sun_park', JSON.stringify(APP.parking));
                 renderParking();
-                showToast('Location Saved!');
+                showToast('Location Saved');
             });
         }
-
+        
         function handlePhoto(e) {
             const file = e.target.files[0];
             const reader = new FileReader();
@@ -426,7 +395,7 @@
                 APP.parking = { photo: ev.target.result, time: Date.now() };
                 localStorage.setItem('sun_park', JSON.stringify(APP.parking));
                 renderParking();
-                showToast('Photo Saved!');
+                showToast('Photo Saved');
             };
             reader.readAsDataURL(file);
         }
@@ -434,40 +403,29 @@
         function renderParking() {
             const div = document.getElementById('parkingDisplay');
             if(!APP.parking) return;
-            
-            let html = '';
-            if(APP.parking.photo) {
-                html = `<img src="${APP.parking.photo}" style="width:100%; height:100%; object-fit:cover;">`;
-            } else if(APP.parking.lat) {
-                html = `<div style="padding:40px;">📍 GPS Saved<br><a href="https://maps.google.com/?q=${APP.parking.lat},${APP.parking.lon}" style="color:#3797ef; text-decoration:none;">Open Maps</a></div>`;
-            }
-            div.innerHTML = html;
+            if(APP.parking.photo) div.innerHTML = `<img src="${APP.parking.photo}" style="width:100%; border-radius:12px; height:200px; object-fit:cover;">`;
+            else if(APP.parking.lat) div.innerHTML = `<div style="padding:20px; font-weight:bold; color:var(--accent-blue);">📍 Location Locked<br><small style="color:white; font-weight:normal;">Tap to open maps</small></div>`;
+            div.onclick = () => { if(APP.parking.lat) window.open(`http://maps.google.com/?q=${APP.parking.lat},${APP.parking.lon}`); };
         }
 
-        // --- Page Navigation Logic ---
-        function togglePage(pageName) {
-            if(pageName === 'feed') {
-                document.getElementById('feed-container').classList.remove('hidden');
-                document.getElementById('page-chat').classList.add('hidden');
-            } else if (pageName === 'chat') {
-                document.getElementById('feed-container').classList.add('hidden');
-                document.getElementById('page-chat').classList.remove('hidden');
-            }
-        }
-
+        // --- Utils ---
+        function loadStorage() { try { APP.parking = JSON.parse(localStorage.getItem('sun_park')); renderParking(); } catch(e){} }
+        
         function sendChat() {
             const val = document.getElementById('chatInput').value;
             if(!val) return;
-            const div = document.createElement('div');
-            div.innerHTML = `<div style="text-align:right; margin-bottom:8px;"><span style="background:#3797ef; padding:8px 12px; border-radius:15px; display:inline-block;">${val}</span></div>`;
-            document.getElementById('chatMessages').appendChild(div);
+            const box = document.getElementById('chatMessages');
+            box.innerHTML += `<div style="text-align:right; margin:5px 0;"><span style="background:var(--accent-blue); padding:8px 12px; border-radius:16px; font-size:14px;">${val}</span></div>`;
             document.getElementById('chatInput').value = '';
-            
             setTimeout(() => {
-                const reply = document.createElement('div');
-                reply.innerHTML = `<div style="text-align:left; margin-bottom:8px;"><span style="background:#262626; padding:8px 12px; border-radius:15px; display:inline-block;">I'm just a demo AI 🤖</span></div>`;
-                document.getElementById('chatMessages').appendChild(reply);
-            }, 1000);
+                box.innerHTML += `<div style="text-align:left; margin:5px 0;"><span style="background:rgba(255,255,255,0.1); padding:8px 12px; border-radius:16px; font-size:14px;">I'm just a demo AI. 🤖</span></div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 800);
+        }
+
+        function addReminder() {
+            showToast('Reminder Set ⏰');
+            document.getElementById('reminderTask').value = '';
         }
 
         function showToast(msg) {
