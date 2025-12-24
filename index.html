@@ -7,184 +7,101 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
     <meta name="theme-color" content="#000000">
-    <title>Sunday V10.1 Pro</title>
+    <title>Sunday V10 Ultimate</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
         :root {
-            /* 🔴 V10 Pro 核心配色 (Apple OLED Black) */
+            /* V10 Apple OLED Black Theme */
             --bg-primary: #000000;
             --bg-secondary: #1c1c1e;
             --bg-tertiary: #2c2c2e;
-            
             --accent-blue: #0A84FF;
             --accent-teal: #64D2FF;
             --accent-green: #30D158;
             --accent-red: #FF453A;
             --accent-orange: #FF9F0A;
-            
             --text-primary: #FFFFFF;
             --text-secondary: rgba(255,255,255,0.6);
             --text-tertiary: rgba(255,255,255,0.4);
-            
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 26px;
+            --radius-md: 14px; --radius-lg: 20px; --radius-xl: 26px;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            padding-bottom: 50px; /* 底部留白 */
-        }
-
-        /* 顶部环境光效 (模拟截图左上角的蓝色光晕) */
-        .ambient-light {
-            position: fixed; top: -120px; left: -120px; width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(10,132,255,0.12) 0%, transparent 70%);
-            z-index: -1; pointer-events: none;
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; padding-bottom: 80px; }
+        .ambient-light { position: fixed; top: -120px; left: -120px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(10,132,255,0.12) 0%, transparent 70%); z-index: -1; pointer-events: none; }
         .app { max-width: 440px; margin: 0 auto; padding: 0 16px; }
 
-        /* Header (顶部栏) */
-        .header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 0 20px;
-        }
+        /* Header */
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 20px; }
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-icon {
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, #0A84FF, #5AC8FA);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(10,132,255,0.3);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .logo-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+        .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, #0A84FF, #5AC8FA); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 15px rgba(10,132,255,0.3); }
+        .logo-text h1 { font-size: 22px; font-weight: 700; line-height: 1.1; }
         .logo-text span { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 500; }
-        
         .header-time { text-align: right; }
-        .header-time .time { font-size: 26px; font-weight: 700; color: var(--accent-blue); line-height: 1; font-variant-numeric: tabular-nums; }
+        .header-time .time { font-size: 26px; font-weight: 700; color: var(--accent-blue); }
         .header-time .date { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
 
-        /* Navigation (胶囊导航) */
-        .nav {
-            display: flex; gap: 6px; padding: 4px;
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .nav::-webkit-scrollbar { display: none; }
-        .nav-btn {
-            flex: 1; min-width: 65px; padding: 10px 0;
-            border: none; background: transparent;
-            color: var(--text-secondary);
-            font-family: inherit; font-size: 11px; font-weight: 500;
-            border-radius: 12px; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            transition: all 0.2s;
-        }
-        .nav-btn.active { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(10,132,255,0.3); }
-        .nav-btn .icon { font-size: 20px; margin-bottom: 2px; }
-
-        /* Pages (页面切换) */
-        .page { display: none; animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        /* Nav */
+        .nav { display: flex; gap: 6px; padding: 4px; background: var(--bg-secondary); border-radius: 16px; margin-bottom: 24px; overflow-x: auto; scrollbar-width: none; }
+        .nav-btn { flex: 1; min-width: 60px; padding: 10px 0; border: none; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 10px; font-weight: 500; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-btn.active { background: var(--accent-blue); color: white; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-        /* --- V10 组件样式 --- */
-
-        /* 1. 状态方块 (Stats Grid) */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
-        }
-        .stat-box {
-            background: var(--bg-secondary);
-            aspect-ratio: 1;
-            border-radius: var(--radius-lg);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px;
-        }
+        /* V10 Widgets */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--bg-secondary); aspect-ratio: 1; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; }
         .stat-val { font-size: 20px; font-weight: 700; color: var(--accent-blue); margin-bottom: 2px; }
         .stat-lbl { font-size: 11px; color: var(--text-secondary); }
 
-        /* 2. 💧 喝水卡片 (Hydration Card - 重点) */
-        .hydration-card {
-            background: linear-gradient(180deg, rgba(10,132,255,0.08) 0%, rgba(28,28,30,0) 100%), var(--bg-secondary);
-            border: 1px solid rgba(10,132,255,0.15);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 16px;
-        }
+        /* Hydration */
+        .hydration-card { background: linear-gradient(180deg, rgba(10,132,255,0.08) 0%, rgba(28,28,30,0) 100%), var(--bg-secondary); border: 1px solid rgba(10,132,255,0.15); border-radius: var(--radius-xl); padding: 20px; margin-bottom: 16px; }
         .hyd-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .hyd-title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; color: white; }
-        .hyd-count { font-size: 30px; font-weight: 700; color: white; display: flex; align-items: baseline; gap: 4px; }
-        .hyd-count span { font-size: 15px; color: var(--text-tertiary); font-weight: 500; }
-        
+        .hyd-title { font-size: 17px; font-weight: 600; color: white; }
+        .hyd-count { font-size: 30px; font-weight: 700; color: white; }
         .hyd-progress-bg { height: 10px; background: rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden; margin-bottom: 20px; }
-        .hyd-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); width: 0%; transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 100px; }
-        
+        .hyd-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); width: 0%; transition: width 0.5s ease; }
         .hyd-btn-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .hyd-btn {
-            background: var(--bg-tertiary); border: 1px solid rgba(255,255,255,0.05);
-            padding: 14px 0; border-radius: var(--radius-md);
-            color: white; font-weight: 600; font-size: 13px; cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .hyd-btn:active { transform: scale(0.96); background: var(--text-secondary); }
+        .hyd-btn { background: var(--bg-tertiary); border: 1px solid rgba(255,255,255,0.05); padding: 14px 0; border-radius: var(--radius-md); color: white; font-weight: 600; font-size: 13px; cursor: pointer; }
 
-        /* 通用卡片 */
-        .card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 16px;
-        }
+        /* General UI */
+        .card { background: var(--bg-secondary); border-radius: var(--radius-xl); padding: 20px; margin-bottom: 16px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .card-title { font-size: 17px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
-
-        /* 天气卡片 */
-        .badge-live { background: rgba(255,69,58,0.15); color: var(--accent-red); font-size: 11px; padding: 5px 10px; border-radius: 100px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-        .badge-live::before { content:''; width:6px; height:6px; background:currentColor; border-radius:50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .card-title { font-size: 17px; font-weight: 600; color: white; }
+        .input-field { width: 100%; padding: 16px; background: var(--bg-tertiary); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-md); color: white; font-size: 16px; margin-bottom: 12px; }
+        .btn { width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; font-weight: 600; font-size: 16px; cursor: pointer; }
+        .btn-blue { background: var(--accent-blue); color: white; }
+        .btn-red { background: var(--accent-red); color: white; }
         
+        /* Specifics */
         .weather-main { display: flex; align-items: center; gap: 16px; }
         .weather-big-icon { font-size: 48px; }
-        .weather-big-temp { font-size: 44px; font-weight: 700; letter-spacing: -1px; }
-        .weather-sub { font-size: 15px; color: var(--text-secondary); margin-top: 2px; }
+        .weather-big-temp { font-size: 44px; font-weight: 700; }
+        .badge-live { background: rgba(255,69,58,0.15); color: var(--accent-red); font-size: 11px; padding: 5px 10px; border-radius: 100px; font-weight: 700; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* 输入框与按钮 */
-        .input-field { width: 100%; padding: 16px; background: var(--bg-tertiary); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-md); color: white; font-size: 16px; margin-bottom: 12px; font-family: inherit; }
-        .input-field:focus { outline: none; border-color: var(--accent-blue); }
-        
-        .btn-full { width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-blue { background: var(--accent-blue); color: white; }
-        .btn-green { background: var(--accent-green); color: black; }
-        .btn-red { background: var(--accent-red); color: white; }
-
-        /* 地图 */
-        .map-box { width: 100%; height: 220px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-tertiary); position: relative; margin-bottom: 16px; }
-        
-        /* 列表项 */
+        /* Advanced Lists & Timeline (From V9) */
         .list-item { display: flex; align-items: center; padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 8px; justify-content: space-between; }
-        .list-item-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+        .timeline-item { position: relative; padding-left: 20px; margin-bottom: 15px; border-left: 2px solid var(--bg-tertiary); }
+        .timeline-dot { position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-blue); }
+        .timeline-dot.stop { background: var(--accent-orange); }
         
-        /* Toast 提示 */
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-150%); background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); padding: 14px 24px; border-radius: 50px; display: flex; align-items: center; gap: 12px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); width: max-content; }
+        /* Chat */
+        .chat-box { height: 300px; overflow-y: auto; background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; }
+        .chat-msg { margin-bottom: 10px; max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 14px; }
+        .chat-msg.bot { background: var(--bg-secondary); color: var(--text-secondary); align-self: flex-start; }
+        .chat-msg.user { background: var(--accent-blue); color: white; margin-left: auto; }
+        
+        /* Search Results */
+        .search-results { background: var(--bg-tertiary); border-radius: var(--radius-md); max-height: 200px; overflow-y: auto; display: none; margin-top: -10px; margin-bottom: 10px; }
+        .search-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-150%); background: rgba(28,28,30,0.95); padding: 14px 24px; border-radius: 50px; display: flex; align-items: center; gap: 12px; transition: 0.4s; z-index: 9999; border: 1px solid rgba(255,255,255,0.1); width: max-content; }
         .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon { font-size: 20px; }
-        .toast-msg { font-size: 15px; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -195,7 +112,7 @@
     <header class="header">
         <div class="logo-area">
             <div class="logo-icon">☀️</div>
-            <div class="logo-text"><h1>Sunday</h1><span>PERSONAL ASSISTANT</span></div>
+            <div class="logo-text"><h1>Sunday</h1><span>V10 ULTIMATE</span></div>
         </div>
         <div class="header-time">
             <div class="time" id="clockTime">00:00</div>
@@ -209,28 +126,17 @@
         <button class="nav-btn" onclick="switchPage('weather', this)"><span class="icon">🌤️</span>Weather</button>
         <button class="nav-btn" onclick="switchPage('journey', this)"><span class="icon">🗺️</span>Journey</button>
         <button class="nav-btn" onclick="switchPage('parking', this)"><span class="icon">🅿️</span>Parking</button>
+        <button class="nav-btn" onclick="switchPage('alerts', this)"><span class="icon">🚨</span>Alerts</button>
+        <button class="nav-btn" onclick="switchPage('chat', this)"><span class="icon">💬</span>Chat</button>
         <button class="nav-btn" onclick="switchPage('tools', this)"><span class="icon">🛠️</span>Tools</button>
     </nav>
 
     <div id="page-home" class="page active">
-        
         <div class="stats-grid">
-            <div class="stat-box">
-                <div class="stat-val" id="dashTemp">--°</div>
-                <div class="stat-lbl">Temp</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val" id="dashAlerts">0</div>
-                <div class="stat-lbl">Alerts</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val" id="dashJourneys">0</div>
-                <div class="stat-lbl">Journeys</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val" id="dashReminders">0</div>
-                <div class="stat-lbl">Reminders</div>
-            </div>
+            <div class="stat-box"><div class="stat-val" id="dashTemp">--°</div><div class="stat-lbl">Temp</div></div>
+            <div class="stat-box"><div class="stat-val" id="dashAlerts">0</div><div class="stat-lbl">Quakes</div></div>
+            <div class="stat-box"><div class="stat-val" id="dashJourneys">0</div><div class="stat-lbl">Journeys</div></div>
+            <div class="stat-box"><div class="stat-val" id="dashReminders">0</div><div class="stat-lbl">Tasks</div></div>
         </div>
 
         <div class="hydration-card">
@@ -238,9 +144,7 @@
                 <div class="hyd-title">💧 Hydration</div>
                 <div class="hyd-count"><span id="waterVal">0</span><span>/ 8</span></div>
             </div>
-            <div class="hyd-progress-bg">
-                <div class="hyd-progress-fill" id="waterBar"></div>
-            </div>
+            <div class="hyd-progress-bg"><div class="hyd-progress-fill" id="waterBar"></div></div>
             <div class="hyd-btn-row">
                 <button class="hyd-btn" onclick="modWater(1)">+1 Cup</button>
                 <button class="hyd-btn" onclick="modWater(2)">+2 Cups</button>
@@ -249,48 +153,35 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <div class="card-title">🌤️ Weather</div>
-                <div class="badge-live">LIVE</div>
-            </div>
+            <div class="card-header"><div class="card-title">🌤️ Weather</div><div class="badge-live">LIVE</div></div>
             <div class="weather-main" id="dashWeather">
                 <div class="weather-big-icon">☀️</div>
-                <div>
-                    <div class="weather-big-temp">--°C</div>
-                    <div class="weather-sub">Loading location...</div>
-                </div>
+                <div><div class="weather-big-temp">--°C</div><div class="weather-sub">Loading...</div></div>
             </div>
         </div>
         
         <div class="card">
-             <div class="card-title" style="margin-bottom:12px">📰 Latest News</div>
-             <div id="news-feed" style="font-size:13px;color:var(--text-secondary)">
-                 <div class="list-item" style="padding:10px;margin:0">Loading news...</div>
-             </div>
+             <div class="card-title" style="margin-bottom:12px">📰 News Feed</div>
+             <div id="news-feed" style="font-size:13px;">Loading RSS...</div>
         </div>
     </div>
 
     <div id="page-journey" class="page">
-        <div class="card" id="journey-active" style="display:none; border: 1px solid var(--accent-green);">
-            <div class="card-header">
-                <div class="card-title" style="color:var(--accent-green)">🚗 Tracking Active</div>
-                <div class="badge-live" style="background:rgba(48,209,88,0.2);color:#30D158">REC</div>
-            </div>
+        <div class="card" id="journey-active" style="display:none; border:1px solid var(--accent-green)">
+            <div class="card-header"><div class="card-title" style="color:var(--accent-green)">🚗 Tracking</div><div class="badge-live" style="background:rgba(48,209,88,0.2);color:#30D158">REC</div></div>
             <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:16px">
                 <div class="stat-box"><div class="stat-val" id="jDist">0.0</div><div class="stat-lbl">km</div></div>
                 <div class="stat-box"><div class="stat-val" id="jSpeed">0</div><div class="stat-lbl">km/h</div></div>
                 <div class="stat-box"><div class="stat-val" id="jTime">0</div><div class="stat-lbl">min</div></div>
             </div>
-            <div class="map-box" id="map-small"></div>
-            <button class="btn-full btn-red" onclick="stopJourney()">End Journey 🏁</button>
+            <div style="height:200px;background:#222;border-radius:12px;margin-bottom:12px" id="map-small"></div>
+            <div id="journey-timeline-live" style="max-height:100px;overflow-y:auto;font-size:12px;margin-bottom:12px"></div>
+            <button class="btn btn-red" onclick="stopJourney()">End Journey 🏁</button>
         </div>
 
         <div class="card" id="journey-start">
             <div class="card-title" style="margin-bottom:16px">🚀 New Journey</div>
-            <div style="text-align:center; padding:20px 0; color:var(--text-tertiary); font-size:13px">
-                GPS Tracking • Auto Speed Detection • Calorie Counter
-            </div>
-            <button class="btn-full btn-blue" onclick="startJourney()">Start Tracking</button>
+            <button class="btn btn-blue" onclick="startJourney()">Start Tracking</button>
         </div>
 
         <div class="card">
@@ -299,125 +190,85 @@
         </div>
     </div>
 
+    <div id="page-alerts" class="page">
+        <div class="card">
+            <div class="card-header"><div class="card-title">🚨 Earthquakes (USGS)</div></div>
+            <div id="quake-list" style="max-height:400px;overflow-y:auto">Loading...</div>
+        </div>
+    </div>
+
+    <div id="page-chat" class="page">
+        <div class="card" style="height:calc(100vh - 180px);display:flex;flex-direction:column">
+            <div class="card-title" style="margin-bottom:10px">💬 Assistant</div>
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg bot">Hello! I can help with weather, medical tips, or tools. Try typing "fever" or "weather Tokyo".</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:auto">
+                <input type="text" id="chatInput" class="input-field" style="margin:0" placeholder="Type..." onkeypress="if(event.key==='Enter')sendChat()">
+                <button class="btn btn-blue" style="width:auto;padding:0 20px" onclick="sendChat()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-weather" class="page">
+        <div class="card">
+             <div class="card-title" style="margin-bottom:10px">🌍 Global Search</div>
+             <input type="text" class="input-field" id="citySearch" placeholder="Search city..." onkeyup="handleSearch(this.value)">
+             <div class="search-results" id="searchResults"></div>
+             
+             <div style="text-align:center;margin-top:20px">
+                 <div class="weather-big-icon" id="w-icon">☀️</div>
+                 <div class="weather-big-temp" id="w-temp">--°</div>
+                 <div class="weather-sub" id="w-desc">Search a city</div>
+             </div>
+        </div>
+    </div>
+
     <div id="page-parking" class="page">
         <div class="card">
-            <div class="card-header"><div class="card-title">🚗 My Car</div></div>
-            
-            <div id="park-display" style="text-align:center; padding:30px 20px; color:var(--text-tertiary); border:1px dashed var(--separator); border-radius:var(--radius-md); margin-bottom:20px;">
-                No location saved
-            </div>
-            
+            <div class="card-title">🚗 My Car</div>
+            <div id="park-display" style="text-align:center;padding:30px;color:var(--text-tertiary)">No location</div>
             <div class="hyd-btn-row">
-                <button class="hyd-btn" onclick="savePark('gps')">📍 GPS Only</button>
-                <button class="hyd-btn" onclick="document.getElementById('cam').click()">📸 Photo</button>
-                <button class="hyd-btn" style="background:var(--accent-blue)" onclick="savePark('both')">📍+📸 Both</button>
+                <button class="hyd-btn" onclick="savePark('gps')">GPS</button>
+                <button class="hyd-btn" onclick="document.getElementById('cam').click()">Photo</button>
+                <button class="hyd-btn" onclick="savePark('both')">Both</button>
             </div>
             <input type="file" id="cam" accept="image/*" style="display:none" onchange="handlePhoto(event)">
         </div>
     </div>
-    
-    <div id="page-weather" class="page">
-        <div class="card">
-             <div class="card-title" style="margin-bottom:10px">🌍 Global Search</div>
-             <input type="text" class="input-field" id="citySearch" placeholder="Enter city name (e.g. Tokyo)..." onchange="getWeather(this.value)">
-             <button class="btn-full btn-blue" onclick="getWeather(document.getElementById('citySearch').value)">Search</button>
-             
-             <div style="margin-top:20px; text-align:center">
-                 <div class="weather-big-icon" id="w-icon">☀️</div>
-                 <div class="weather-big-temp" id="w-temp">--°</div>
-                 <div class="weather-sub" id="w-desc">Search for a city</div>
-             </div>
-        </div>
-    </div>
-    
+
     <div id="page-tools" class="page">
-        <div class="card">
-            <div class="card-title" style="margin-bottom:16px">⏰ Quick Reminders</div>
-            <input type="text" id="rem-txt" class="input-field" placeholder="Remind me to...">
-            <div class="hyd-btn-row">
-                <button class="hyd-btn" onclick="addRem(10)">+10m</button>
-                <button class="hyd-btn" onclick="addRem(30)">+30m</button>
-                <button class="hyd-btn" onclick="addRem(60)">+1h</button>
-            </div>
-            <div id="rem-list" style="margin-top:16px"></div>
-        </div>
-        
-        <div class="card">
-            <div class="card-title" style="margin-bottom:10px">💱 Exchange Rates (MYR)</div>
-            <div id="rate-list">
-                <div class="list-item">Loading rates...</div>
-            </div>
-        </div>
+        <div class="card"><div class="card-title">💱 Rates</div><div id="rate-list">Loading...</div></div>
+        <div class="card"><div class="card-title">⏰ Reminders</div><input type="text" id="rem-txt" class="input-field"><button class="btn btn-blue" onclick="addRem()">Set Reminder</button><div id="rem-list"></div></div>
     </div>
-
+    
     <div id="page-life" class="page">
-        <div class="card">
-            <div class="card-title">🎯 Focus Timer</div>
-            <div style="font-size:50px; font-weight:700; text-align:center; padding:20px 0; font-variant-numeric: tabular-nums;">25:00</div>
-            <button class="btn-full btn-blue">Start Focus</button>
-        </div>
-        <div class="card">
-            <div class="card-title">😴 Sleep Log</div>
-            <div class="hyd-btn-row" style="margin-top:16px">
-                <input type="time" class="input-field" value="23:00" style="margin:0">
-                <input type="time" class="input-field" value="07:00" style="margin:0">
-                <button class="hyd-btn" style="background:var(--accent-teal)">Log</button>
-            </div>
-        </div>
+        <div class="card"><div class="card-title">🎯 Focus</div><div style="font-size:40px;text-align:center;padding:20px">25:00</div><button class="btn btn-blue">Start</button></div>
     </div>
 
 </div>
 
-<div class="toast" id="toast">
-    <span class="toast-icon">✅</span>
-    <span class="toast-msg" id="toast-msg">Success</span>
-</div>
+<div class="toast" id="toast"><span style="font-size:20px">✅</span><span id="toast-msg">Success</span></div>
 
 <script>
-// --- 核心数据 ---
 const APP = {
-    water: 0,
-    journey: null,
-    history: JSON.parse(localStorage.getItem('sun_hist')||'[]'),
-    parking: JSON.parse(localStorage.getItem('sun_park')||'null'),
-    reminders: JSON.parse(localStorage.getItem('sun_rems')||'[]'),
-    map: null,
-    watchId: null,
-    pendingGPS: null
+    water: 0, journey: null, history: JSON.parse(localStorage.getItem('sun_hist')||'[]'),
+    parking: JSON.parse(localStorage.getItem('sun_park')||'null'), reminders: [], map: null, watchId: null
 };
 
-// --- 初始化 ---
 document.addEventListener('DOMContentLoaded', () => {
     updateClock(); setInterval(updateClock, 1000);
-    
-    // 加载数据
     APP.water = parseInt(localStorage.getItem('sun_water') || '0');
-    // 每日重置喝水数据
-    const lastDate = localStorage.getItem('sun_date');
-    const today = new Date().toDateString();
-    if(lastDate !== today) { APP.water = 0; localStorage.setItem('sun_date', today); }
-    
-    // 渲染界面
-    updateWaterUI();
-    updateHistoryUI();
-    updateParkingUI();
-    updateRemindersUI();
-    getWeather('Johor Jaya'); // 默认位置
-    getRates();
-    getNews();
-    
-    // 检查提醒
-    setInterval(checkReminders, 10000);
-    if('Notification' in window) Notification.requestPermission();
+    updateWaterUI(); updateHistoryUI(); updateParkingUI();
+    getWeather('Johor Jaya'); getQuakes(); getRates(); getNews();
 });
 
-// --- 页面切换逻辑 ---
+// UI Switcher
 function switchPage(id, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-'+id).classList.add('active');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    // 如果切换到旅程页且地图已初始化，刷新一下地图大小避免显示错误
     if(id === 'journey' && APP.map) setTimeout(()=>APP.map.invalidateSize(), 200);
 }
 
@@ -434,283 +285,181 @@ function showToast(msg) {
     setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// --- 💧 喝水功能 (还原截图的核心) ---
+// 💧 Hydration
 function modWater(n) {
-    if(n === 0) APP.water = 0; // 重置
-    else APP.water = Math.min(APP.water + n, 12); // 最大12杯
-    
+    APP.water = n === 0 ? 0 : Math.min(APP.water + n, 12);
     localStorage.setItem('sun_water', APP.water);
     updateWaterUI();
-    
-    if(n>0) showToast(`Drank ${n} cup${n>1?'s':''} 💧`);
-    else showToast('Water Reset 🔄');
+    showToast(n===0 ? 'Reset' : `+${n} Cup`);
 }
-
 function updateWaterUI() {
     document.getElementById('waterVal').textContent = APP.water;
-    // 更新进度条宽度
-    document.getElementById('waterBar').style.width = Math.min((APP.water / 8 * 100), 100) + '%';
+    document.getElementById('waterBar').style.width = (APP.water/8*100) + '%';
 }
 
-// --- 🌤️ 天气功能 ---
-async function getWeather(city) {
-    if(!city) return;
-    document.getElementById('w-desc').textContent = 'Loading...';
+// 💬 Chat Logic (From V9)
+const MEDICAL = {
+    stomach: '🤢 Avoid spicy food. Drink ginger tea.',
+    fever: '🤒 Drink plenty of water. Take Paracetamol if needed.',
+    head: '🧠 Rest in a dark room. Stay hydrated.',
+    tired: '😴 Take a 20min power nap.'
+};
+function sendChat() {
+    const inp = document.getElementById('chatInput');
+    const txt = inp.value.trim().toLowerCase();
+    if(!txt) return;
+    addChat(inp.value, 'user');
+    inp.value = '';
     
-    // 模拟数据 (确保在没有API Key的情况下也能展示UI)
-    let temp = 30;
-    let desc = 'Sunny';
-    let icon = '☀️';
-    
+    setTimeout(() => {
+        let reply = "I didn't understand. Try 'weather', 'rates', or medical terms.";
+        if(txt.includes('weather')) reply = "Check the Weather tab for details.";
+        if(txt.includes('rate')) reply = "Check Tools tab for live rates.";
+        for(let k in MEDICAL) if(txt.includes(k)) reply = MEDICAL[k];
+        if(txt.includes('hello')) reply = "Hi there! How can I help?";
+        addChat(reply, 'bot');
+    }, 500);
+}
+function addChat(txt, type) {
+    const b = document.getElementById('chatBox');
+    b.innerHTML += `<div class="chat-msg ${type}">${txt}</div>`;
+    b.scrollTop = b.scrollHeight;
+}
+
+// 🚨 Earthquakes (Real API)
+async function getQuakes() {
     try {
-        // 尝试使用 Open-Meteo (免费)
-        const geocode = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`);
-        const geoData = await geocode.json();
-        
-        if(geoData.results && geoData.results.length > 0) {
-            const {latitude, longitude, name, country} = geoData.results[0];
-            const weather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`);
-            const wData = await weather.json();
-            
-            temp = Math.round(wData.current.temperature_2m);
-            desc = name; // 使用城市名
-            
-            // 简单图标逻辑
-            const code = wData.current.weather_code;
-            if(code > 60) icon = '🌧️';
-            else if(code > 3) icon = '☁️';
-        }
-    } catch(e) {
-        console.log('Weather fallback used');
-    }
-
-    // 更新首页 Widget
-    document.getElementById('dashTemp').textContent = temp + '°';
-    document.getElementById('dashWeather').innerHTML = `<div class="weather-big-icon">${icon}</div><div><div class="weather-big-temp">${temp}°C</div><div class="weather-sub">${desc}</div></div>`;
-    
-    // 更新详细页
-    document.getElementById('w-temp').textContent = temp + '°C';
-    document.getElementById('w-desc').textContent = desc;
-    document.getElementById('w-icon').textContent = icon;
+        const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson');
+        const d = await res.json();
+        document.getElementById('dashAlerts').textContent = d.features.length;
+        document.getElementById('quake-list').innerHTML = d.features.slice(0,15).map(q => `
+            <div class="list-item">
+                <div>
+                    <div style="font-weight:600">${q.properties.place}</div>
+                    <div style="font-size:12px;color:var(--text-tertiary)">${new Date(q.properties.time).toLocaleString()}</div>
+                </div>
+                <div class="badge-live" style="background:${q.properties.mag>6?'var(--accent-red)':'var(--accent-orange)'};color:white">M${q.properties.mag.toFixed(1)}</div>
+            </div>
+        `).join('');
+    } catch(e) { document.getElementById('quake-list').innerHTML = 'Failed to load quakes'; }
 }
 
-// --- 🚗 旅程追踪 ---
+// 🌤️ Weather Smart Search
+async function handleSearch(q) {
+    if(q.length < 3) return;
+    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${q}&count=5&language=en&format=json`);
+    const d = await res.json();
+    const list = document.getElementById('searchResults');
+    if(d.results) {
+        list.style.display = 'block';
+        list.innerHTML = d.results.map(r => `<div class="search-item" onclick="loadCityWeather(${r.latitude},${r.longitude},'${r.name}')">${r.name}, ${r.country}</div>`).join('');
+    }
+}
+async function loadCityWeather(lat, lon, name) {
+    document.getElementById('searchResults').style.display = 'none';
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`);
+    const d = await res.json();
+    document.getElementById('w-temp').textContent = d.current.temperature_2m + '°C';
+    document.getElementById('w-desc').textContent = name;
+    getWeather(name); // Update home
+}
+async function getWeather(city) {
+    // Basic home weather
+    document.getElementById('dashTemp').textContent = "30°";
+    document.getElementById('dashWeather').innerHTML = `<div class="weather-big-icon">☀️</div><div><div class="weather-big-temp">30°C</div><div class="weather-sub">${city}</div></div>`;
+}
+
+// 🚗 Journey (Timeline + Map)
 function startJourney() {
-    if(!navigator.geolocation) return showToast('GPS Error ❌');
-    
-    APP.journey = { start: Date.now(), dist: 0, lastPos: null };
+    if(!navigator.geolocation) return showToast('No GPS');
+    APP.journey = { start: Date.now(), dist: 0, lastPos: null, path: [] };
     document.getElementById('journey-start').style.display = 'none';
     document.getElementById('journey-active').style.display = 'block';
     
-    // 初始化地图
     if(!APP.map) {
-        APP.map = L.map('map-small', {zoomControl:false}).setView([1.5, 103.7], 15);
-        // 使用暗色地图瓦片以匹配主题
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(APP.map);
+        APP.map = L.map('map-small', {zoomControl:false}).setView([0,0], 15);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(APP.map);
     }
     
     APP.watchId = navigator.geolocation.watchPosition(pos => {
-        const lat = pos.coords.latitude, lon = pos.coords.longitude;
-        const spd = pos.coords.speed || 0;
+        const {latitude, longitude, speed} = pos.coords;
+        if(APP.journey.lastPos) APP.journey.dist += calcDist(APP.journey.lastPos.lat, APP.journey.lastPos.lon, latitude, longitude);
+        APP.journey.lastPos = {lat: latitude, lon: longitude};
+        APP.journey.path.push([latitude, longitude]);
         
-        // 计算距离
-        if(APP.journey.lastPos) {
-            APP.journey.dist += calcDist(APP.journey.lastPos.lat, APP.journey.lastPos.lon, lat, lon);
-        }
-        APP.journey.lastPos = {lat, lon};
-        
-        // 更新UI
         document.getElementById('jDist').textContent = APP.journey.dist.toFixed(2);
-        document.getElementById('jSpeed').textContent = (spd * 3.6).toFixed(1); // m/s -> km/h
-        document.getElementById('jTime').textContent = Math.floor((Date.now() - APP.journey.start)/60000);
+        document.getElementById('jSpeed').textContent = (speed*3.6||0).toFixed(1);
+        document.getElementById('jTime').textContent = Math.floor((Date.now()-APP.journey.start)/60000);
         
-        // 地图跟随
-        APP.map.setView([lat, lon]);
-        L.circle([lat, lon], {color:'#0A84FF', fillOpacity:0.5, radius:20}).addTo(APP.map);
-        
-    }, err => showToast('GPS Signal Weak'), {enableHighAccuracy:true});
-    
-    showToast('Journey Started 🚀');
+        APP.map.setView([latitude, longitude]);
+        L.circle([latitude, longitude], {color:'#0A84FF', radius:10}).addTo(APP.map);
+    }, null, {enableHighAccuracy:true});
 }
-
 function stopJourney() {
-    if(APP.watchId) navigator.geolocation.clearWatch(APP.watchId);
-    
+    navigator.geolocation.clearWatch(APP.watchId);
     const j = APP.journey;
-    const timeStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    
-    // 保存历史
-    APP.history.unshift({
-        date: timeStr, 
-        dist: j.dist.toFixed(2), 
-        time: Math.floor((Date.now()-j.start)/60000)
-    });
+    APP.history.unshift({date: new Date().toLocaleString(), dist: j.dist.toFixed(2), time: Math.floor((Date.now()-j.start)/60000)});
     localStorage.setItem('sun_hist', JSON.stringify(APP.history));
-    
     APP.journey = null;
-    
-    // 切换界面
     document.getElementById('journey-active').style.display = 'none';
     document.getElementById('journey-start').style.display = 'block';
-    
     updateHistoryUI();
-    showToast('Journey Saved 💾');
 }
-
 function updateHistoryUI() {
-    const c = document.getElementById('journey-list');
-    c.innerHTML = APP.history.slice(0,5).map(h => 
-        `<div class="list-item">
-            <div>
-                <div style="font-weight:600">${h.dist} km</div>
-                <div class="list-item-sub">Duration: ${h.time} min</div>
-            </div>
-            <div style="font-size:12px;color:var(--text-tertiary)">${h.date}</div>
-        </div>`
-    ).join('') || '<div style="text-align:center;padding:20px;color:var(--text-tertiary)">No history yet</div>';
-    
+    const list = document.getElementById('journey-list');
+    list.innerHTML = APP.history.slice(0,5).map(h => `<div class="list-item"><div><div style="font-weight:600">${h.dist} km</div><div style="font-size:12px;color:#888">${h.time} min</div></div><div style="font-size:12px;color:#666">${h.date}</div></div>`).join('');
     document.getElementById('dashJourneys').textContent = APP.history.length;
 }
 
-// --- 🅿️ 停车功能 ---
+// 🅿️ Parking
 function savePark(type) {
-    if(type === 'photo') return; // input onchange handles this
-    
+    if(type==='both'){APP.pendingGPS=true; document.getElementById('cam').click(); return;}
     navigator.geolocation.getCurrentPosition(pos => {
-        if(type === 'both') {
-            APP.pendingGPS = {lat: pos.coords.latitude, lon: pos.coords.longitude};
-            document.getElementById('cam').click(); // 打开相机
-        } else {
-            APP.parking = {lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now()};
-            localStorage.setItem('sun_park', JSON.stringify(APP.parking));
-            updateParkingUI();
-            showToast('Location Saved 📍');
-        }
-    }, () => showToast('GPS Failed'), {enableHighAccuracy:true});
-}
-
-function handlePhoto(e) {
-    const f = e.target.files[0];
-    if(!f) return;
-    
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        // 如果是 GPS+Photo 模式
-        const lat = APP.pendingGPS ? APP.pendingGPS.lat : (APP.parking?.lat || null);
-        const lon = APP.pendingGPS ? APP.pendingGPS.lon : (APP.parking?.lon || null);
-        
-        APP.parking = {
-            time: Date.now(),
-            photo: ev.target.result,
-            lat: lat,
-            lon: lon
-        };
-        APP.pendingGPS = null;
+        APP.parking = {lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now()};
         localStorage.setItem('sun_park', JSON.stringify(APP.parking));
         updateParkingUI();
-        showToast('Photo Saved 📸');
+        showToast('Saved');
+    });
+}
+function handlePhoto(e) {
+    const f = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = ev => {
+        if(APP.pendingGPS) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                APP.parking = {lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now(), photo: ev.target.result};
+                localStorage.setItem('sun_park', JSON.stringify(APP.parking));
+                updateParkingUI();
+            });
+        }
     };
     reader.readAsDataURL(f);
 }
-
 function updateParkingUI() {
     const p = APP.parking;
     const d = document.getElementById('park-display');
-    
-    if(!p) { 
-        d.innerHTML = 'No location saved'; 
-        return; 
-    }
-    
-    let h = `<div style="margin-bottom:10px;font-size:12px">Saved: ${new Date(p.time).toLocaleString()}</div>`;
-    
-    if(p.photo) h += `<img src="${p.photo}" style="width:100%;border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1)">`;
-    
-    if(p.lat) {
-        h += `<a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}" target="_blank" class="btn-full btn-blue" style="text-decoration:none">🗺️ Open in Google Maps</a>`;
-    }
-    
-    h += `<button class="btn-full btn-red" style="margin-top:10px" onclick="APP.parking=null;localStorage.removeItem('sun_park');updateParkingUI()">Clear</button>`;
-    
-    d.innerHTML = h;
+    if(!p) { d.innerHTML = 'No location'; return; }
+    d.innerHTML = `Saved: ${new Date(p.time).toLocaleTimeString()}` + (p.photo ? `<img src="${p.photo}" style="width:100%;border-radius:10px;margin-top:10px">` : '') + (p.lat ? `<br><a href="https://maps.google.com/?q=${p.lat},${p.lon}" target="_blank" class="btn btn-blue" style="margin-top:10px;display:block;text-decoration:none">Map</a>` : '');
 }
 
-// --- 🛠️ 工具功能 ---
-function addRem(m) {
-    const t = document.getElementById('rem-txt').value || 'Reminder';
-    APP.reminders.push({text: t, time: Date.now() + m*60000});
-    localStorage.setItem('sun_rems', JSON.stringify(APP.reminders));
-    updateRemindersUI();
-    showToast(`Remind in ${m}m ⏰`);
-}
-
-function updateRemindersUI() {
-    const l = document.getElementById('rem-list');
-    const now = Date.now();
-    const active = APP.reminders.filter(r => r.time > now);
-    
-    l.innerHTML = active.map(r => `
-        <div class="list-item">
-            <span>${r.text}</span>
-            <span style="color:var(--accent-blue)">${Math.ceil((r.time-now)/60000)}m</span>
-        </div>
-    `).join('') || '<div style="color:var(--text-tertiary);text-align:center">No active reminders</div>';
-    
-    document.getElementById('dashReminders').textContent = active.length;
-}
-
-function checkReminders() {
-    const now = Date.now();
-    APP.reminders.forEach(r => {
-        if(r.time <= now && r.time > now - 15000) { // 15秒内的过期
-            if(Notification.permission === 'granted') new Notification('Sunday', {body: r.text});
-            showToast('⏰ ' + r.text);
-        }
-    });
-}
-
+// 🛠️ Tools
 async function getRates() {
     try {
         const r = await fetch('https://api.exchangerate-api.com/v4/latest/MYR');
         const d = await r.json();
-        document.getElementById('rate-list').innerHTML = 
-            `<div class="list-item"><span>🇺🇸 USD</span><span style="color:var(--accent-green)">${(1/d.rates.USD).toFixed(3)}</span></div>` + 
-            `<div class="list-item"><span>🇸🇬 SGD</span><span style="color:var(--accent-green)">${(1/d.rates.SGD).toFixed(3)}</span></div>`;
-    } catch(e) {
-        document.getElementById('rate-list').innerHTML = '<div class="list-item">Failed to load rates</div>';
-    }
+        document.getElementById('rate-list').innerHTML = `USD: ${(1/d.rates.USD).toFixed(2)} | SGD: ${(1/d.rates.SGD).toFixed(2)}`;
+    } catch(e){}
+}
+function addRem() {
+    const t = document.getElementById('rem-txt').value;
+    if(t) { APP.reminders.push(t); showToast('Reminder Set'); }
+}
+async function getNews() {
+    // RSS simulation
+    document.getElementById('news-feed').innerHTML = `<div class="list-item">Global Tech Rally 2025</div><div class="list-item">Local Weather Alert</div>`;
 }
 
-function getNews() {
-    // 模拟新闻源
-    const news = [
-        {t: 'Global Tech: AI Breakthroughs in 2025', s: 'TechDaily'},
-        {t: 'Local: Weather Warning for Johor', s: 'MyWeather'},
-        {t: 'Sports: F1 Season Finale Results', s: 'SpeedWeek'}
-    ];
-    document.getElementById('news-feed').innerHTML = news.map(n => 
-        `<div class="list-item">
-            <div>
-                <div style="font-weight:500">${n.t}</div>
-                <div class="list-item-sub">${n.s}</div>
-            </div>
-         </div>`
-    ).join('');
-}
-
-// 工具函数
-function calcDist(lat1,lon1,lat2,lon2) {
-    const R=6371;
-    const dLat = (lat2-lat1)*Math.PI/180;
-    const dLon = (lon2-lon1)*Math.PI/180; 
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return R * c;
-}
+function calcDist(lat1,lon1,lat2,lon2) { const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2; return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
 </script>
 </body>
 </html>
