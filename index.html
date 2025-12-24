@@ -1,3 +1,4 @@
+cat > /mnt/user-data/outputs/sunday-v10-fixed.html << 'ENDOFFILE'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,1218 +7,791 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
-    <meta name="theme-color" content="#0f0f1a">
-    <title>Sunday V9.1 Blue</title>
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="logosunday.jpg">
-    <link rel="icon" type="image/png" href="logosunday.jpg">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <meta name="theme-color" content="#000000">
+    <title>Sunday V10 - Final</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <style>
         :root {
-            /* 🔵 恢复经典的蓝色主题 (V3/V5 Style) */
-            --bg-primary: #0f0f1a;
-            --bg-secondary: #1a1a2e;
-            --bg-card: #16213e;
-            
-            --accent-primary: #00d4ff; /* 经典蓝 */
-            --accent-secondary: #7b2cbf; /* 紫色点缀 */
-            --accent-glow: rgba(0, 212, 255, 0.5);
-            
-            --accent-success: #00ff88;
-            --accent-danger: #ff4757;
-            --accent-warning: #ff6b35;
-            
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b0;
-            --text-muted: #6b6b7b;
-            
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --radius-md: 16px;
-            --radius-lg: 24px;
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --bg-card: rgba(28, 28, 30, 0.85);
+            --accent-blue: #0A84FF;
+            --accent-teal: #64D2FF;
+            --accent-green: #30D158;
+            --accent-red: #FF453A;
+            --accent-orange: #FF9F0A;
+            --accent-yellow: #FFD60A;
+            --accent-purple: #BF5AF2;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-tertiary: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.3);
+            --separator: rgba(255,255,255,0.08);
+            --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .bg-gradient {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-            z-index: -1;
-        }
-
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 15px;
-            padding-bottom: 100px;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 0;
-            margin-bottom: 20px;
-        }
-
-        .logo { display: flex; align-items: center; gap: 12px; }
-
-        /* ✅ LOGO 样式更新：支持图片 */
-        .logo-icon {
-            width: 48px; height: 48px;
-            background: #000;
-            border-radius: 50%;
-            overflow: hidden; /* 切割成圆形 */
-            border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-            display: flex; align-items: center; justify-content: center;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; font-size: 15px; line-height: 1.47; }
+        .bg-ambient { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(10,132,255,0.12) 0%, transparent 50%); z-index: -1; }
+        .app { max-width: 430px; margin: 0 auto; padding: 0 16px 100px; }
         
-        .logo-icon img {
-            width: 100%; height: 100%;
-            object-fit: cover; /* 充满圆形 */
-        }
-
-        .logo-text h1 { font-size: 24px; font-weight: 700; }
-        .logo-text span { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
-
-        .header-time { text-align: right; font-family: 'JetBrains Mono', monospace; }
-        .header-time .time { font-size: 24px; font-weight: 500; color: var(--accent-primary); }
-        .header-time .date { font-size: 12px; color: var(--text-secondary); }
-
+        /* Header */
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 20px; position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 100; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(10,132,255,0.3); overflow: hidden; }
+        .logo-text h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+        .logo-text span { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; }
+        .header-time { text-align: right; }
+        .header-time .time { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-time .date { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+        
         /* Navigation */
-        .nav-tabs {
-            display: flex; gap: 6px; padding: 6px;
-            background: var(--glass);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
-        .nav-tabs::-webkit-scrollbar { display: none; }
-
-        .nav-tab {
-            flex: 1; min-width: 55px; padding: 10px 6px;
-            border: none; background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 9px; font-weight: 500;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-        }
-
-        .nav-tab.active {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-        }
-
-        .nav-tab .icon { font-size: 18px; }
-
+        .nav { display: flex; gap: 4px; padding: 4px; background: var(--bg-secondary); border-radius: var(--radius-lg); margin-bottom: 24px; overflow-x: auto; scrollbar-width: none; }
+        .nav::-webkit-scrollbar { display: none; }
+        .nav-btn { flex: 1; min-width: 52px; padding: 10px 8px; border: none; background: transparent; color: var(--text-tertiary); font-family: inherit; font-size: 11px; font-weight: 500; border-radius: var(--radius-md); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s; }
+        .nav-btn.active { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(10,132,255,0.4); }
+        .nav-btn .icon { font-size: 20px; }
+        
         /* Pages */
-        .page { display: none; animation: fadeIn 0.3s ease-out; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            padding: 18px;
-            margin-bottom: 15px;
-        }
-
-        .card-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 16px; font-weight: 600;
-        }
-
-        .badge {
-            padding: 5px 10px; border-radius: 15px;
-            font-size: 11px; font-weight: 500;
-            background: var(--glass);
-        }
-
-        .badge.live { background: rgba(255, 71, 87, 0.2); color: var(--accent-danger); animation: pulse 2s infinite; }
-        .badge.tracking { background: rgba(0, 255, 136, 0.2); color: var(--accent-success); }
-
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 8px; margin-bottom: 15px;
-        }
-
-        .stat-item {
-            background: var(--glass);
-            padding: 12px 8px;
-            border-radius: var(--radius-md);
-            text-align: center;
-        }
-
-        .stat-value { font-size: 18px; font-weight: 700; color: var(--accent-primary); }
-        .stat-label { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
-
-        /* Weather */
-        .weather-main { display: flex; align-items: center; gap: 20px; padding: 10px 0; }
-        .weather-icon { font-size: 50px; }
-        .weather-temp { font-size: 38px; font-weight: 700; }
-        .weather-condition { color: var(--text-secondary); font-size: 14px; }
-
-        .weather-details {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; margin-top: 15px;
-        }
-
-        .weather-detail {
-            background: var(--glass);
-            padding: 12px; border-radius: var(--radius-md);
-            text-align: center;
-        }
-
-        .weather-detail .value { font-size: 16px; font-weight: 600; color: var(--accent-primary); }
-        .weather-detail .label { font-size: 10px; color: var(--text-muted); }
-
-        /* Location List */
-        .location-list { display: flex; flex-direction: column; gap: 8px; }
-
-        .location-card {
-            background: var(--glass);
-            padding: 12px; border-radius: var(--radius-md);
-            display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .location-info { display: flex; align-items: center; gap: 10px; }
-        .location-name { font-weight: 500; font-size: 14px; }
-        .location-temp { font-size: 18px; font-weight: 600; color: var(--accent-primary); }
-
-        /* Input & Buttons */
-        .input-group { position: relative; margin-bottom: 12px; }
-
-        .input-field {
-            width: 100%; padding: 14px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 15px;
-        }
-
-        .input-field:focus { outline: none; border-color: var(--accent-primary); }
-
-        /* ✅ 智能搜索列表 (Smart Search List) */
-        .search-results {
-            position: absolute;
-            top: 100%; left: 0; right: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-primary);
-            border-radius: var(--radius-md);
-            margin-top: 5px;
-            z-index: 3000;
-            max-height: 250px;
-            overflow-y: auto;
-            display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .search-results.active { display: block; animation: slideDown 0.2s ease-out; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .search-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--glass-border);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .search-item:last-child { border-bottom: none; }
-        .search-item:hover { background: var(--glass); }
-        .search-item-name { font-weight: 500; font-size: 14px; color: var(--text-primary); }
-        .search-item-detail { font-size: 11px; color: var(--accent-primary); margin-top: 2px; }
-
-        .btn {
-            padding: 14px 24px; border: none;
-            border-radius: var(--radius-md);
-            font-family: 'Outfit', sans-serif;
-            font-size: 14px; font-weight: 500;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%;
-        }
-
-        .btn-primary { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; }
-        .btn-secondary { background: var(--glass); color: var(--text-primary); border: 1px solid var(--glass-border); }
-        .btn-danger { background: linear-gradient(135deg, var(--accent-danger), #ff6b6b); color: white; }
-        .btn-success { background: linear-gradient(135deg, var(--accent-success), #00d68f); color: #0f0f1a; }
-
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        
+        /* Components */
+        .card { background: var(--bg-card); backdrop-filter: blur(20px); border-radius: var(--radius-xl); border: 1px solid var(--separator); padding: 20px; margin-bottom: 16px; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .card-title { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; }
+        .badge { padding: 5px 10px; border-radius: 100px; font-size: 11px; font-weight: 500; background: var(--bg-tertiary); }
+        .badge.live { background: rgba(255,69,58,0.15); color: var(--accent-red); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+        
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+        .stat { background: var(--bg-secondary); padding: 14px 10px; border-radius: var(--radius-md); text-align: center; }
+        .stat-val { font-size: 20px; font-weight: 700; color: var(--accent-blue); }
+        .stat-lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+        
+        .btn { padding: 14px 24px; border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: all 0.2s; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(10,132,255,0.3); }
+        .btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--separator); }
+        .btn-danger { background: var(--accent-red); color: white; }
+        .btn-success { background: var(--accent-green); color: var(--bg-primary); }
         .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .btn-sm { padding: 10px 16px; font-size: 12px; }
-
-        /* ==================== MAP STYLES ==================== */
-        .map-small-container {
-            width: 100%;
-            height: 200px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            margin-bottom: 15px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .map-small-container::after {
-            content: '🔍 Tap to Zoom';
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            z-index: 1000;
-        }
-
-        #journeyMapSmall, #parkingMap { width: 100%; height: 100%; }
-
-        /* Fullscreen Map */
-        .map-fullscreen {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 2000;
-            background: var(--bg-primary);
-            display: none;
-        }
-
-        .map-fullscreen.active { display: block; }
-
-        #journeyMapFull { width: 100%; height: 100%; }
-
-        /* Map Top Bar */
-        .map-top-bar {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            background: linear-gradient(180deg, rgba(15, 15, 26, 0.95) 0%, transparent 100%);
-            padding: 50px 20px 40px;
-            z-index: 2001;
-        }
-
-        .map-status-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .map-mode-icon {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        }
-
-        .map-mode-info { flex: 1; }
-        .map-mode-title { font-size: 20px; font-weight: 700; }
-        .map-street { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
-
-        .map-close-btn {
-            width: 40px; height: 40px;
-            background: var(--glass);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .map-live-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        .map-stat {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 5px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .map-stat .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent-primary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .map-stat .label { font-size: 9px; color: var(--text-muted); }
-
-        /* Map Bottom Bar */
-        .map-bottom-bar {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(0deg, rgba(15, 15, 26, 0.98) 0%, transparent 100%);
-            padding: 40px 20px 40px;
-            z-index: 2001;
-        }
-
-        .map-duration {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .map-duration-label { font-size: 12px; color: var(--text-muted); }
-        .map-duration-time {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent-success);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .map-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .map-btn {
-            width: 55px; height: 55px;
-            border-radius: 50%;
-            border: none;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            backdrop-filter: blur(10px);
-        }
-
-        .map-btn-end {
-            width: 70px; height: 70px;
-            background: linear-gradient(135deg, var(--accent-danger), #ff6b6b);
-            font-size: 28px;
-            box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
-        }
-
-        /* Timeline Panel */
-        .timeline-panel {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: var(--bg-card);
-            border-radius: 24px 24px 0 0;
-            max-height: 50%;
-            z-index: 2002;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .timeline-panel.show { transform: translateY(0); }
-
-        .timeline-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .timeline-header h3 { font-size: 16px; }
-        .timeline-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
-
-        .timeline-content {
-            padding: 20px;
-            max-height: calc(50vh - 60px);
-            overflow-y: auto;
-        }
-
-        /* Timeline */
-        .timeline { position: relative; padding-left: 25px; }
-
-        .timeline::before {
-            content: ''; position: absolute;
-            left: 8px; top: 0; bottom: 0; width: 2px;
-            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), transparent);
-        }
-
-        .timeline-item { position: relative; padding-bottom: 15px; }
-
-        .timeline-dot {
-            position: absolute; left: -21px; top: 5px;
-            width: 12px; height: 12px;
-            background: var(--accent-primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-primary);
-        }
-
-        .timeline-dot.walking { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
-        .timeline-dot.driving { background: var(--accent-warning); box-shadow: 0 0 10px var(--accent-warning); }
-        .timeline-dot.resting { background: var(--accent-secondary); box-shadow: 0 0 10px var(--accent-secondary); }
-        .timeline-dot.active { animation: dotPulse 1.5s ease-in-out infinite; }
-
-        @keyframes dotPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-
-        .timeline-card {
-            background: var(--glass);
-            padding: 12px;
-            border-radius: var(--radius-md);
-        }
-
-        .timeline-title { font-weight: 600; font-size: 14px; }
-        .timeline-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-        .timeline-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 10px;
-            margin-top: 6px;
-        }
-        .timeline-badge.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
-        .timeline-badge.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
-        .timeline-badge.resting { background: rgba(123, 44, 191, 0.15); color: var(--accent-secondary); }
-
-        /* Custom Map Marker */
-        .custom-marker {
-            width: 20px; height: 20px;
-            background: #4285F4;
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(66, 133, 244, 0.8);
-        }
-
-        .custom-marker-photo {
-            /* Photo marker style */
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* History Card */
-        .history-card {
-            background: var(--glass);
-            border-radius: var(--radius-md);
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .history-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .history-date { font-size: 12px; color: var(--accent-primary); }
-        .history-mode { font-size: 11px; padding: 3px 8px; border-radius: 10px; }
-        .history-mode.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
-        .history-mode.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
-
-        .history-stats { display: flex; gap: 15px; flex-wrap: wrap; }
-        .history-stat { font-size: 12px; color: var(--text-secondary); }
-        .history-stat span { color: var(--text-primary); font-weight: 600; }
-
-        /* Other Styles */
-        .parking-display { text-align: center; padding: 20px; }
-        .parking-icon { font-size: 50px; margin-bottom: 10px; }
-        .parking-photo { max-width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; }
-
-        .place-card {
-            background: var(--glass);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        .place-photo { width: 100%; height: 100px; object-fit: cover; }
-        .place-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .place-name { font-weight: 600; }
-
-        .reminder-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px; background: var(--glass);
-            border-radius: var(--radius-md);
-            margin-bottom: 10px;
-        }
-        .reminder-icon {
-            width: 38px; height: 38px;
-            background: linear-gradient(135deg, var(--accent-warning), #ff8c42);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .reminder-content { flex: 1; }
-        .reminder-task { font-weight: 500; font-size: 13px; }
-        .reminder-time { font-size: 11px; color: var(--text-muted); }
-        .reminder-delete { background: none; border: none; color: var(--text-muted); cursor: pointer; }
-
-        .rate-card {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px; background: var(--glass);
-            border-radius: var(--radius-md);
-            margin-bottom: 8px;
-        }
-        .rate-pair { display: flex; align-items: center; gap: 10px; }
-        .rate-flag { font-size: 20px; }
-        .rate-code { font-weight: 600; font-size: 13px; }
-        .rate-value { font-size: 16px; font-weight: 600; color: var(--accent-success); }
-
-        .alert-card {
-            padding: 12px; border-radius: var(--radius-md);
-            margin-bottom: 10px; border-left: 4px solid;
-            background: var(--glass);
-        }
-        .alert-card.danger { background: rgba(255, 71, 87, 0.1); border-color: var(--accent-danger); }
-        .alert-card.warning { background: rgba(255, 165, 0, 0.1); border-color: var(--accent-warning); }
-        .alert-card.info { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-primary); }
-        .alert-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
-        .alert-title { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
-        .alert-time { font-size: 10px; color: var(--text-muted); }
-        .alert-body { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-
-        /* Group Header */
-        .group-header {
-            font-size: 11px; font-weight: 700; color: var(--text-muted);
-            margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .chat-messages {
-            height: 250px; overflow-y: auto;
-            padding: 15px; background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-        }
-        .chat-message { margin-bottom: 12px; }
-        .chat-message.user { text-align: right; }
-        .chat-bubble {
-            display: inline-block; max-width: 85%;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-        }
-        .chat-message.user .chat-bubble {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-        }
-        .chat-message.bot .chat-bubble { background: var(--glass); }
-        .chat-input-area { display: flex; gap: 10px; }
-        .chat-input-area .btn { width: auto; padding: 14px 18px; }
+        .btn-sm { padding: 12px 16px; font-size: 13px; }
         
-        /* Briefing Style */
-        .briefing-card {
-            border-left: 3px solid var(--accent-primary);
-            background: rgba(0, 212, 255, 0.05);
-            margin-bottom: 15px; padding: 12px; border-radius: var(--radius-md);
-        }
-        .briefing-title { font-weight: 700; color: var(--accent-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .briefing-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .briefing-row:last-child { border-bottom: none; }
-        .briefing-footer { margin-top: 8px; font-size: 11px; color: var(--accent-success); font-style: italic; }
-
-        .command-list { margin-top: 15px; padding: 15px; background: var(--glass); border-radius: var(--radius-md); }
-        .command-title { font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 10px; }
-        .command-item { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
-        .command-item code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; color: var(--accent-primary); }
-
-        .empty-state { text-align: center; padding: 30px; }
-        .empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.4; }
-        .empty-text { color: var(--text-muted); font-size: 12px; }
-
-        .loading { display: flex; justify-content: center; padding: 30px; }
-        .spinner {
-            width: 30px; height: 30px;
-            border: 3px solid var(--glass);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .toast {
-            position: fixed; top: 20px; left: 20px; right: 20px;
-            padding: 14px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-success);
-            border-radius: var(--radius-md);
-            z-index: 5000;
-            display: flex; align-items: center; gap: 10px;
-            transform: translateY(-150%);
-            transition: transform 0.4s ease;
-        }
+        .input-group { position: relative; margin-bottom: 12px; }
+        .input-field { width: 100%; padding: 14px 16px; background: var(--bg-secondary); border: 1px solid var(--separator); border-radius: var(--radius-md); color: var(--text-primary); font-family: inherit; font-size: 15px; transition: all 0.2s; }
+        .input-field:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(10,132,255,0.2); }
+        
+        /* Specific Styles */
+        .weather-main { display: flex; align-items: center; gap: 20px; padding: 10px 0; }
+        .weather-icon { font-size: 56px; }
+        .weather-temp { font-size: 34px; font-weight: 700; }
+        .weather-cond { color: var(--text-secondary); font-size: 15px; margin-top: 2px; }
+        .weather-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+        .weather-detail { background: var(--bg-secondary); padding: 14px; border-radius: var(--radius-md); text-align: center; }
+        .weather-detail .val { font-size: 17px; font-weight: 600; color: var(--accent-blue); }
+        .weather-detail .lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+        
+        /* Map & Journey */
+        .map-container { width: 100%; height: 200px; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; position: relative; cursor: pointer; }
+        .map-fullscreen { position: fixed; inset: 0; z-index: 2000; background: var(--bg-primary); display: none; }
+        .map-fullscreen.active { display: block; }
+        #journeyMapFull { width: 100%; height: 100%; }
+        .map-top-bar { position: absolute; top: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent); padding: 60px 20px 50px; z-index: 2001; }
+        .map-bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.95), transparent); padding: 50px 20px 40px; z-index: 2001; }
+        .map-controls { display: flex; gap: 16px; justify-content: center; align-items: center; }
+        .map-btn { width: 56px; height: 56px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; background: rgba(255,255,255,0.12); color: white; transition: all 0.2s; }
+        .map-btn-end { width: 72px; height: 72px; background: var(--accent-red); font-size: 28px; box-shadow: 0 8px 24px rgba(255,69,58,0.4); }
+        
+        /* Parking & Lists */
+        .parking-display { text-align: center; padding: 24px; }
+        .parking-photo { max-width: 100%; border-radius: var(--radius-lg); margin-bottom: 16px; object-fit: cover; }
+        
+        .reminder-item { display: flex; align-items: center; gap: 14px; padding: 14px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 10px; }
+        .reminder-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .reminder-content { flex: 1; }
+        .reminder-delete { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; padding: 8px; }
+        
+        .history-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px; margin-bottom: 10px; cursor: pointer; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .history-date { font-size: 13px; color: var(--accent-blue); font-weight: 500; }
+        .history-mode { font-size: 11px; padding: 4px 10px; border-radius: 100px; font-weight: 500; }
+        
+        /* Utils */
+        .toast { position: fixed; top: 60px; left: 16px; right: 16px; max-width: 400px; margin: 0 auto; padding: 16px 20px; background: rgba(44,44,46,0.95); backdrop-filter: blur(20px); border: 1px solid var(--separator); border-radius: var(--radius-lg); z-index: 5000; display: flex; align-items: center; gap: 12px; transform: translateY(-150%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
         .toast.show { transform: translateY(0); }
-        .toast.error { border-color: var(--accent-danger); }
-
-        .modal {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 4000;
-            display: none;
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal.show { display: flex; }
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            width: 100%; max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .modal-title { font-size: 18px; font-weight: 600; }
-        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+        .modal-content { background: var(--bg-secondary); border-radius: var(--radius-xl); width: 100%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--separator); display: flex; justify-content: space-between; align-items: center; }
+        .modal-close { background: none; border: none; color: var(--text-tertiary); font-size: 24px; cursor: pointer; }
         .modal-body { padding: 20px; }
-
-        .fitness-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
-        .fitness-item { background: var(--glass); padding: 15px; border-radius: var(--radius-md); text-align: center; }
-        .fitness-icon { font-size: 24px; margin-bottom: 8px; }
-        .fitness-value { font-size: 20px; font-weight: 700; color: var(--accent-success); }
-        .fitness-label { font-size: 10px; color: var(--text-muted); }
-
-        .news-item { padding: 12px; background: var(--glass); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
-        .news-source { display: inline-block; padding: 2px 8px; background: var(--accent-primary); color: var(--bg-primary); border-radius: 10px; font-size: 9px; margin-bottom: 5px; }
-        .news-title { font-size: 13px; font-weight: 500; }
-
-        /* GPS Accuracy Indicator */
-        .gps-accuracy {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: var(--glass);
-            border-radius: 20px;
-            font-size: 11px;
-        }
-
-        .gps-accuracy-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-        }
-
-        .gps-accuracy-dot.excellent { background: var(--accent-success); box-shadow: 0 0 8px var(--accent-success); }
-        .gps-accuracy-dot.good { background: var(--accent-primary); }
-        .gps-accuracy-dot.poor { background: var(--accent-warning); }
-        .gps-accuracy-dot.bad { background: var(--accent-danger); }
+        .fitness-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 16px 0; }
+        .fitness-item { background: var(--bg-tertiary); padding: 18px; border-radius: var(--radius-md); text-align: center; }
+        .fitness-value { font-size: 24px; font-weight: 700; color: var(--accent-green); }
+        .fitness-label { font-size: 11px; color: var(--text-tertiary); }
+        
+        /* Search */
+        .search-results { position: absolute; top: 100%; left: 0; right: 0; background: rgba(44,44,46,0.95); backdrop-filter: blur(20px); border: 1px solid var(--separator); border-radius: var(--radius-md); margin-top: 8px; z-index: 3000; max-height: 280px; overflow-y: auto; display: none; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .search-results.active { display: block; }
+        .search-item { padding: 14px 16px; border-bottom: 1px solid var(--separator); cursor: pointer; }
+        
+        /* Life Styles */
+        .water-tracker, .focus-card, .sleep-card, .expense-card, .habit-card, .notes-card { margin-bottom: 16px; border-radius: var(--radius-lg); padding: 20px; }
+        .water-tracker { background: linear-gradient(135deg, rgba(90,200,250,0.15), rgba(100,210,255,0.05)); }
+        .focus-card { background: linear-gradient(135deg, rgba(255,159,10,0.15), rgba(255,149,0,0.05)); text-align: center; }
+        .expense-card { background: linear-gradient(135deg, rgba(48,209,88,0.15), rgba(52,199,89,0.05)); }
+        
+        /* Rates & News */
+        .rate-card { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 8px; }
+        .news-item { padding: 14px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 8px; }
+        .news-source { display: inline-block; padding: 3px 10px; background: var(--accent-blue); color: white; border-radius: 100px; font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+        .alert-card { padding: 14px 16px; border-radius: var(--radius-md); margin-bottom: 10px; border-left: 4px solid; background: var(--bg-secondary); }
+        .alert-card.danger { background: rgba(255,69,58,0.1); border-color: var(--accent-red); }
+        .alert-card.info { background: rgba(10,132,255,0.1); border-color: var(--accent-blue); }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
+<div class="bg-ambient"></div>
+<div class="app">
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">☀️</div>
+            <div class="logo-text"><h1>Sunday</h1><span>Personal Assistant</span></div>
+        </div>
+        <div class="header-time">
+            <div class="time" id="currentTime">00:00</div>
+            <div class="date" id="currentDate">Loading...</div>
+        </div>
+    </header>
 
-    <div class="app-container">
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <img src="logosunday.jpg" alt="S">
-                </div>
-                <div class="logo-text">
-                    <h1>Sunday</h1>
-                    <span>AI ASSISTANT V9.1</span>
-                </div>
+    <nav class="nav">
+        <button class="nav-btn active" data-page="dashboard"><span class="icon">🏠</span><span>Home</span></button>
+        <button class="nav-btn" data-page="life"><span class="icon">💫</span><span>Life</span></button>
+        <button class="nav-btn" data-page="weather"><span class="icon">🌤️</span><span>Weather</span></button>
+        <button class="nav-btn" data-page="journey"><span class="icon">🗺️</span><span>Journey</span></button>
+        <button class="nav-btn" data-page="parking"><span class="icon">🅿️</span><span>Parking</span></button>
+        <button class="nav-btn" data-page="tools"><span class="icon">🛠️</span><span>Tools</span></button>
+        <button class="nav-btn" data-page="alerts"><span class="icon">🚨</span><span>Alerts</span></button>
+    </nav>
+
+    <div class="page active" id="page-dashboard">
+        <div id="dailyBriefing" class="briefing" style="display:none;padding:16px;background:rgba(10,132,255,0.1);border-radius:16px;margin-bottom:16px">
+            <div style="font-weight:700;color:var(--accent-blue);margin-bottom:10px">☀️ Good Morning</div>
+            <div id="briefingContent"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat"><div class="stat-val" id="dashTemp">--°</div><div class="stat-lbl">Temp</div></div>
+            <div class="stat"><div class="stat-val" id="dashAlerts">0</div><div class="stat-lbl">Alerts</div></div>
+            <div class="stat"><div class="stat-val" id="dashJourneys">0</div><div class="stat-lbl">Journeys</div></div>
+            <div class="stat"><div class="stat-val" id="dashReminders">0</div><div class="stat-lbl">Reminders</div></div>
+        </div>
+
+        <div class="water-tracker">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                <div style="font-weight:600">💧 Hydration</div>
+                <div><span style="font-size:24px;font-weight:700" id="waterCount">0</span>/8</div>
             </div>
-            <div class="header-time">
-                <div class="time" id="currentTime">00:00</div>
-                <div class="date" id="currentDate">Loading...</div>
+            <div style="height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;margin-bottom:16px">
+                <div id="waterProgress" style="height:100%;width:0%;background:var(--accent-teal)"></div>
             </div>
-        </header>
-
-        <nav class="nav-tabs">
-            <button class="nav-tab active" data-page="dashboard"><span class="icon">🏠</span><span>Home</span></button>
-            <button class="nav-tab" data-page="weather"><span class="icon">🌤️</span><span>Weather</span></button>
-            <button class="nav-tab" data-page="journey"><span class="icon">🗺️</span><span>Journey</span></button>
-            <button class="nav-tab" data-page="parking"><span class="icon">🅿️</span><span>Parking</span></button>
-            <button class="nav-tab" data-page="tools"><span class="icon">🛠️</span><span>Tools</span></button>
-            <button class="nav-tab" data-page="alerts"><span class="icon">🚨</span><span>Alerts</span></button>
-            <button class="nav-tab" data-page="chat"><span class="icon">💬</span><span>Chat</span></button>
-        </nav>
-
-        <div class="page active" id="page-dashboard">
-            <div id="dailyBriefing" class="briefing-card" style="display:none">
-                <div class="briefing-title">🔔 Morning Update</div>
-                <div id="briefingContent"></div>
-                <div class="briefing-footer">Don't forget to drink some water! 💧</div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-item"><div class="stat-value" id="dashTemp">--°</div><div class="stat-label">Temp</div></div>
-                <div class="stat-item"><div class="stat-value" id="dashAlerts">0</div><div class="stat-label">Alerts</div></div>
-                <div class="stat-item"><div class="stat-value" id="dashJourneys">0</div><div class="stat-label">Journeys</div></div>
-                <div class="stat-item"><div class="stat-value" id="dashReminders">0</div><div class="stat-label">Reminders</div></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><div class="card-title">🌤️ Weather</div><span class="badge live">● LIVE</span></div>
-                <div class="weather-main" id="dashWeather">
-                    <div class="weather-icon">☀️</div>
-                    <div><div class="weather-temp">--°C</div><div class="weather-condition">Loading...</div></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><div class="card-title">🚨 Recent Alerts</div></div>
-                <div id="dashAlertsPreview"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><div class="card-title">📰 News</div></div>
-                <div id="dashNews"><div class="loading"><div class="spinner"></div></div></div>
+            <div class="btn-row-3">
+                <button class="btn btn-secondary btn-sm" onclick="addWater(1)">+1 Cup</button>
+                <button class="btn btn-secondary btn-sm" onclick="addWater(2)">+2 Cups</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetWater()">Reset</button>
             </div>
         </div>
 
-        <div class="page" id="page-weather">
+        <div class="card">
+            <div class="card-header"><div class="card-title">🌤️ Weather</div><span class="badge live">● LIVE</span></div>
+            <div class="weather-main" id="dashWeather">
+                <div class="weather-icon">☀️</div>
+                <div><div class="weather-temp">--°C</div><div class="weather-cond">Loading...</div></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header"><div class="card-title">📰 News</div></div>
+            <div id="dashNews"><div style="padding:10px;text-align:center">Loading news...</div></div>
+        </div>
+    </div>
+
+    <div class="page" id="page-life">
+        <div class="focus-card">
+            <div class="card-title" style="justify-content:center;margin-bottom:20px">🎯 Focus Timer</div>
+            <div id="focusTimer" style="font-size:60px;font-weight:700;color:var(--accent-orange);margin-bottom:10px;font-feature-settings:'tnum'">25:00</div>
+            <div id="focusStatus" style="color:var(--text-secondary);margin-bottom:20px">Ready?</div>
+            <div class="btn-row-3" style="margin-bottom:20px">
+                <button class="btn btn-secondary btn-sm" onclick="setFocusTime(25)">25m</button>
+                <button class="btn btn-secondary btn-sm" onclick="setFocusTime(45)">45m</button>
+                <button class="btn btn-secondary btn-sm" onclick="setFocusTime(60)">60m</button>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="resetFocus()">Reset</button>
+                <button class="btn btn-primary" id="focusPlayBtn" onclick="toggleFocus()">Start</button>
+            </div>
+        </div>
+        
+        <div class="sleep-card">
+             <div class="card-title">😴 Sleep Tracker</div>
+             <div style="text-align:center;padding:20px">
+                 <div id="sleepHours" style="font-size:30px;font-weight:700;color:var(--accent-purple)">-- hrs</div>
+                 <div id="sleepQuality" style="color:var(--text-secondary)">Log sleep</div>
+             </div>
+             <div class="btn-row">
+                 <input type="time" id="sleepBedtime" class="input-field" value="23:00">
+                 <input type="time" id="sleepWakeup" class="input-field" value="07:00">
+             </div>
+             <button class="btn btn-primary" style="margin-top:10px" onclick="logSleep()">Log Sleep</button>
+        </div>
+
+        <div class="expense-card">
+             <div class="card-title">💰 Today: <span id="expenseTotal" style="color:var(--accent-green)">RM 0</span></div>
+             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0">
+                 <button class="btn btn-secondary btn-sm" onclick="selectExpenseCat('food')">🍔</button>
+                 <button class="btn btn-secondary btn-sm" onclick="selectExpenseCat('transport')">🚗</button>
+                 <button class="btn btn-secondary btn-sm" onclick="selectExpenseCat('shopping')">🛍️</button>
+                 <button class="btn btn-secondary btn-sm" onclick="selectExpenseCat('other')">📦</button>
+             </div>
+             <div class="btn-row">
+                 <input type="number" id="expenseAmount" class="input-field" placeholder="RM Amount">
+                 <button class="btn btn-success" onclick="addExpense()">Add</button>
+             </div>
+             <div id="expenseList" style="margin-top:16px;max-height:150px;overflow-y:auto"></div>
+        </div>
+
+        <div class="habit-card">
+            <div class="card-header"><div class="card-title">✅ Habits</div><button class="btn btn-sm btn-secondary" onclick="showAddHabitModal()">+</button></div>
+            <div id="habitList"></div>
+        </div>
+
+        <div class="notes-card">
+            <div class="card-title" style="margin-bottom:10px">📝 Quick Notes</div>
+            <textarea id="quickNotes" class="input-field" style="height:100px;resize:none" placeholder="Type here..." oninput="saveNotes()"></textarea>
+            <div style="text-align:right;margin-top:5px;font-size:11px;color:var(--text-tertiary)" id="notesDate"></div>
+        </div>
+    </div>
+
+    <div class="page" id="page-weather">
+        <div class="input-group">
+            <input type="text" class="input-field" id="weatherSearch" placeholder="Search city..." autocomplete="off">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+        <div class="card">
+            <div class="card-header"><div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div></div>
+            <div class="weather-main">
+                <div class="weather-icon" id="weatherIcon">☀️</div>
+                <div><div class="weather-temp"><span id="weatherTemp">--</span>°C</div><div class="weather-cond" id="weatherCondition">Loading...</div></div>
+            </div>
+            <div class="weather-details">
+                <div class="weather-detail"><div class="val" id="weatherWind">--</div><div class="lbl">Wind</div></div>
+                <div class="weather-detail"><div class="val" id="weatherHumidity">--</div><div class="lbl">Hum</div></div>
+                <div class="weather-detail"><div class="val" id="weatherRain">--</div><div class="lbl">Rain</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><div class="card-title">🌍 Saved Locations</div></div>
+            <div class="loc-list" id="monitoredLocations"></div>
+        </div>
+    </div>
+
+    <div class="page" id="page-journey">
+        <div class="card" id="activeJourneyCard" style="display:none">
+            <div class="card-header"><div class="card-title">🚗 <span id="journeyModeText">Tracking</span></div><span class="badge live">● LIVE</span></div>
+            <div id="gpsAccuracy" style="margin-bottom:10px;font-size:12px;color:var(--text-secondary)">GPS Signal...</div>
+            <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+                <div class="stat"><div class="stat-val" id="jDistance">0.0</div><div class="stat-lbl">km</div></div>
+                <div class="stat"><div class="stat-val" id="jSpeed">0</div><div class="stat-lbl">km/h</div></div>
+                <div class="stat"><div class="stat-val" id="jTime">0</div><div class="stat-lbl">min</div></div>
+            </div>
+            <div class="map-container" onclick="openFullscreenMap()"><div id="journeyMapSmall" style="width:100%;height:100%"></div></div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="openFullscreenMap()">Full Map</button>
+                <button class="btn btn-danger" onclick="endJourney()">End</button>
+            </div>
+        </div>
+
+        <div class="card" id="startJourneyCard">
+            <div class="card-header"><div class="card-title">🚀 New Journey</div></div>
+            <button class="btn btn-primary" onclick="startJourney()">Start Tracking</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><div class="card-title">📜 History</div></div>
+            <div id="journeyHistory"></div>
+        </div>
+    </div>
+
+    <div class="page" id="page-parking">
+        <div class="card">
+            <div class="card-header"><div class="card-title">🚗 My Car</div></div>
+            <div id="parkingDisplay" class="parking-display">
+                <div class="parking-icon">🅿️</div>
+                <div>No location saved</div>
+            </div>
+            <div class="map-container" id="parkingMapContainer" style="display:none"><div id="parkingMap" style="width:100%;height:100%"></div></div>
+            <div class="btn-row-3">
+                <button class="btn btn-primary btn-sm" onclick="saveParking('gps')">GPS Only</button>
+                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
+                <button class="btn btn-secondary btn-sm" onclick="saveParking('both')">GPS+Photo</button>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
+        </div>
+        <div class="card">
+            <div class="card-header"><div class="card-title">⭐ Saved Places</div></div>
             <div class="input-group">
-                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search city (e.g. London)..." autocomplete="off">
-                <div id="searchResults" class="search-results"></div>
+                <input type="text" id="customPlaceName" class="input-field" placeholder="Place Name (e.g., Home)">
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div>
-                    <span class="badge live">● LIVE</span>
-                </div>
-                <div class="weather-main">
-                    <div class="weather-icon" id="weatherIcon">☀️</div>
-                    <div><div class="weather-temp"><span id="weatherTemp">--</span>°C</div><div class="weather-condition" id="weatherCondition">Loading...</div></div>
-                </div>
-                <div class="weather-details">
-                    <div class="weather-detail"><div class="value" id="weatherWind">--</div><div class="label">Wind</div></div>
-                    <div class="weather-detail"><div class="value" id="weatherHumidity">--</div><div class="label">Humidity</div></div>
-                    <div class="weather-detail"><div class="value" id="weatherRain">--</div><div class="label">Rain %</div></div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">🌍 Locations</div></div>
-                <div class="location-list" id="monitoredLocations"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-        </div>
-
-        <div class="page" id="page-journey">
-            <div class="card" id="activeJourneyCard" style="display: none;">
-                <div class="card-header">
-                    <div class="card-title">🚗 <span id="journeyModeText">Tracking</span></div>
-                    <span class="badge tracking">● LIVE</span>
-                </div>
-                <div class="gps-accuracy" id="gpsAccuracy">
-                    <div class="gps-accuracy-dot good" id="gpsAccuracyDot"></div>
-                    <span id="gpsAccuracyText">GPS: Good</span>
-                </div>
-                <div class="stats-grid" style="margin-top: 15px; grid-template-columns: repeat(3, 1fr);">
-                    <div class="stat-item"><div class="stat-value" id="jDistance">0.0</div><div class="stat-label">km</div></div>
-                    <div class="stat-item"><div class="stat-value" id="jSpeed">0</div><div class="stat-label">km/h</div></div>
-                    <div class="stat-item"><div class="stat-value" id="jTime">0</div><div class="stat-label">min</div></div>
-                    <div class="stat-item"><div class="stat-value" id="jPace">--</div><div class="stat-label">min/km</div></div>
-                    <div class="stat-item"><div class="stat-value" id="jAlt">0</div><div class="stat-label">m (Alt)</div></div>
-                    <div class="stat-item"><div class="stat-value" id="jCalories">0</div><div class="stat-label">kcal</div></div>
-                </div>
-                <div class="map-small-container" onclick="openFullscreenMap()">
-                    <div id="journeyMapSmall"></div>
-                </div>
-                <div class="timeline" id="timelinePreview" style="max-height: 150px; overflow: hidden;"></div>
-                <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="openFullscreenMap()">🗺️ Full Map</button>
-                    <button class="btn btn-danger" onclick="endJourney()">🏁 End</button>
-                </div>
-            </div>
-
-            <div class="card" id="startJourneyCard">
-                <div class="card-header"><div class="card-title">🚀 Start Journey</div></div>
-                <div class="empty-state">
-                    <div class="empty-icon">🗺️</div>
-                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Track Your Movement</div>
-                    <div class="empty-text">Mini-map tracking + Tap to zoom<br>Auto-detects walking/driving & tracks calories</div>
-                </div>
-                <button class="btn btn-primary" onclick="startJourney()">📍 Start Journey</button>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><div class="card-title">📜 History</div></div>
-                <div id="journeyHistory"></div>
-            </div>
-        </div>
-
-        <div class="page" id="page-parking">
-            <div class="card">
-                <div class="card-header"><div class="card-title">🚗 My Car</div></div>
-                <div id="parkingDisplay">
-                    <div class="parking-display">
-                        <div class="parking-icon">🚗</div>
-                        <div style="font-size: 14px;">No location saved</div>
-                    </div>
-                </div>
-                <div class="map-small-container" id="parkingMapContainer" style="display: none;">
-                    <div id="parkingMap"></div>
-                </div>
-                <div class="btn-row-3">
-                    <button class="btn btn-primary btn-sm" onclick="saveParking('gps')">📍 GPS</button>
-                    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
-                    <button class="btn btn-secondary btn-sm" onclick="saveParking('both')">📍+📸</button>
-                </div>
-                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">⭐ Saved Places</div></div>
-                <div class="input-group"><input type="text" class="input-field" id="customPlaceName" placeholder="Name this place"></div>
-                <button class="btn btn-secondary" onclick="saveCustomPlace()">💾 Save Place</button>
-                <div id="customPlacesList" style="margin-top: 15px;"></div>
-            </div>
-        </div>
-
-        <div class="page" id="page-tools">
-            <div class="card">
-                <div class="card-header"><div class="card-title">⏰ Reminders</div><span class="badge" id="reminderBadge">0</span></div>
-                <button class="btn btn-secondary" onclick="enableNotifications()" style="margin-bottom: 10px;">🔔 Enable Alerts on iPhone</button>
-                <div class="input-group"><input type="text" class="input-field" id="reminderTask" placeholder="What to remind?"></div>
-                <div class="btn-row" style="margin-bottom: 15px;">
-                    <select class="input-field" id="reminderTime">
-                        <option value="10">10 mins</option>
-                        <option value="30">30 mins</option>
-                        <option value="60">1 hour</option>
-                        <option value="120">2 hours</option>
-                        <option value="480">8 hours</option>
-                        <option value="1440">24 hours</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="addReminder()">⏰ Set</button>
-                </div>
-                <div id="reminderList"></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">💱 Currency (vs MYR)</div></div>
-                <div id="currencyRates"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">📰 News</div></div>
-                <div id="newsList"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-        </div>
-
-        <div class="page" id="page-alerts">
-            <div class="card">
-                <div class="card-header"><div class="card-title">🌍 Global Weather Watch</div><span class="badge live">● LIVE</span></div>
-                <div id="globalWeatherAlerts"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">🚨 Earthquake Monitor</div></div>
-                <div id="earthquakeAlerts"><div class="loading"><div class="spinner"></div></div></div>
-            </div>
-        </div>
-
-        <div class="page" id="page-chat">
-            <div class="card">
-                <div class="card-header"><div class="card-title">💬 Chat</div></div>
-                <div id="chatBriefing" class="briefing-card" style="display:none; margin: 15px;">
-                    <div class="briefing-title">🔔 Morning Update</div>
-                    <div id="chatBriefingContent"></div>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="chat-message bot"><div class="chat-bubble">Hi! 👋 I'm Sunday. I monitor weather and earthquakes for you.</div></div>
-                </div>
-                <div class="chat-input-area">
-                    <input type="text" class="input-field" id="chatInput" placeholder="Type..." onkeypress="if(event.key==='Enter')sendChat()">
-                    <button class="btn btn-primary" onclick="sendChat()">➤</button>
-                </div>
-            </div>
+            <button class="btn btn-secondary" onclick="saveCustomPlace()">Save Current Location</button>
+            <div id="customPlacesList" style="margin-top:16px"></div>
         </div>
     </div>
 
-    <div class="map-fullscreen" id="mapFullscreen">
-        <div id="journeyMapFull"></div>
-        <div class="map-top-bar">
-            <div class="map-status-row">
-                <div class="map-mode-icon" id="fsModeIcon">🚶</div>
-                <div class="map-mode-info">
-                    <div class="map-mode-title" id="fsModeTitle">Walking</div>
-                    <div class="map-street" id="fsStreet">Detecting location...</div>
-                </div>
-                <button class="map-close-btn" onclick="closeFullscreenMap()">✕</button>
+    <div class="page" id="page-tools">
+        <div class="card">
+            <div class="card-header"><div class="card-title">⏰ Reminders</div></div>
+            <button class="btn btn-secondary" style="margin-bottom:10px" onclick="enableNotifications()">🔔 Enable Notifications</button>
+            <div class="input-group"><input type="text" id="reminderTask" class="input-field" placeholder="Task..."></div>
+            <div class="btn-row">
+                <select id="reminderTime" class="input-field">
+                    <option value="1">1 min (Test)</option>
+                    <option value="10">10 mins</option>
+                    <option value="30">30 mins</option>
+                    <option value="60">1 hour</option>
+                </select>
+                <button class="btn btn-primary" onclick="addReminder()">Set</button>
             </div>
-            <div class="map-live-stats" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="map-stat"><div class="value" id="fsDistance">0.0</div><div class="label">km</div></div>
-                <div class="map-stat"><div class="value" id="fsSpeed">0</div><div class="label">km/h</div></div>
-                <div class="map-stat"><div class="value" id="fsTime">0</div><div class="label">min</div></div>
-                <div class="map-stat"><div class="value" id="fsPace">--</div><div class="label">Pace</div></div>
-                <div class="map-stat"><div class="value" id="fsAlt">0</div><div class="label">Alt (m)</div></div>
-                <div class="map-stat"><div class="value" id="fsCalories">0</div><div class="label">kcal</div></div>
-            </div>
+            <div id="reminderList" style="margin-top:16px"></div>
         </div>
-        <div class="map-bottom-bar">
-            <div class="map-duration">
-                <div class="map-duration-label">Duration</div>
-                <div class="map-duration-time" id="fsDuration">00:00</div>
-            </div>
-            <div class="map-controls">
-                <button class="map-btn" onclick="toggleTimelinePanel()">📋</button>
-                <button class="map-btn" onclick="document.getElementById('journeyPhotoInput').click()">📷</button>
-                <button class="map-btn map-btn-end" onclick="endJourney()">🏁</button>
-                <button class="map-btn" onclick="centerMapOnUser()">📍</button>
-                <input type="file" id="journeyPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="addJourneyPhoto(event)">
-            </div>
-        </div>
-        <div class="timeline-panel" id="timelinePanel">
-            <div class="timeline-header"><h3>📜 Timeline</h3><button class="timeline-close" onclick="toggleTimelinePanel()">×</button></div>
-            <div class="timeline-content"><div class="timeline" id="fsTimeline"></div></div>
+        <div class="card">
+            <div class="card-header"><div class="card-title">💱 Currency (vs MYR)</div></div>
+            <div id="currencyRates">Loading...</div>
         </div>
     </div>
 
-    <div class="toast" id="toast"><span class="toast-icon">✅</span><span class="toast-message">Success!</span></div>
+    <div class="page" id="page-alerts">
+        <div class="card"><div class="card-header"><div class="card-title">🌍 Global Weather</div></div><div id="globalWeatherAlerts">Loading...</div></div>
+        <div class="card"><div class="card-header"><div class="card-title">🚨 Earthquakes</div></div><div id="earthquakeAlerts">Loading...</div></div>
+    </div>
+</div>
 
-    <div class="modal" id="historyModal">
-        <div class="modal-content">
-            <div class="modal-header"><div class="modal-title">📜 Journey Details</div><button class="modal-close" onclick="closeModal()">×</button></div>
-            <div class="modal-body" id="historyModalBody"></div>
+<div class="map-fullscreen" id="mapFullscreen">
+    <div id="journeyMapFull"></div>
+    <div class="map-top-bar">
+        <div style="font-size:20px;font-weight:700;color:white" id="fsModeTitle">Tracking</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.7)" id="fsStreet">Detecting...</div>
+        <button class="map-btn" style="position:absolute;right:20px;top:60px" onclick="closeFullscreenMap()">✕</button>
+    </div>
+    <div class="map-bottom-bar">
+        <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:48px;font-weight:700;color:var(--accent-green)" id="fsDuration">00:00</div>
+        </div>
+        <div class="map-controls">
+            <button class="map-btn" onclick="centerMapOnUser()">📍</button>
+            <button class="map-btn map-btn-end" onclick="endJourney()">🏁</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const APP = { journey: null, watchId: null, mapSmall: null, mapFull: null, markerSmall: null, markerFull: null, pathSmall: null, pathFull: null, pathCoords: [], parkingMap: null, reminders: [], parking: null, customPlaces: {}, journeyHistory: [], pendingPhoto: null, timerInterval: null, isFullscreen: false };
-        const LOCATIONS = { 'Johor Jaya': { lat: 1.5360, lon: 103.7930 }, 'Iskandar Puteri': { lat: 1.4190, lon: 103.6350 }, 'Singapore': { lat: 1.3521, lon: 103.8198 }, 'Tokyo': { lat: 35.6895, lon: 139.6917 }, 'London': { lat: 51.5074, lon: -0.1278 } };
-        const GLOBAL_MONITOR = [{n:'Tokyo', lat:35.6895, lon:139.6917}, {n:'New York', lat:40.7128, lon:-74.0060}, {n:'London', lat:51.5074, lon:-0.1278}, {n:'Dubai', lat:25.2769, lon:55.2962}, {n:'Sydney', lat:-33.8688, lon:151.2093}, {n:'Shanghai', lat:31.2304, lon:121.4737}, {n:'Singapore', lat:1.3521, lon:103.8198}, {n:'Paris', lat:48.8566, lon:2.3522}, {n:'Beijing', lat:39.9042, lon:116.4074}, {n:'Seoul', lat:37.5665, lon:126.9780}, {n:'Hokkaido', lat:43.2203, lon:142.8635}];
-        const CURRENCIES = [{ code: 'USD', flag: '🇺🇸' }, { code: 'SGD', flag: '🇸🇬' }, { code: 'EUR', flag: '🇪🇺' }, { code: 'GBP', flag: '🇬🇧' }, { code: 'JPY', flag: '🇯🇵' }, { code: 'CNY', flag: '🇨🇳' }];
+<div class="toast" id="toast"><span class="toast-icon">✅</span><span class="toast-message">Success</span></div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadStorage(); initNav(); updateClock(); setInterval(updateClock, 1000);
-            loadWeather(); loadNews(); loadCurrency(); loadEarthquakes(); loadGlobalWeatherAlerts();
-            renderReminders(); renderParking(); renderHistory(); renderPlaces(); generateDailyBriefing();
-            setInterval(checkReminders, 10000); setInterval(loadEarthquakes, 300000);
-            if ('Notification' in window) Notification.requestPermission();
+<div class="modal" id="historyModal">
+    <div class="modal-content">
+        <div class="modal-header"><div class="modal-title">Journey</div><button class="modal-close" onclick="closeModal()">×</button></div>
+        <div class="modal-body" id="historyModalBody"></div>
+    </div>
+</div>
+
+<div class="modal" id="habitModal">
+    <div class="modal-content">
+        <div class="modal-header"><div class="modal-title">Add Habit</div><button class="modal-close" onclick="closeHabitModal()">×</button></div>
+        <div class="modal-body">
+            <input type="text" id="habitName" class="input-field" placeholder="Habit Name" style="margin-bottom:10px">
+            <input type="text" id="habitIcon" class="input-field" placeholder="Emoji (🏃)" style="margin-bottom:10px">
+            <button class="btn btn-primary" onclick="addHabit()">Add</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const APP = {
+    journey: null, watchId: null, mapSmall: null, mapFull: null, markerSmall: null, markerFull: null, pathSmall: null, pathFull: null, pathCoords: [],
+    parking: null, parkingMap: null, pendingPhoto: null,
+    reminders: [], customPlaces: {}, journeyHistory: [],
+    water: 0, expenses: [], selectedExpenseCat: 'food', habits: [], notes: '',
+    focusTime: 25*60, focusRemaining: 25*60, focusRunning: false, focusInterval: null
+};
+const LOCATIONS = {'Johor Jaya':{lat:1.536,lon:103.793},'Singapore':{lat:1.3521,lon:103.8198},'Tokyo':{lat:35.6895,lon:139.6917}};
+const CURRENCIES = [{code:'USD',flag:'🇺🇸'},{code:'SGD',flag:'🇸🇬'},{code:'JPY',flag:'🇯🇵'},{code:'GBP',flag:'🇬🇧'}];
+const EXPENSE_ICONS = {food:'🍔',transport:'🚗',shopping:'🛍️',other:'📦'};
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadStorage(); initNav(); updateClock(); setInterval(updateClock, 1000);
+    loadWeather(); loadCurrency(); loadNews(); loadAlerts();
+    renderParking(); renderHistory(); renderReminders(); renderPlaces();
+    renderWater(); renderExpenses(); renderHabits(); loadNotes();
+    setInterval(checkReminders, 10000);
+});
+
+// Storage
+function loadStorage() {
+    try {
+        APP.reminders = JSON.parse(localStorage.getItem('sun_rem') || '[]');
+        APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null');
+        APP.customPlaces = JSON.parse(localStorage.getItem('sun_places') || '{}');
+        APP.journeyHistory = JSON.parse(localStorage.getItem('sun_hist') || '[]');
+        APP.water = parseInt(localStorage.getItem('sun_water') || '0');
+        APP.expenses = JSON.parse(localStorage.getItem('sun_expenses') || '[]');
+        APP.habits = JSON.parse(localStorage.getItem('sun_habits') || '[]');
+        APP.notes = localStorage.getItem('sun_notes') || '';
+        
+        // Reset water daily
+        const lastDate = localStorage.getItem('sun_date_chk');
+        const today = new Date().toDateString();
+        if(lastDate !== today) {
+            APP.water = 0;
+            APP.expenses = [];
+            localStorage.setItem('sun_date_chk', today);
+        }
+    } catch(e) {}
+}
+function saveStorage() {
+    localStorage.setItem('sun_rem', JSON.stringify(APP.reminders));
+    localStorage.setItem('sun_park', JSON.stringify(APP.parking));
+    localStorage.setItem('sun_places', JSON.stringify(APP.customPlaces));
+    localStorage.setItem('sun_hist', JSON.stringify(APP.journeyHistory));
+    localStorage.setItem('sun_water', APP.water);
+    localStorage.setItem('sun_expenses', JSON.stringify(APP.expenses));
+    localStorage.setItem('sun_habits', JSON.stringify(APP.habits));
+    localStorage.setItem('sun_notes', APP.notes);
+}
+
+// Navigation & Time
+function initNav() {
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('page-'+btn.dataset.page).classList.add('active');
+    }));
+}
+function updateClock() {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short'});
+}
+
+// Reminders
+function enableNotifications() {
+    if('Notification' in window) Notification.requestPermission().then(p => showToast(p==='granted'?'Enabled ✅':'Denied ❌'));
+}
+function addReminder() {
+    const txt = document.getElementById('reminderTask').value;
+    const min = parseInt(document.getElementById('reminderTime').value);
+    if(!txt) return showToast('Enter task', true);
+    
+    APP.reminders.push({id: Date.now(), text: txt, time: Date.now() + min*60000});
+    document.getElementById('reminderTask').value = '';
+    saveStorage(); renderReminders(); showToast('Reminder set! ⏰');
+}
+function checkReminders() {
+    const now = Date.now();
+    APP.reminders.forEach((r, i) => {
+        if(r.time <= now) {
+            if(Notification.permission === 'granted') new Notification('Sunday Reminder', {body: r.text});
+            showToast('⏰ ' + r.text);
+            APP.reminders.splice(i, 1);
+            saveStorage(); renderReminders();
+        }
+    });
+}
+function renderReminders() {
+    const list = document.getElementById('reminderList');
+    document.getElementById('dashReminders').textContent = APP.reminders.length;
+    list.innerHTML = APP.reminders.map(r => {
+        const minLeft = Math.ceil((r.time - Date.now())/60000);
+        return `<div class="reminder-item"><div class="reminder-content"><div>${r.text}</div><div style="font-size:12px;color:var(--text-tertiary)">in ${minLeft} mins</div></div><button class="reminder-delete" onclick="deleteReminder(${r.id})">🗑️</button></div>`;
+    }).join('') || '<div style="text-align:center;color:var(--text-tertiary)">No active reminders</div>';
+}
+function deleteReminder(id) { APP.reminders = APP.reminders.filter(r => r.id !== id); saveStorage(); renderReminders(); }
+
+// Parking
+function handlePhoto(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    if(file.size > 2*1024*1024) return showToast('Image too large (>2MB)', true);
+    const reader = new FileReader();
+    reader.onload = ev => {
+        APP.pendingPhoto = ev.target.result;
+        document.getElementById('parkingDisplay').innerHTML = `<img src="${APP.pendingPhoto}" class="parking-photo"><div>Photo ready to save</div>`;
+    };
+    reader.readAsDataURL(file);
+}
+function saveParking(type) {
+    if(!APP.parking) APP.parking = {};
+    if(type === 'gps' || type === 'both') {
+        navigator.geolocation.getCurrentPosition(pos => {
+            APP.parking.lat = pos.coords.latitude;
+            APP.parking.lon = pos.coords.longitude;
+            finishSaveParking(type);
         });
+    } else finishSaveParking(type);
+}
+function finishSaveParking(type) {
+    if((type === 'photo' || type === 'both') && APP.pendingPhoto) {
+        APP.parking.photo = APP.pendingPhoto;
+        APP.pendingPhoto = null;
+    }
+    APP.parking.time = Date.now();
+    saveStorage(); renderParking(); showToast('Location Saved! 🅿️');
+}
+function renderParking() {
+    const disp = document.getElementById('parkingDisplay');
+    if(!APP.parking) return disp.innerHTML = '<div>No saved location</div>';
+    let h = `<div style="font-size:12px;margin-bottom:10px">Saved: ${new Date(APP.parking.time).toLocaleString()}</div>`;
+    if(APP.parking.photo) h += `<img src="${APP.parking.photo}" class="parking-photo">`;
+    disp.innerHTML = h;
+    
+    if(APP.parking.lat) {
+        document.getElementById('parkingMapContainer').style.display = 'block';
+        if(APP.parkingMap) APP.parkingMap.remove();
+        setTimeout(() => {
+            APP.parkingMap = L.map('parkingMap', {zoomControl:false}).setView([APP.parking.lat, APP.parking.lon], 17);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.parkingMap);
+            L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap);
+        }, 100);
+    }
+}
+function saveCustomPlace() {
+    const name = document.getElementById('customPlaceName').value;
+    if(!name) return showToast('Enter name', true);
+    navigator.geolocation.getCurrentPosition(pos => {
+        APP.customPlaces[name] = {lat: pos.coords.latitude, lon: pos.coords.longitude};
+        document.getElementById('customPlaceName').value = '';
+        saveStorage(); renderPlaces(); showToast('Place saved!');
+    });
+}
+function renderPlaces() {
+    document.getElementById('customPlacesList').innerHTML = Object.entries(APP.customPlaces).map(([n, l]) => 
+        `<div class="loc-card" onclick="openPlaceMap(${l.lat},${l.lon})"><span class="loc-name">📍 ${n}</span></div>`
+    ).join('');
+}
+function openPlaceMap(lat, lon) { window.open(`https://maps.google.com/?q=${lat},${lon}`); }
 
-        function loadStorage() {
-            try { APP.reminders = JSON.parse(localStorage.getItem('sun_rem') || '[]'); APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null'); APP.customPlaces = JSON.parse(localStorage.getItem('sun_places') || '{}'); APP.journeyHistory = JSON.parse(localStorage.getItem('sun_hist') || '[]'); } catch(e) {}
-        }
-        function saveStorage() {
-            localStorage.setItem('sun_rem', JSON.stringify(APP.reminders)); localStorage.setItem('sun_park', JSON.stringify(APP.parking)); localStorage.setItem('sun_places', JSON.stringify(APP.customPlaces)); localStorage.setItem('sun_hist', JSON.stringify(APP.journeyHistory));
-        }
-        function initNav() {
-            document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active')); document.querySelectorAll('.page').forEach(x => x.classList.remove('active')); t.classList.add('active'); document.getElementById('page-' + t.dataset.page).classList.add('active'); }));
-        }
-        function updateClock() {
-            const now = new Date(); document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }); document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-        }
+// Journey
+function startJourney() {
+    if(!navigator.geolocation) return showToast('No GPS', true);
+    navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude, lon = pos.coords.longitude;
+        APP.journey = { startTime: Date.now(), lastLat: lat, lastLon: lon, totalKm: 0, calories: 0, speed: 0, waypoints: [{lat,lon}] };
+        APP.pathCoords = [[lat, lon]];
+        document.getElementById('startJourneyCard').style.display = 'none';
+        document.getElementById('activeJourneyCard').style.display = 'block';
+        
+        setTimeout(() => {
+            APP.mapSmall = L.map('journeyMapSmall', {zoomControl:false}).setView([lat, lon], 17);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapSmall);
+            APP.pathSmall = L.polyline(APP.pathCoords, {color:'#0A84FF', weight:4}).addTo(APP.mapSmall);
+        }, 100);
+        
+        APP.watchId = navigator.geolocation.watchPosition(trackPos, null, {enableHighAccuracy:true});
+        setInterval(() => {
+            if(!APP.journey) return;
+            const mins = Math.floor((Date.now() - APP.journey.startTime)/60000);
+            document.getElementById('jTime').textContent = mins;
+            document.getElementById('fsDuration').textContent = new Date(Date.now() - APP.journey.startTime).toISOString().substr(11, 8);
+        }, 1000);
+    });
+}
+function trackPos(pos) {
+    if(!APP.journey) return;
+    const lat = pos.coords.latitude, lon = pos.coords.longitude, j = APP.journey;
+    const dist = calcDist(j.lastLat, j.lastLon, lat, lon);
+    if(dist > 0.005) {
+        j.totalKm += dist;
+        j.calories += dist * 65; // approx
+        j.speed = (dist / ((Date.now() - j.waypoints[j.waypoints.length-1].time || Date.now())/3600000)) || 0; // rough speed
+        j.lastLat = lat; j.lastLon = lon;
+        j.waypoints.push({lat, lon, time: Date.now()});
+        APP.pathCoords.push([lat, lon]);
+        
+        if(APP.mapSmall) { APP.pathSmall.setLatLngs(APP.pathCoords); APP.mapSmall.panTo([lat, lon]); }
+        if(APP.mapFull) { APP.pathFull.setLatLngs(APP.pathCoords); APP.mapFull.panTo([lat, lon]); }
+        
+        document.getElementById('jDistance').textContent = j.totalKm.toFixed(2);
+        document.getElementById('jCalories').textContent = Math.floor(j.calories);
+        document.getElementById('jSpeed').textContent = j.speed.toFixed(1);
+    }
+}
+function endJourney() {
+    if(APP.watchId) navigator.geolocation.clearWatch(APP.watchId);
+    const j = APP.journey;
+    APP.journeyHistory.unshift({
+        id: Date.now(), date: new Date().toISOString(), distance: j.totalKm.toFixed(2), 
+        duration: Math.floor((Date.now() - j.startTime)/60000), calories: Math.floor(j.calories),
+        mode: 'walking', startLat: j.waypoints[0].lat, startLon: j.waypoints[0].lon, endLat: j.lastLat, endLon: j.lastLon
+    });
+    saveStorage();
+    APP.journey = null;
+    document.getElementById('startJourneyCard').style.display = 'block';
+    document.getElementById('activeJourneyCard').style.display = 'none';
+    closeFullscreenMap();
+    renderHistory();
+}
+function renderHistory() {
+    const list = document.getElementById('journeyHistory');
+    list.innerHTML = APP.journeyHistory.slice(0,10).map(j => `
+        <div class="history-card" onclick="showHistoryDetail(${j.id})">
+            <div class="history-header"><span class="history-date">${new Date(j.date).toLocaleDateString()}</span><span>${j.distance} km</span></div>
+        </div>
+    `).join('') || '<div class="empty-state">No history</div>';
+}
+function showHistoryDetail(id) {
+    const j = APP.journeyHistory.find(x => x.id === id);
+    if(!j) return;
+    document.getElementById('historyModal').classList.add('show');
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${j.startLat},${j.startLon}&destination=${j.endLat},${j.endLon}&travelmode=walking`;
+    document.getElementById('historyModalBody').innerHTML = `
+        <div class="fitness-grid">
+            <div class="fitness-item"><div class="fitness-value">${j.distance}</div><div class="fitness-label">km</div></div>
+            <div class="fitness-item"><div class="fitness-value">${j.duration}</div><div class="fitness-label">min</div></div>
+        </div>
+        <a href="${url}" target="_blank" class="btn btn-primary">View on Map</a>
+    `;
+}
 
-        async function generateDailyBriefing() {
-            let content = ''; content += `<div class="briefing-row"><strong>🌥️ Sky Status (VIP Zones):</strong></div>`;
-            for (const [n, c] of Object.entries(LOCATIONS)) { if(n === 'London') break; try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json(); const cond = getWeatherCond(d.current.weather_code); content += `<div class="briefing-row"><span>• ${n}</span><span>${cond.icon} ${d.current.temperature_2m}°C</span></div>`; } catch(e) {} }
-            content += `<div class="briefing-row" style="margin-top:10px"><strong>💰 Rates:</strong></div>`; try { const r = await (await fetch('https://api.exchangerate-api.com/v4/latest/SGD')).json(); content += `<div class="briefing-row"><span>SGD 1 ≈ RM ${(r.rates.MYR).toFixed(2)}</span></div>`; } catch(e) {}
-            document.getElementById('briefingContent').innerHTML = content; document.getElementById('chatBriefingContent').innerHTML = content; document.getElementById('dailyBriefing').style.display = 'block'; document.getElementById('chatBriefing').style.display = 'block';
-        }
+// Utils
+function calcDist(lat1,lon1,lat2,lon2) {
+    const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function showToast(msg, err=false) {
+    const t = document.getElementById('toast');
+    t.querySelector('.toast-message').textContent = msg;
+    t.querySelector('.toast-icon').textContent = err ? '❌' : '✅';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+function openFullscreenMap() {
+    if(!APP.journey) return;
+    document.getElementById('mapFullscreen').classList.add('active');
+    setTimeout(() => {
+        APP.mapFull = L.map('journeyMapFull', {zoomControl:false}).setView([APP.journey.lastLat, APP.journey.lastLon], 17);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapFull);
+        APP.pathFull = L.polyline(APP.pathCoords, {color:'#0A84FF', weight:5}).addTo(APP.mapFull);
+    }, 100);
+}
+function closeFullscreenMap() { document.getElementById('mapFullscreen').classList.remove('active'); }
+function closeModal() { document.getElementById('historyModal').classList.remove('show'); }
+function closeHabitModal() { document.getElementById('habitModal').classList.remove('show'); }
 
-        async function loadWeather() {
-            await updateWeather('Johor Jaya', 1.536, 103.793);
-            const container = document.getElementById('monitoredLocations'); container.innerHTML = '';
-            for (const [n, c] of Object.entries(LOCATIONS)) { try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json(); const cond = getWeatherCond(d.current.weather_code); container.innerHTML += `<div class="location-card" onclick="updateWeather('${n}',${c.lat},${c.lon})"><div class="location-info"><span style="font-size:20px">${cond.icon}</span><span class="location-name">${n}</span></div><span class="location-temp">${Math.round(d.current.temperature_2m)}°</span></div>`; } catch(e) {} }
-        }
+// Simple logic handlers
+function addWater(n) { APP.water += n; saveStorage(); renderWater(); }
+function resetWater() { APP.water = 0; saveStorage(); renderWater(); }
+function renderWater() { document.getElementById('waterCount').textContent = APP.water; document.getElementById('waterProgress').style.width = Math.min((APP.water/8)*100, 100)+'%'; }
 
-        async function updateWeather(name, lat, lon) {
-            try {
-                const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`)).json();
-                const temp = Math.round(d.current.temperature_2m); const cond = getWeatherCond(d.current.weather_code);
-                document.getElementById('weatherLocation').textContent = name; document.getElementById('weatherTemp').textContent = temp; document.getElementById('weatherIcon').textContent = cond.icon; document.getElementById('weatherCondition').textContent = cond.text; document.getElementById('weatherWind').textContent = Math.round(d.current.wind_speed_10m); document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m; document.getElementById('weatherRain').textContent = d.hourly.precipitation_probability[0] || 0; document.getElementById('dashTemp').textContent = temp + '°'; document.getElementById('dashWeather').innerHTML = `<div class="weather-icon">${cond.icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name}</div></div>`;
-                return `${cond.icon} ${name}: ${temp}°C`;
-            } catch(e) { return 'Error'; }
-        }
+function setFocusTime(m) { APP.focusTime = m*60; APP.focusRemaining = m*60; renderFocusTimer(); }
+function toggleFocus() {
+    if(APP.focusRunning) { clearInterval(APP.focusInterval); APP.focusRunning=false; document.getElementById('focusPlayBtn').textContent='Start'; }
+    else {
+        APP.focusRunning = true; document.getElementById('focusPlayBtn').textContent='Pause';
+        APP.focusInterval = setInterval(() => {
+            APP.focusRemaining--; renderFocusTimer();
+            if(APP.focusRemaining<=0) { clearInterval(APP.focusInterval); APP.focusRunning=false; showToast('Focus Done!'); }
+        }, 1000);
+    }
+}
+function resetFocus() { clearInterval(APP.focusInterval); APP.focusRunning=false; APP.focusRemaining=APP.focusTime; renderFocusTimer(); }
+function renderFocusTimer() { const m=Math.floor(APP.focusRemaining/60), s=APP.focusRemaining%60; document.getElementById('focusTimer').textContent=`${m}:${s<10?'0'+s:s}`; }
 
-        function getWeatherCond(code) {
-            if (code === 0) return { icon: '☀️', text: 'Clear' }; if (code <= 3) return { icon: '⛅', text: 'Cloudy' }; if (code >= 95) return { icon: '⛈️', text: 'Storm' }; if (code >= 61) return { icon: '🌧️', text: 'Rain' }; if (code >= 51) return { icon: '🌦️', text: 'Drizzle' }; if (code >= 71) return { icon: '❄️', text: 'Snow' }; return { icon: '☁️', text: 'Cloudy' };
-        }
+function logSleep() {
+    const b = document.getElementById('sleepBedtime').value.split(':').map(Number);
+    const w = document.getElementById('sleepWakeup').value.split(':').map(Number);
+    let h = (w[0]-b[0]) + (w[1]-b[1])/60;
+    if(h < 0) h += 24;
+    document.getElementById('sleepHours').textContent = h.toFixed(1) + ' hrs';
+    showToast('Logged Sleep');
+}
 
-        // ==================== NEW SMART SEARCH ====================
-        const searchInput = document.getElementById('weatherSearch');
-        const searchResults = document.getElementById('searchResults');
+function selectExpenseCat(c) { APP.selectedExpenseCat = c; showToast(`Selected ${c}`); }
+function addExpense() {
+    const amt = parseFloat(document.getElementById('expenseAmount').value);
+    if(!amt) return;
+    APP.expenses.push({id:Date.now(), amt, cat:APP.selectedExpenseCat});
+    document.getElementById('expenseAmount').value = '';
+    saveStorage(); renderExpenses();
+}
+function renderExpenses() {
+    const total = APP.expenses.reduce((a,b)=>a+b.amt,0);
+    document.getElementById('expenseTotal').textContent = `RM ${total.toFixed(2)}`;
+    document.getElementById('expenseList').innerHTML = APP.expenses.map(e => `
+        <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #333">
+            <span>${EXPENSE_ICONS[e.cat]}</span><span>RM ${e.amt.toFixed(2)}</span>
+        </div>
+    `).join('');
+}
 
-        searchInput.addEventListener('keyup', async (e) => {
-            if (e.key === 'Enter') {
-                const query = e.target.value.trim();
-                if (!query) return;
-                
-                searchResults.innerHTML = '<div class="search-item"><div class="search-item-detail">Searching...</div></div>';
-                searchResults.classList.add('active');
+function showAddHabitModal() { document.getElementById('habitModal').classList.add('show'); }
+function addHabit() {
+    const n = document.getElementById('habitName').value;
+    if(!n) return;
+    APP.habits.push({id:Date.now(), name:n, icon:document.getElementById('habitIcon').value||'✅', done:false});
+    saveStorage(); renderHabits(); closeHabitModal();
+}
+function renderHabits() {
+    document.getElementById('habitList').innerHTML = APP.habits.map(h => `
+        <div class="habit-item" onclick="toggleHabit(${h.id})" style="opacity:${h.done?0.5:1}">
+            <div class="habit-icon">${h.icon}</div>
+            <div style="flex:1">${h.name}</div>
+            <div>${h.done?'✅':''}</div>
+        </div>
+    `).join('');
+}
+function toggleHabit(id) { const h = APP.habits.find(x=>x.id===id); if(h){h.done=!h.done; saveStorage(); renderHabits();} }
 
-                try {
-                    const r = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=en&format=json`)).json();
-                    if (!r.results || r.results.length === 0) {
-                        searchResults.innerHTML = '<div class="search-item"><div class="search-item-name">No results found</div></div>';
-                    } else {
-                        searchResults.innerHTML = r.results.map(item => `
-                            <div class="search-item" onclick="selectLocation('${item.name}', ${item.latitude}, ${item.longitude}, '${item.admin1 || ''}', '${item.country || ''}')">
-                                <div class="search-item-name">${item.name} ${item.country_code ? getFlagEmoji(item.country_code) : ''}</div>
-                                <div class="search-item-detail">${item.admin1 ? item.admin1 + ', ' : ''}${item.country || ''}</div>
-                            </div>
-                        `).join('');
-                    }
-                } catch(err) {
-                    searchResults.classList.remove('active');
-                }
-            }
-        });
+function saveNotes() { APP.notes = document.getElementById('quickNotes').value; saveStorage(); document.getElementById('notesDate').textContent = 'Saved ' + new Date().toLocaleTimeString(); }
+function loadNotes() { document.getElementById('quickNotes').value = APP.notes; }
 
-        // Click outside to close list
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.input-group')) searchResults.classList.remove('active');
-        });
-
-        function selectLocation(name, lat, lon, region, country) {
-            // Keep specific name selected from list
-            updateWeather(name, lat, lon);
-            searchInput.value = `${name}, ${country}`;
-            searchResults.classList.remove('active');
-        }
-
-        function getFlagEmoji(countryCode) {
-            const codePoints = countryCode.toUpperCase().split('').map(char =>  127397 + char.charCodeAt());
-            return String.fromCodePoint(...codePoints);
-        }
-
-        // ==================== GLOBAL ALERTS ====================
-        async function loadGlobalWeatherAlerts() {
-            const container = document.getElementById('globalWeatherAlerts'); let alertsFound = false; let html = '';
-            for (const city of GLOBAL_MONITOR) {
-                try {
-                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code&hourly=weather_code,precipitation&forecast_days=1`)).json();
-                    const curr = d.current.weather_code; const hourlyCodes = d.hourly.weather_code; const hourlyRain = d.hourly.precipitation; const totalRain = hourlyRain.reduce((a, b) => a + b, 0);
-                    let msg = ""; let type = "info";
-                    if ([95, 96, 99].includes(curr)) { msg = "⚡ LIVE ALERT: Heavy Thunderstorm occurring RIGHT NOW!"; type = "danger"; }
-                    else if ([71, 73, 75, 85, 86].includes(curr)) { msg = "❄️ LIVE ALERT: It is SNOWING right now! 🥶"; type = "warning"; }
-                    else if ([63, 65, 80, 81, 82].includes(curr)) { msg = "🌧 LIVE ALERT: Heavy Rain detected currently!"; type = "info"; }
-                    if (!msg) {
-                        if (hourlyCodes.some(c => [96, 99].includes(c))) { msg = "🌪️ FUTURE WARNING: Extreme storm risk in next 24h."; type = "danger"; }
-                        else if (totalRain >= 50.0) { msg = `🌊 FLOOD RISK: Heavy continuous rain predicted (${totalRain.toFixed(1)}mm).`; type = "danger"; }
-                        else if (hourlyCodes.some(c => [71, 75].includes(c))) { msg = "❄️ SNOW FORECAST: Snowfall expected within 24 hours."; type = "warning"; }
-                    }
-                    if (msg) { alertsFound = true; html += `<div class="alert-card ${type}"><div class="alert-header"><div class="alert-title">🚨 ${city.n}</div></div><div class="alert-body">${msg}</div></div>`; }
-                } catch(e) {}
-            }
-            if(!alertsFound) html = '<div class="alert-card info"><div class="alert-body">✅ No global severe weather detected.</div></div>';
-            container.innerHTML = html;
-        }
-
-        async function loadEarthquakes() {
-            try {
-                const quakes = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features;
-                document.getElementById('dashAlerts').textContent = quakes.length;
-                const container = document.getElementById('earthquakeAlerts');
-                if(!quakes.length) { container.innerHTML = '<div class="alert-card info"><div class="alert-title">✅ No earthquakes</div></div>'; return; }
-                let html = ''; let todayHeaderAdded = false; let otherHeaderAdded = false; const today = new Date().toDateString();
-                quakes.slice(0, 15).forEach(q => {
-                    const d = new Date(q.properties.time); const isToday = d.toDateString() === today;
-                    const dateStr = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute:'numeric', hour12: true });
-                    if(isToday && !todayHeaderAdded) { html += '<div class="group-header">📅 Today</div>'; todayHeaderAdded = true; }
-                    if(!isToday && !otherHeaderAdded) { html += '<div class="group-header">📅 Yesterday / Older</div>'; otherHeaderAdded = true; }
-                    html += `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'warning'}"><div class="alert-header"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)}</div><div class="alert-time">${dateStr}</div></div><div class="alert-body">📍 ${q.properties.place}</div></div>`;
-                });
-                container.innerHTML = html;
-                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
-            } catch(e) {}
-        }
-
-        function enableNotifications() {
-            if (!("Notification" in window)) { showToast("❌ Notifications not supported", true); return; }
-            Notification.requestPermission().then(permission => { if (permission === "granted") { showToast("✅ Notifications Allowed!"); new Notification("Sunday", { body: "Test: I can warn you about rain now!" }); } else { showToast("❌ Permission denied", true); } });
-        }
-
-        function startJourney() {
-            if (!navigator.geolocation) return showToast('GPS not supported', true);
-            navigator.geolocation.getCurrentPosition(pos => {
-                const lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy;
-                APP.journey = { startTime: Date.now(), lastLat: lat, lastLon: lon, lastTime: Date.now(), totalKm: 0, calories: 0, speed: 0, mode: 'walking', currentAlt: pos.coords.altitude || 0, overspeedWarning: false, waypoints: [{ name: '🚩 Start', lat, lon, time: Date.now(), type: 'start' }], currentStop: null };
-                APP.pathCoords = [[lat, lon]];
-                document.getElementById('startJourneyCard').style.display = 'none'; document.getElementById('activeJourneyCard').style.display = 'block';
-                setTimeout(() => {
-                    APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false, attributionControl: false }).setView([lat, lon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapSmall);
-                    const icon = L.divIcon({ className: '', html: '<div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(66,133,244,0.8)"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
-                    APP.markerSmall = L.marker([lat, lon], { icon }).addTo(APP.mapSmall); APP.pathSmall = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 4 }).addTo(APP.mapSmall); L.marker([lat, lon]).addTo(APP.mapSmall).bindPopup('🚩 Start');
-                }, 100);
-                APP.watchId = navigator.geolocation.watchPosition(trackPosition, err => updateGPSStatus('Error', 'bad'), { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 });
-                APP.timerInterval = setInterval(updateTimer, 1000); updateGPSStatus(acc); showToast('Journey started! 🚗');
-            }, err => showToast('GPS Error: ' + err.message, true), { enableHighAccuracy: true, timeout: 15000 });
-        }
-
-        function trackPosition(pos) {
-            if (!APP.journey) return;
-            const lat = pos.coords.latitude, lon = pos.coords.longitude; const acc = pos.coords.accuracy; const alt = pos.coords.altitude || 0; const now = Date.now();
-            const dist = calcDist(APP.journey.lastLat, APP.journey.lastLon, lat, lon); const timeDiff = (now - APP.journey.lastTime) / 1000 / 3600;
-            let speed = timeDiff > 0 ? dist / timeDiff : 0; if (speed > 300) speed = APP.journey.speed;
-            APP.journey.speed = speed; APP.journey.currentAlt = alt;
-            if (speed > 110) { if (!APP.journey.overspeedWarning) { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); showToast('⚠️ Speeding Alert! > 110km/h', true); APP.journey.overspeedWarning = true; } } else { APP.journey.overspeedWarning = false; }
-            const prevMode = APP.journey.mode; APP.journey.mode = speed > 15 ? 'driving' : 'walking'; updateGPSStatus(acc);
-            APP.pathCoords.push([lat, lon]);
-            if (APP.mapSmall && APP.markerSmall) { APP.markerSmall.setLatLng([lat, lon]); APP.pathSmall.setLatLngs(APP.pathCoords); APP.mapSmall.panTo([lat, lon]); }
-            if (APP.isFullscreen && APP.mapFull && APP.markerFull) { APP.markerFull.setLatLng([lat, lon]); APP.pathFull.setLatLngs(APP.pathCoords); APP.mapFull.panTo([lat, lon]); }
-            if (dist > 0.005) {
-                if (prevMode !== APP.journey.mode && APP.journey.totalKm > 0.05) { APP.journey.waypoints.push({ name: APP.journey.mode === 'driving' ? '🚗 Driving Mode' : '🚶 Walking Mode', lat, lon, time: now, type: 'mode', mode: APP.journey.mode }); }
-                if (APP.journey.currentStop) { const dur = Math.round((now - APP.journey.currentStop.startTime) / 60000); if (dur >= 2) { APP.journey.waypoints.push({ name: `⏸️ Stopped ${dur}min`, lat: APP.journey.currentStop.lat, lon: APP.journey.currentStop.lon, duration: dur, type: 'stop', time: APP.journey.currentStop.startTime }); if(APP.mapFull) L.marker([APP.journey.currentStop.lat, APP.journey.currentStop.lon]).addTo(APP.mapFull).bindPopup(`Stopped ${dur} min`); } APP.journey.currentStop = null; }
-                APP.journey.totalKm += dist; if (APP.journey.mode === 'walking') APP.journey.calories += dist * 65; APP.journey.lastLat = lat; APP.journey.lastLon = lon; APP.journey.lastTime = now; getStreetName(lat, lon);
-            } else if (!APP.journey.currentStop && APP.journey.totalKm > 0.01) { APP.journey.currentStop = { lat, lon, startTime: now }; }
-            updateJourneyUI();
-        }
-
-        function updateJourneyUI() {
-            if (!APP.journey) return;
-            const j = APP.journey; let pace = "--"; if (j.speed > 1) { const paceMin = 60 / j.speed; const pm = Math.floor(paceMin); const ps = Math.round((paceMin - pm) * 60); pace = `${pm}'${ps}"`; }
-            document.getElementById('jDistance').textContent = j.totalKm.toFixed(2); document.getElementById('jSpeed').textContent = j.speed.toFixed(1); document.getElementById('jCalories').textContent = Math.round(j.calories); document.getElementById('jAlt').textContent = Math.round(j.currentAlt || 0); document.getElementById('jPace').textContent = pace; document.getElementById('journeyModeText').textContent = j.mode === 'driving' ? '🚗 Driving' : '🚶 Walking';
-            document.getElementById('fsDistance').textContent = j.totalKm.toFixed(2); document.getElementById('fsSpeed').textContent = j.speed.toFixed(1); document.getElementById('fsCalories').textContent = Math.round(j.calories); document.getElementById('fsAlt').textContent = Math.round(j.currentAlt || 0); document.getElementById('fsPace').textContent = pace; document.getElementById('fsModeIcon').textContent = j.mode === 'driving' ? '🚗' : '🚶'; document.getElementById('fsModeTitle').textContent = j.mode === 'driving' ? 'Driving' : 'Walking'; renderTimeline();
-        }
-
-        function updateTimer() { if (!APP.journey) return; const secs = Math.floor((Date.now() - APP.journey.startTime) / 1000); const mins = Math.floor(secs / 60), s = secs % 60; const str = `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; document.getElementById('jTime').textContent = mins; document.getElementById('fsTime').textContent = mins; document.getElementById('fsDuration').textContent = str; }
-        function updateGPSStatus(acc, status) { let quality = 'good', text = 'GPS: Good'; if (typeof acc === 'number') { if (acc <= 10) { quality = 'excellent'; text = `GPS: Excellent (±${Math.round(acc)}m)`; } else if (acc <= 30) { quality = 'good'; text = `GPS: Good (±${Math.round(acc)}m)`; } else if (acc <= 100) { quality = 'poor'; text = `GPS: Poor (±${Math.round(acc)}m)`; } else { quality = 'bad'; text = `GPS: Weak (±${Math.round(acc)}m)`; } } else if (status === 'bad') { quality = 'bad'; text = 'GPS: Error'; } document.getElementById('gpsAccuracyDot').className = 'gps-accuracy-dot ' + quality; document.getElementById('gpsAccuracyText').textContent = text; }
-        async function getStreetName(lat, lon) { try { const d = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18`)).json(); const street = d.address?.road || d.address?.suburb || 'Unknown'; document.getElementById('fsStreet').textContent = street; } catch(e) {} }
-        function calcDist(lat1, lon1, lat2, lon2) { const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180; const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2; return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
-        function renderTimeline() { if (!APP.journey) return; const html = APP.journey.waypoints.map((w, i) => ` <div class="timeline-item"> <div class="timeline-dot ${w.mode || ''} ${i === APP.journey.waypoints.length - 1 ? 'active' : ''}"></div> <div class="timeline-card"> <div class="timeline-title">${w.name}</div> <div class="timeline-time">${new Date(w.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div> ${w.duration ? `<span class="timeline-badge resting">${w.duration} min</span>` : ''} ${w.photo ? `<img src="${w.photo}" style="width:100%;margin-top:5px;border-radius:8px">` : ''} </div> </div> `).join(''); document.getElementById('timelinePreview').innerHTML = `<div class="timeline">${html}</div>`; document.getElementById('fsTimeline').innerHTML = html; }
-        function addJourneyPhoto(e) { if (!APP.journey) return; const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { const photoData = ev.target.result; const lat = APP.journey.lastLat; const lon = APP.journey.lastLon; APP.journey.waypoints.push({ name: '📸 Photo', lat: lat, lon: lon, time: Date.now(), type: 'photo', photo: photoData }); if (APP.mapFull) { const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${photoData});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] }); L.marker([lat, lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${photoData}" style="width:100px;border-radius:8px">`); } renderTimeline(); showToast('Photo added! 📸'); }; reader.readAsDataURL(file); }
-        function exportGPX(journeyId) { const journey = APP.journeyHistory.find(j => j.id === journeyId); if (!journey) return showToast('Error finding journey', true); let gpx = `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SundayApp"><metadata><name>Journey ${new Date(journey.date).toLocaleDateString()}</name></metadata><trk><name>Sunday Track</name><trkseg>`; const points = journey.pathCoords || journey.waypoints; points.forEach(p => { const lat = p.lat || p[0]; const lon = p.lon || p[1]; gpx += `<trkpt lat="${lat}" lon="${lon}"><time>${new Date(p.time || journey.id).toISOString()}</time></trkpt>`; }); gpx += `</trkseg></trk></gpx>`; const blob = new Blob([gpx], { type: 'application/gpx+xml' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `journey_${journeyId}.gpx`; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast('GPX Downloaded! 📂'); }
-        function openFullscreenMap() { if (!APP.journey) return; APP.isFullscreen = true; document.getElementById('mapFullscreen').classList.add('active'); setTimeout(() => { if (APP.mapFull) APP.mapFull.remove(); APP.mapFull = L.map('journeyMapFull', { zoomControl: false }).setView([APP.journey.lastLat, APP.journey.lastLon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapFull); const icon = L.divIcon({ className: '', html: '<div style="width:20px;height:20px;background:#4285F4;border:4px solid white;border-radius:50%;box-shadow:0 0 15px rgba(66,133,244,0.8)"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }); APP.markerFull = L.marker([APP.journey.lastLat, APP.journey.lastLon], { icon }).addTo(APP.mapFull); APP.pathFull = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 5 }).addTo(APP.mapFull); L.marker([APP.journey.waypoints[0].lat, APP.journey.waypoints[0].lon]).addTo(APP.mapFull).bindPopup('🚩 Start'); APP.journey.waypoints.forEach(w => { if (w.type === 'stop') L.marker([w.lat, w.lon]).addTo(APP.mapFull).bindPopup(`⏸️ ${w.duration} min`); if (w.type === 'photo') { const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${w.photo});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] }); L.marker([w.lat, w.lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${w.photo}" style="width:100px;border-radius:8px">`); } }); }, 100); }
-        function closeFullscreenMap() { APP.isFullscreen = false; document.getElementById('mapFullscreen').classList.remove('active'); document.getElementById('timelinePanel').classList.remove('show'); }
-        function centerMapOnUser() { if (APP.journey && APP.mapFull) { APP.mapFull.setView([APP.journey.lastLat, APP.journey.lastLon], 17); } }
-        function toggleTimelinePanel() { document.getElementById('timelinePanel').classList.toggle('show'); }
-        function endJourney() { if (!APP.journey) return; if (APP.watchId) navigator.geolocation.clearWatch(APP.watchId); if (APP.timerInterval) clearInterval(APP.timerInterval); const j = APP.journey; const totalMins = Math.round((Date.now() - j.startTime) / 60000); const avgSpeed = totalMins > 0 ? (j.totalKm / (totalMins / 60)).toFixed(1) : 0; APP.journeyHistory.unshift({ id: Date.now(), date: new Date().toISOString(), distance: parseFloat(j.totalKm.toFixed(2)), duration: totalMins, calories: Math.round(j.calories), avgSpeed: parseFloat(avgSpeed), mode: avgSpeed > 12 ? 'driving' : 'walking', waypoints: j.waypoints, pathCoords: APP.pathCoords, startLat: j.waypoints[0].lat, startLon: j.waypoints[0].lon, endLat: j.lastLat, endLon: j.lastLon }); if (APP.journeyHistory.length > 30) APP.journeyHistory = APP.journeyHistory.slice(0, 30); APP.parking = { type: 'gps', lat: j.lastLat, lon: j.lastLon, time: Date.now() }; saveStorage(); if (APP.mapSmall) { APP.mapSmall.remove(); APP.mapSmall = null; } if (APP.mapFull) { APP.mapFull.remove(); APP.mapFull = null; } APP.journey = null; APP.pathCoords = []; APP.isFullscreen = false; document.getElementById('mapFullscreen').classList.remove('active'); document.getElementById('activeJourneyCard').style.display = 'none'; document.getElementById('startJourneyCard').style.display = 'block'; renderHistory(); renderParking(); document.getElementById('dashJourneys').textContent = APP.journeyHistory.length; showToast(`Done! ${j.totalKm.toFixed(2)}km, ${Math.round(j.calories)}kcal 🏁`); }
-        function renderHistory() { const c = document.getElementById('journeyHistory'); document.getElementById('dashJourneys').textContent = APP.journeyHistory.length; if (!APP.journeyHistory.length) { c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>'; return; } c.innerHTML = APP.journeyHistory.slice(0, 10).map(j => ` <div class="history-card" onclick="showHistoryDetail(${j.id})"> <div class="history-header"> <span class="history-date">${new Date(j.date).toLocaleDateString()}</span> <span class="history-mode ${j.mode}">${j.mode === 'driving' ? '🚗' : '🚶'}</span> </div> <div class="history-stats"> <div class="history-stat">📏 <span>${j.distance}km</span></div> <div class="history-stat">⏱️ <span>${j.duration}min</span></div> <div class="history-stat">🔥 <span>${j.calories}kcal</span></div> </div> </div> `).join(''); }
-        function showHistoryDetail(id) { const j = APP.journeyHistory.find(x => x.id === id); if (!j) return; document.getElementById('historyModalBody').innerHTML = ` <div class="fitness-grid"> <div class="fitness-item"><div class="fitness-icon">${j.mode === 'driving' ? '🚗' : '🚶'}</div><div class="fitness-value">${j.distance}</div><div class="fitness-label">km</div></div> <div class="fitness-item"><div class="fitness-icon">⏱️</div><div class="fitness-value">${j.duration}</div><div class="fitness-label">min</div></div> <div class="fitness-item"><div class="fitness-icon">🔥</div><div class="fitness-value">${j.calories}</div><div class="fitness-label">kcal</div></div> <div class="fitness-item"><div class="fitness-icon">⚡</div><div class="fitness-value">${j.avgSpeed}</div><div class="fitness-label">km/h</div></div> </div> <div class="btn-row"> <a href="https://www.google.com/maps/dir/${j.startLat},${j.startLon}/${j.endLat},${j.endLon}" target="_blank" class="btn btn-primary">🗺️ View Route</a> <button class="btn btn-secondary" onclick="exportGPX(${j.id})">📂 Export GPX</button> </div> `; document.getElementById('historyModal').classList.add('show'); }
-        function closeModal() { document.getElementById('historyModal').classList.remove('show'); }
-        function handlePhoto(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { APP.pendingPhoto = ev.target.result; if (APP.pendingSaveMode === 'both') completeBothSave(); else { APP.parking = { type: 'photo', photo: APP.pendingPhoto, time: Date.now() }; saveStorage(); renderParking(); showToast('Photo saved! 📸'); } }; reader.readAsDataURL(file); }
-        function saveParking(type) { APP.pendingSaveMode = type; if (type === 'photo') { document.getElementById('photoInput').click(); return; } navigator.geolocation.getCurrentPosition(pos => { if (type === 'gps') { APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() }; saveStorage(); renderParking(); showToast('GPS saved! 🅿️'); } else { APP.pendingGPS = { lat: pos.coords.latitude, lon: pos.coords.longitude }; document.getElementById('photoInput').click(); } }, err => showToast('GPS Error', true), { enableHighAccuracy: true }); }
-        function completeBothSave() { APP.parking = { type: 'both', lat: APP.pendingGPS.lat, lon: APP.pendingGPS.lon, photo: APP.pendingPhoto, time: Date.now() }; saveStorage(); renderParking(); showToast('GPS + Photo saved! 🅿️📸'); }
-        function renderParking() { const c = document.getElementById('parkingDisplay'); const mc = document.getElementById('parkingMapContainer'); if (!APP.parking) { c.innerHTML = '<div class="parking-display"><div class="parking-icon">🚗</div><div>No location saved</div></div>'; mc.style.display = 'none'; return; } let html = '<div class="parking-display">'; if (APP.parking.photo) html += `<img src="${APP.parking.photo}" class="parking-photo">`; html += `<div style="font-size:14px;font-weight:600">${APP.parking.lat ? '📍 GPS Saved' : '📸 Photo Saved'}</div>`; html += `<div style="font-size:12px;color:var(--text-muted);margin:5px 0">${getTimeAgo(APP.parking.time)}</div>`; if (APP.parking.lat) html += `<a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success btn-sm" style="margin:10px 0">🗺️ Open Maps</a>`; html += `<button class="btn btn-secondary btn-sm" onclick="APP.parking=null;saveStorage();renderParking()">🗑️ Clear</button></div>`; c.innerHTML = html; if (APP.parking.lat) { mc.style.display = 'block'; setTimeout(() => { if (APP.parkingMap) APP.parkingMap.remove(); APP.parkingMap = L.map('parkingMap', { zoomControl: false }).setView([APP.parking.lat, APP.parking.lon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.parkingMap); L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap).bindPopup('🚗').openPopup(); }, 100); } else mc.style.display = 'none'; }
-        function saveCustomPlace() { const name = document.getElementById('customPlaceName').value.trim(); if (!name || !APP.parking?.lat) return showToast('Save GPS first', true); APP.customPlaces[name] = { lat: APP.parking.lat, lon: APP.parking.lon, photo: APP.parking.photo || null }; saveStorage(); document.getElementById('customPlaceName').value = ''; showToast(`"${name}" saved! ⭐`); renderPlaces(); }
-        function renderPlaces() { const c = document.getElementById('customPlacesList'); const p = Object.entries(APP.customPlaces); if (!p.length) { c.innerHTML = ''; return; } c.innerHTML = p.map(([n, d]) => ` <div class="place-card"> ${d.photo ? `<img src="${d.photo}" class="place-photo">` : ''} <div class="place-info"> <div class="place-name">⭐ ${n}</div> <button class="btn btn-secondary btn-sm" style="width:auto" onclick="window.open('https://www.google.com/maps?q=${d.lat},${d.lon}')">🗺️</button> </div> </div> `).join(''); }
-        function addReminder(task, mins) { task = task || document.getElementById('reminderTask').value.trim(); mins = mins || parseInt(document.getElementById('reminderTime').value); if (!task) return showToast('Enter task', true); APP.reminders.push({ id: Date.now(), task, triggerTime: Date.now() + mins * 60000 }); saveStorage(); document.getElementById('reminderTask').value = ''; renderReminders(); showToast(`Reminder: ${mins} mins ⏰`); return `✅ ${task} in ${mins} mins`; }
-        function renderReminders() { const active = APP.reminders.filter(r => r.triggerTime > Date.now()); document.getElementById('reminderBadge').textContent = active.length; document.getElementById('dashReminders').textContent = active.length; document.getElementById('reminderList').innerHTML = active.length ? active.map(r => ` <div class="reminder-item"> <div class="reminder-icon">⏰</div> <div class="reminder-content"> <div class="reminder-task">${r.task}</div> <div class="reminder-time">${getTimeUntil(r.triggerTime)}</div> </div> <button class="reminder-delete" onclick="APP.reminders=APP.reminders.filter(x=>x.id!==${r.id});saveStorage();renderReminders()">✕</button> </div> `).join('') : '<div class="empty-state"><div class="empty-text">No reminders</div></div>'; }
-        function checkReminders() { const now = Date.now(); APP.reminders.filter(r => r.triggerTime <= now).forEach(r => { showToast(`⏰ ${r.task}`, false, 8000); if (Notification.permission === 'granted') new Notification('Sunday', { body: r.task }); }); APP.reminders = APP.reminders.filter(r => r.triggerTime > now); saveStorage(); renderReminders(); }
-        let rates = {}; async function loadCurrency() { try { rates = (await (await fetch('https://api.exchangerate-api.com/v4/latest/MYR')).json()).rates; document.getElementById('currencyRates').innerHTML = CURRENCIES.map(c => ` <div class="rate-card"> <div class="rate-pair"><span class="rate-flag">${c.flag}</span><div class="rate-code">${c.code}/MYR</div></div> <span class="rate-value">${(1/rates[c.code]).toFixed(4)}</span> </div> `).join(''); } catch(e) {} }
-        let news = []; async function loadNews() { try { news = (await (await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.thestar.com.my/rss/news/nation')).json()).items?.slice(0, 5) || []; const html = news.map(n => `<div class="news-item" onclick="window.open('${n.link}')"><span class="news-source">NEWS</span><div class="news-title">${n.title}</div></div>`).join(''); document.getElementById('dashNews').innerHTML = html; document.getElementById('newsList').innerHTML = html; } catch(e) {} }
-        function sendChat() { const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return; addMsg(text, 'user'); input.value = ''; processCmd(text).then(r => addMsg(r, 'bot')); }
-        function addMsg(text, type) { const c = document.getElementById('chatMessages'); c.innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${text}</div></div>`; c.scrollTop = c.scrollHeight; }
-        const MEDICAL = { stomach: { kw: ['stomach', 'gastric'], reply: '🤢 Ginger tea, avoid spicy food, rest upright.' }, fever: { kw: ['fever', 'hot'], reply: '🤒 Drink water, cool towel, Paracetamol.' }, headache: { kw: ['headache', 'head'], reply: '🧠 Drink water, dark room, cold compress.' }, flu: { kw: ['flu', 'cold', 'cough'], reply: '🤧 Rest, warm soup, Vitamin C.' } };
-        async function processCmd(text) { const t = text.toLowerCase(); if (t.startsWith('weather ')) { return await updateWeather(text.slice(8), 0, 0); } if (t === 'weather') { document.querySelector('[data-page="weather"]').click(); return '🌤️ Weather page'; } const m = t.match(/remind.*?(\d+)\s*(min|hour|h|m).*?(?:to)?\s*(.+)/i); if (m) { let mins = parseInt(m[1]); if (m[2]?.startsWith('h')) mins *= 60; return addReminder(m[3], mins); } if (t.includes('car') || t.includes('parking')) { document.querySelector('[data-page="parking"]').click(); return APP.parking?.lat ? '🚗 Opening parking...' : '❌ No parking saved'; } if (t.includes('start') && t.includes('journey')) { setTimeout(startJourney, 500); return '🚗 Starting...'; } if (t === 'news') return news[0]?.title || 'No news'; if (t.startsWith('rate ')) { const c = t.split(' ')[1].toUpperCase(); return rates[c] ? `${c}: ${(1/rates[c]).toFixed(4)} MYR` : 'Not found'; } for (const [, d] of Object.entries(MEDICAL)) if (d.kw.some(k => t.includes(k))) return d.reply; return 'Try: weather tokyo, remind me in 30 mins to call'; }
-        function getTimeAgo(t) { const s = Math.floor((Date.now() - t) / 1000); if (s < 60) return 'just now'; if (s < 3600) return `${Math.floor(s/60)} mins ago`; if (s < 86400) return `${Math.floor(s/3600)} hours ago`; return `${Math.floor(s/86400)} days ago`; }
-        function getTimeUntil(t) { const s = Math.floor((t - Date.now()) / 1000); if (s < 60) return `${s}s`; if (s < 3600) return `${Math.floor(s/60)}m`; return `${Math.floor(s/3600)}h`; }
-        function showToast(msg, err = false, dur = 3000) { const t = document.getElementById('toast'); t.querySelector('.toast-icon').textContent = err ? '❌' : '✅'; t.querySelector('.toast-message').textContent = msg; t.classList.toggle('error', err); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), dur); }
-    </script>
+// API Loaders (Simplified)
+async function loadWeather() {
+    try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=1.536&longitude=103.793&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`);
+        const d = await res.json();
+        document.getElementById('weatherTemp').textContent = Math.round(d.current.temperature_2m);
+        document.getElementById('weatherWind').textContent = d.current.wind_speed_10m;
+        document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m;
+        document.getElementById('weatherRain').textContent = d.hourly.precipitation_probability[0];
+        document.getElementById('dashTemp').textContent = Math.round(d.current.temperature_2m) + '°';
+    } catch(e){}
+}
+async function loadCurrency() {
+    try {
+        const res = await fetch('https://open.er-api.com/v6/latest/MYR');
+        const data = await res.json();
+        const rates = {USD: (1/data.rates.USD).toFixed(3), SGD: (1/data.rates.SGD).toFixed(3), JPY: (1/data.rates.JPY).toFixed(4)*100};
+        document.getElementById('currencyRates').innerHTML = `
+            <div class="rate-card"><span>🇺🇸 USD</span><span>RM ${rates.USD}</span></div>
+            <div class="rate-card"><span>🇸🇬 SGD</span><span>RM ${rates.SGD}</span></div>
+            <div class="rate-card"><span>🇯🇵 JPY (100)</span><span>RM ${rates.JPY.toFixed(2)}</span></div>
+        `;
+    } catch(e) { document.getElementById('currencyRates').textContent = 'Error loading rates'; }
+}
+async function loadNews() {
+    const news = [{t:'Tech Trends 2025', s:'TechDaily'}, {t:'Local Weather Alert', s:'Meteo'}];
+    const h = news.map(n => `<div class="news-item"><span class="news-source">${n.s}</span><div style="font-weight:500">${n.t}</div></div>`).join('');
+    document.getElementById('dashNews').innerHTML = h;
+}
+async function loadAlerts() {
+    // Mock alerts for demo
+    document.getElementById('globalWeatherAlerts').innerHTML = '<div class="alert-card info"><div>✅ No severe alerts</div></div>';
+    document.getElementById('earthquakeAlerts').innerHTML = '<div class="alert-card info"><div>✅ No recent quakes > M6</div></div>';
+}
+</script>
 </body>
 </html>
+ENDOFFILE
