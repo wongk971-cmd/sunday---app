@@ -6,266 +6,765 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sunday">
-    <meta name="theme-color" content="#000000">
-    <title>Sunday Ultimate</title>
+    <meta name="theme-color" content="#0f0f1a">
+    <title>Sunday V9.1 Blue</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="logosunday.jpg">
+    <link rel="icon" type="image/png" href="logosunday.jpg">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
         :root {
-            /* 🔴 核心改变：采用 Apple OLED Black 主题 */
-            --bg-primary: #000000;
-            --bg-secondary: #1c1c1e; /* 卡片背景 */
-            --bg-tertiary: #2c2c2e;  /* 按钮背景 */
+            /* 🔵 Restore classic blue theme (V3/V5 Style) */
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
             
-            --accent-blue: #0A84FF;
-            --accent-green: #30D158;
-            --accent-red: #FF453A;
-            --accent-orange: #FF9F0A;
-            --accent-purple: #BF5AF2;
+            --accent-primary: #00d4ff; /* Classic Blue */
+            --accent-secondary: #7b2cbf; /* Purple Accent */
+            --accent-glow: rgba(0, 212, 255, 0.5);
             
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255,255,255,0.6);
-            --text-tertiary: rgba(255,255,255,0.4);
+            --accent-success: #00ff88;
+            --accent-danger: #ff4757;
+            --accent-warning: #ff6b35;
             
-            --separator: rgba(255,255,255,0.1);
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 26px;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --radius-md: 16px;
+            --radius-lg: 24px;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            font-family: 'Outfit', -apple-system, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 50px;
         }
 
-        /* 顶部微弱蓝光 (Ambient Light) */
-        .ambient-light {
-            position: fixed; top: -150px; left: -150px; width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(10,132,255,0.15) 0%, transparent 70%);
-            z-index: -1; pointer-events: none;
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
         }
 
-        .app-container { max-width: 440px; margin: 0 auto; padding: 0 16px; }
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
 
-        /* --- Header (完美还原截图) --- */
+        /* Header */
         .header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-bottom: 20px;
         }
-        .logo { display: flex; align-items: center; gap: 12px; }
-        .logo-icon {
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, #0A84FF, #5AC8FA); /* 截图里的蓝色图标 */
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(10,132,255,0.3);
-        }
-        .logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-        
-        .logo-text h1 { font-size: 22px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; }
-        .logo-text span { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 500; }
-        
-        .header-time { text-align: right; }
-        .header-time .time { font-size: 26px; font-weight: 700; color: var(--accent-blue); line-height: 1; font-variant-numeric: tabular-nums; }
-        .header-time .date { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
 
-        /* --- Nav (胶囊导航) --- */
+        .logo { display: flex; align-items: center; gap: 12px; }
+
+        /* ✅ LOGO Style Update: Supports Images */
+        .logo-icon {
+            width: 48px; height: 48px;
+            background: #000;
+            border-radius: 50%;
+            overflow: hidden; /* Crop to circle */
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-glow);
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .logo-icon img {
+            width: 100%; height: 100%;
+            object-fit: cover; /* Fill circle */
+        }
+
+        .logo-text h1 { font-size: 24px; font-weight: 700; }
+        .logo-text span { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+
+        .header-time { text-align: right; font-family: 'JetBrains Mono', monospace; }
+        .header-time .time { font-size: 24px; font-weight: 500; color: var(--accent-primary); }
+        .header-time .date { font-size: 12px; color: var(--text-secondary); }
+
+        /* Navigation */
         .nav-tabs {
-            display: flex; gap: 6px; padding: 4px;
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            margin-bottom: 24px;
+            display: flex; gap: 6px; padding: 6px;
+            background: var(--glass);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
             overflow-x: auto;
-            scrollbar-width: none;
         }
         .nav-tabs::-webkit-scrollbar { display: none; }
+
         .nav-tab {
-            flex: 1; min-width: 60px; padding: 10px 0;
+            flex: 1; min-width: 55px; padding: 10px 6px;
             border: none; background: transparent;
             color: var(--text-secondary);
-            font-family: inherit; font-size: 11px; font-weight: 500;
-            border-radius: 12px; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px; font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
         }
-        .nav-tab.active { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(10,132,255,0.3); }
-        .nav-tab .icon { font-size: 20px; margin-bottom: 2px; }
 
-        /* --- Pages --- */
-        .page { display: none; animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .nav-tab .icon { font-size: 18px; }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s ease-out; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-        /* --- V10 组件风格 (黑色卡片) --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
         .card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 16px;
-            border: none; /* 移除 V9 的玻璃边框 */
-        }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .card-title { font-size: 17px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
-
-        /* 1. 首页方块 (Stats Grid - 还原截图) */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
-        }
-        .stat-item {
-            background: var(--bg-secondary);
-            aspect-ratio: 1;
+            background: var(--bg-card);
             border-radius: var(--radius-lg);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px;
-            border: none;
+            border: 1px solid var(--glass-border);
+            padding: 18px;
+            margin-bottom: 15px;
         }
-        .stat-value { font-size: 20px; font-weight: 700; color: var(--accent-blue); margin-bottom: 2px; }
-        .stat-label { font-size: 11px; color: var(--text-secondary); }
 
-        /* 2. 💧 喝水卡片 (V9没有, 但截图有, 这里补全了) */
-        .hydration-card {
-            background: linear-gradient(180deg, rgba(10,132,255,0.08) 0%, rgba(28,28,30,0) 100%), var(--bg-secondary);
-            border: 1px solid rgba(10,132,255,0.15);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 16px;
+        .card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 15px;
         }
-        .hyd-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .hyd-title { font-size: 17px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
-        .hyd-count { font-size: 30px; font-weight: 700; color: white; }
-        .hyd-count span { font-size: 15px; color: var(--text-tertiary); font-weight: 500; }
-        
-        .hyd-progress-bg { height: 10px; background: rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden; margin-bottom: 20px; }
-        .hyd-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); width: 0%; transition: width 0.5s ease; }
-        
-        .hyd-btn-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .hyd-btn {
-            background: var(--bg-tertiary); border: none;
-            padding: 14px 0; border-radius: var(--radius-md);
-            color: white; font-weight: 600; font-size: 13px; cursor: pointer;
+
+        .card-title {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 16px; font-weight: 600;
         }
-        .hyd-btn:active { background: var(--text-secondary); }
 
-        /* 3. 天气 & 徽章 */
-        .badge { padding: 5px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; background: var(--bg-tertiary); }
-        .badge.live { background: rgba(255,69,58,0.15); color: var(--accent-red); animation: pulse 1.5s infinite; display: flex; align-items: center; gap: 4px; }
-        .badge.live::before { content:''; width:6px; height:6px; background:currentColor; border-radius:50%; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .badge {
+            padding: 5px 10px; border-radius: 15px;
+            font-size: 11px; font-weight: 500;
+            background: var(--glass);
+        }
 
-        .weather-main { display: flex; align-items: center; gap: 16px; }
-        .weather-icon { font-size: 48px; }
-        .weather-temp { font-size: 44px; font-weight: 700; letter-spacing: -1px; }
-        .weather-condition { font-size: 15px; color: var(--text-secondary); margin-top: 2px; }
-        
-        .weather-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
-        .weather-detail { background: var(--bg-tertiary); padding: 12px; border-radius: var(--radius-md); text-align: center; }
-        .weather-detail .value { font-size: 16px; font-weight: 600; color: white; }
-        .weather-detail .label { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+        .badge.live { background: rgba(255, 71, 87, 0.2); color: var(--accent-danger); animation: pulse 2s infinite; }
+        .badge.tracking { background: rgba(0, 255, 136, 0.2); color: var(--accent-success); }
 
-        /* 4. 输入框 & 按钮 (V9 的功能, V10 的皮) */
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 8px; margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: var(--glass);
+            padding: 12px 8px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--accent-primary); }
+        .stat-label { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+
+        /* Weather */
+        .weather-main { display: flex; align-items: center; gap: 20px; padding: 10px 0; }
+        .weather-icon { font-size: 50px; }
+        .weather-temp { font-size: 38px; font-weight: 700; }
+        .weather-condition { color: var(--text-secondary); font-size: 14px; }
+
+        .weather-details {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; margin-top: 15px;
+        }
+
+        .weather-detail {
+            background: var(--glass);
+            padding: 12px; border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .weather-detail .value { font-size: 16px; font-weight: 600; color: var(--accent-primary); }
+        .weather-detail .label { font-size: 10px; color: var(--text-muted); }
+
+        /* Location List */
+        .location-list { display: flex; flex-direction: column; gap: 8px; }
+
+        .location-card {
+            background: var(--glass);
+            padding: 12px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .location-info { display: flex; align-items: center; gap: 10px; }
+        .location-name { font-weight: 500; font-size: 14px; }
+        .location-temp { font-size: 18px; font-weight: 600; color: var(--accent-primary); }
+
+        /* Input & Buttons */
         .input-group { position: relative; margin-bottom: 12px; }
-        .input-field { width: 100%; padding: 16px; background: var(--bg-tertiary); border: none; border-radius: var(--radius-md); color: white; font-size: 16px; font-family: inherit; }
-        .input-field:focus { outline: none; box-shadow: 0 0 0 2px var(--accent-blue); }
-        
-        .btn { width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
-        .btn-primary { background: var(--accent-blue); color: white; }
-        .btn-secondary { background: var(--bg-tertiary); color: white; }
-        .btn-danger { background: var(--accent-red); color: white; }
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .btn-sm { padding: 12px 16px; font-size: 13px; }
 
-        /* 5. 地图与时间轴 (保留了 V9 的高级功能) */
-        .map-small-container { width: 100%; height: 200px; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; position: relative; background: var(--bg-tertiary); }
-        .map-fullscreen { position: fixed; inset: 0; z-index: 2000; background: black; display: none; }
-        .map-fullscreen.active { display: block; }
-        #journeyMapFull { width: 100%; height: 100%; }
-        
-        /* 地图覆盖层 */
-        .map-top-bar { position: absolute; top: 0; left: 0; right: 0; padding: 60px 20px 20px; background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent); z-index: 2001; pointer-events: none; }
-        .map-status-row { display: flex; align-items: center; gap: 12px; pointer-events: auto; }
-        .map-mode-icon { width: 48px; height: 48px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(10,132,255,0.4); }
-        .map-mode-info { flex: 1; color: white; }
-        .map-mode-title { font-size: 20px; font-weight: 700; }
-        .map-street { font-size: 13px; opacity: 0.7; }
-        .map-close-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; border:none; color: white; font-size: 18px; cursor: pointer; pointer-events: auto; }
-        
-        .map-bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 20px; background: linear-gradient(0deg, rgba(0,0,0,0.95), transparent); z-index: 2001; pointer-events: none; }
-        .map-controls { display: flex; justify-content: center; gap: 16px; pointer-events: auto; }
-        .map-btn { width: 56px; height: 56px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50%; border: none; font-size: 24px; color: white; cursor: pointer; }
-        .map-btn-end { background: var(--accent-red); width: 72px; height: 72px; font-size: 30px; box-shadow: 0 0 20px rgba(255,69,58,0.4); }
+        .input-field {
+            width: 100%; padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+        }
 
-        /* 6. 聊天界面 (V9 独有功能，已适配黑夜模式) */
-        .chat-messages { height: 300px; overflow-y: auto; background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; }
-        .chat-message { margin-bottom: 12px; display: flex; }
-        .chat-message.bot { justify-content: flex-start; }
-        .chat-message.user { justify-content: flex-end; }
-        .chat-bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 15px; }
-        .chat-message.bot .chat-bubble { background: var(--bg-secondary); color: var(--text-secondary); }
-        .chat-message.user .chat-bubble { background: var(--accent-blue); color: white; }
-        .chat-input-area { display: flex; gap: 10px; }
+        .input-field:focus { outline: none; border-color: var(--accent-primary); }
 
-        /* 7. 搜索结果 & 列表 */
-        .search-results { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--separator); border-radius: var(--radius-md); margin-top: 8px; z-index: 3000; display: none; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .search-results.active { display: block; }
-        .search-item { padding: 14px 16px; border-bottom: 1px solid var(--separator); cursor: pointer; }
+        /* ✅ Smart Search List */
+        .search-results {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            margin-top: 5px;
+            z-index: 3000;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .search-results.active { display: block; animation: slideDown 0.2s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .search-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
         .search-item:last-child { border-bottom: none; }
-        .search-item-name { color: white; font-weight: 500; }
-        .search-item-detail { font-size: 12px; color: var(--text-tertiary); }
+        .search-item:hover { background: var(--glass); }
+        .search-item-name { font-weight: 500; font-size: 14px; color: var(--text-primary); }
+        .search-item-detail { font-size: 11px; color: var(--accent-primary); margin-top: 2px; }
 
-        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 8px; }
+        .btn {
+            padding: 14px 24px; border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px; font-weight: 500;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%;
+        }
+
+        .btn-primary { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; }
+        .btn-secondary { background: var(--glass); color: var(--text-primary); border: 1px solid var(--glass-border); }
+        .btn-danger { background: linear-gradient(135deg, var(--accent-danger), #ff6b6b); color: white; }
+        .btn-success { background: linear-gradient(135deg, var(--accent-success), #00d68f); color: #0f0f1a; }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .btn-sm { padding: 10px 16px; font-size: 12px; }
+
+        /* ==================== MAP STYLES ==================== */
+        .map-small-container {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .map-small-container::after {
+            content: '🔍 Tap to Zoom';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 1000;
+        }
+
+        #journeyMapSmall, #parkingMap { width: 100%; height: 100%; }
+
+        /* Fullscreen Map */
+        .map-fullscreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 2000;
+            background: var(--bg-primary);
+            display: none;
+        }
+
+        .map-fullscreen.active { display: block; }
+
+        #journeyMapFull { width: 100%; height: 100%; }
+
+        /* Map Top Bar */
+        .map-top-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(180deg, rgba(15, 15, 26, 0.95) 0%, transparent 100%);
+            padding: 50px 20px 40px;
+            z-index: 2001;
+        }
+
+        .map-status-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .map-mode-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .map-mode-info { flex: 1; }
+        .map-mode-title { font-size: 20px; font-weight: 700; }
+        .map-street { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+
+        .map-close-btn {
+            width: 40px; height: 40px;
+            background: var(--glass);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .map-live-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .map-stat {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 5px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-stat .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .map-stat .label { font-size: 9px; color: var(--text-muted); }
+
+        /* Map Bottom Bar */
+        .map-bottom-bar {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(0deg, rgba(15, 15, 26, 0.98) 0%, transparent 100%);
+            padding: 40px 20px 40px;
+            z-index: 2001;
+        }
+
+        .map-duration {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .map-duration-label { font-size: 12px; color: var(--text-muted); }
+        .map-duration-time {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-success);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .map-btn {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-btn-end {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--accent-danger), #ff6b6b);
+            font-size: 28px;
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+        }
+
+        /* Timeline Panel */
+        .timeline-panel {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: var(--bg-card);
+            border-radius: 24px 24px 0 0;
+            max-height: 50%;
+            z-index: 2002;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-panel.show { transform: translateY(0); }
+
+        .timeline-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-header h3 { font-size: 16px; }
+        .timeline-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+
+        .timeline-content {
+            padding: 20px;
+            max-height: calc(50vh - 60px);
+            overflow-y: auto;
+        }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 25px; }
+
+        .timeline::before {
+            content: ''; position: absolute;
+            left: 8px; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), transparent);
+        }
+
+        .timeline-item { position: relative; padding-bottom: 15px; }
+
+        .timeline-dot {
+            position: absolute; left: -21px; top: 5px;
+            width: 12px; height: 12px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .timeline-dot.walking { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
+        .timeline-dot.driving { background: var(--accent-warning); box-shadow: 0 0 10px var(--accent-warning); }
+        .timeline-dot.resting { background: var(--accent-secondary); box-shadow: 0 0 10px var(--accent-secondary); }
+        .timeline-dot.active { animation: dotPulse 1.5s ease-in-out infinite; }
+
+        @keyframes dotPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+        .timeline-card {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: var(--radius-md);
+        }
+
+        .timeline-title { font-weight: 600; font-size: 14px; }
+        .timeline-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .timeline-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-top: 6px;
+        }
+        .timeline-badge.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
+        .timeline-badge.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
+        .timeline-badge.resting { background: rgba(123, 44, 191, 0.15); color: var(--accent-secondary); }
+
+        /* Custom Map Marker */
+        .custom-marker {
+            width: 20px; height: 20px;
+            background: #4285F4;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.8);
+        }
+
+        .custom-marker-photo {
+            /* Photo marker style */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* History Card */
+        .history-card {
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .history-date { font-size: 12px; color: var(--accent-primary); }
+        .history-mode { font-size: 11px; padding: 3px 8px; border-radius: 10px; }
+        .history-mode.walking { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); }
+        .history-mode.driving { background: rgba(255, 107, 53, 0.15); color: var(--accent-warning); }
+
+        .history-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+        .history-stat { font-size: 12px; color: var(--text-secondary); }
+        .history-stat span { color: var(--text-primary); font-weight: 600; }
+
+        /* Other Styles */
+        .parking-display { text-align: center; padding: 20px; }
+        .parking-icon { font-size: 50px; margin-bottom: 10px; }
+        .parking-photo { max-width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; }
+
+        .place-card {
+            background: var(--glass);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .place-photo { width: 100%; height: 100px; object-fit: cover; }
+        .place-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .place-name { font-weight: 600; }
+
+        .reminder-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+        }
+        .reminder-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--accent-warning), #ff8c42);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .reminder-content { flex: 1; }
+        .reminder-task { font-weight: 500; font-size: 13px; }
+        .reminder-time { font-size: 11px; color: var(--text-muted); }
+        .reminder-delete { background: none; border: none; color: var(--text-muted); cursor: pointer; }
+
+        .rate-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px; background: var(--glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+        }
+        .rate-pair { display: flex; align-items: center; gap: 10px; }
+        .rate-flag { font-size: 20px; }
+        .rate-code { font-weight: 600; font-size: 13px; }
+        .rate-value { font-size: 16px; font-weight: 600; color: var(--accent-success); }
+
+        .alert-card {
+            padding: 12px; border-radius: var(--radius-md);
+            margin-bottom: 10px; border-left: 4px solid;
+            background: var(--glass);
+        }
+        .alert-card.danger { background: rgba(255, 71, 87, 0.1); border-color: var(--accent-danger); }
+        .alert-card.warning { background: rgba(255, 165, 0, 0.1); border-color: var(--accent-warning); }
+        .alert-card.info { background: rgba(0, 212, 255, 0.1); border-color: var(--accent-primary); }
+        .alert-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .alert-title { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .alert-time { font-size: 10px; color: var(--text-muted); }
+        .alert-body { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* Group Header */
+        .group-header {
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
+            margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .chat-messages {
+            height: 250px; overflow-y: auto;
+            padding: 15px; background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
+        }
+        .chat-message { margin-bottom: 12px; }
+        .chat-message.user { text-align: right; }
+        .chat-bubble {
+            display: inline-block; max-width: 85%;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+        }
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+        .chat-message.bot .chat-bubble { background: var(--glass); }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area .btn { width: auto; padding: 14px 18px; }
         
-        .alert-card { padding: 16px; border-radius: var(--radius-md); margin-bottom: 10px; background: rgba(255,69,58,0.1); border-left: 4px solid var(--accent-red); }
-        .alert-card.info { background: rgba(10,132,255,0.1); border-color: var(--accent-blue); }
-        
-        /* Utils */
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-150%); background: rgba(44,44,46,0.9); backdrop-filter: blur(20px); padding: 12px 24px; border-radius: 50px; display: flex; align-items: center; gap: 10px; z-index: 5000; transition: 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: max-content; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        
-        /* 隐藏元素 */
-        #photoInput, #journeyPhotoInput, #cam { display: none; }
+        /* Briefing Style */
+        .briefing-card {
+            border-left: 3px solid var(--accent-primary);
+            background: rgba(0, 212, 255, 0.05);
+            margin-bottom: 15px; padding: 12px; border-radius: var(--radius-md);
+        }
+        .briefing-title { font-weight: 700; color: var(--accent-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .briefing-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .briefing-row:last-child { border-bottom: none; }
+        .briefing-footer { margin-top: 8px; font-size: 11px; color: var(--accent-success); font-style: italic; }
+
+        .command-list { margin-top: 15px; padding: 15px; background: var(--glass); border-radius: var(--radius-md); }
+        .command-title { font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 10px; }
+        .command-item { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
+        .command-item code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; color: var(--accent-primary); }
+
+        .empty-state { text-align: center; padding: 30px; }
+        .empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.4; }
+        .empty-text { color: var(--text-muted); font-size: 12px; }
+
+        .loading { display: flex; justify-content: center; padding: 30px; }
+        .spinner {
+            width: 30px; height: 30px;
+            border: 3px solid var(--glass);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed; top: 20px; left: 20px; right: 20px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-success);
+            border-radius: var(--radius-md);
+            z-index: 5000;
+            display: flex; align-items: center; gap: 10px;
+            transform: translateY(-150%);
+            transition: transform 0.4s ease;
+        }
+        .toast.show { transform: translateY(0); }
+        .toast.error { border-color: var(--accent-danger); }
+
+        .modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 4000;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: 100%; max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+        .modal-body { padding: 20px; }
+
+        .fitness-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
+        .fitness-item { background: var(--glass); padding: 15px; border-radius: var(--radius-md); text-align: center; }
+        .fitness-icon { font-size: 24px; margin-bottom: 8px; }
+        .fitness-value { font-size: 20px; font-weight: 700; color: var(--accent-success); }
+        .fitness-label { font-size: 10px; color: var(--text-muted); }
+
+        .news-item { padding: 12px; background: var(--glass); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
+        .news-source { display: inline-block; padding: 2px 8px; background: var(--accent-primary); color: var(--bg-primary); border-radius: 10px; font-size: 9px; margin-bottom: 5px; }
+        .news-title { font-size: 13px; font-weight: 500; }
+
+        /* GPS Accuracy Indicator */
+        .gps-accuracy {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--glass);
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .gps-accuracy-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        .gps-accuracy-dot.excellent { background: var(--accent-success); box-shadow: 0 0 8px var(--accent-success); }
+        .gps-accuracy-dot.good { background: var(--accent-primary); }
+        .gps-accuracy-dot.poor { background: var(--accent-warning); }
+        .gps-accuracy-dot.bad { background: var(--accent-danger); }
     </style>
 </head>
 <body>
-
-    <div class="ambient-light"></div>
+    <div class="bg-gradient"></div>
 
     <div class="app-container">
         <header class="header">
             <div class="logo">
-                <div class="logo-icon"><img src="logosunday.jpg" alt="S" onerror="this.style.display='none';this.parentElement.innerHTML='☀️'"></div>
-                <div class="logo-text"><h1>Sunday</h1><span>PERSONAL ASSISTANT</span></div>
+                <div class="logo-icon">
+                    <img src="logosunday.jpg" alt="S">
+                </div>
+                <div class="logo-text">
+                    <h1>Sunday</h1>
+                    <span>AI ASSISTANT V9.1</span>
+                </div>
             </div>
             <div class="header-time">
                 <div class="time" id="currentTime">00:00</div>
-                <div class="date" id="currentDate">Mon, Jan 1</div>
+                <div class="date" id="currentDate">Loading...</div>
             </div>
         </header>
 
         <nav class="nav-tabs">
-            <button class="nav-tab active" data-page="dashboard"><span class="icon">🏠</span>Home</button>
-            <button class="nav-tab" data-page="weather"><span class="icon">🌤️</span>Weather</button>
-            <button class="nav-tab" data-page="journey"><span class="icon">🗺️</span>Journey</button>
-            <button class="nav-tab" data-page="parking"><span class="icon">🅿️</span>Parking</button>
-            <button class="nav-tab" data-page="tools"><span class="icon">🛠️</span>Tools</button>
-            <button class="nav-tab" data-page="alerts"><span class="icon">🚨</span>Alerts</button>
-            <button class="nav-tab" data-page="chat"><span class="icon">💬</span>Chat</button>
+            <button class="nav-tab active" data-page="dashboard"><span class="icon">🏠</span><span>Home</span></button>
+            <button class="nav-tab" data-page="weather"><span class="icon">🌤️</span><span>Weather</span></button>
+            <button class="nav-tab" data-page="journey"><span class="icon">🗺️</span><span>Journey</span></button>
+            <button class="nav-tab" data-page="parking"><span class="icon">🅿️</span><span>Parking</span></button>
+            <button class="nav-tab" data-page="tools"><span class="icon">🛠️</span><span>Tools</span></button>
+            <button class="nav-tab" data-page="alerts"><span class="icon">🚨</span><span>Alerts</span></button>
+            <button class="nav-tab" data-page="chat"><span class="icon">💬</span><span>Chat</span></button>
         </nav>
 
         <div class="page active" id="page-dashboard">
-            <div id="dailyBriefing" style="display:none; margin-bottom:16px; padding:12px; background:rgba(10,132,255,0.1); border-radius:14px; border-left:3px solid var(--accent-blue);">
-                <div style="font-weight:700; color:var(--accent-blue); margin-bottom:4px">🔔 Morning Brief</div>
-                <div id="briefingContent" style="font-size:12px; color:var(--text-secondary)">Loading...</div>
+            <div id="dailyBriefing" class="briefing-card" style="display:none">
+                <div class="briefing-title">🔔 Morning Update</div>
+                <div id="briefingContent"></div>
+                <div class="briefing-footer">Don't forget to drink some water! 💧</div>
             </div>
 
             <div class="stats-grid">
@@ -273,19 +772,6 @@
                 <div class="stat-item"><div class="stat-value" id="dashAlerts">0</div><div class="stat-label">Alerts</div></div>
                 <div class="stat-item"><div class="stat-value" id="dashJourneys">0</div><div class="stat-label">Journeys</div></div>
                 <div class="stat-item"><div class="stat-value" id="dashReminders">0</div><div class="stat-label">Reminders</div></div>
-            </div>
-
-            <div class="hydration-card">
-                <div class="hyd-header">
-                    <div class="hyd-title">💧 Hydration</div>
-                    <div class="hyd-count"><span id="waterCount">0</span><span>/8</span></div>
-                </div>
-                <div class="hyd-progress-bg"><div class="hyd-progress-fill" id="waterBar"></div></div>
-                <div class="hyd-btn-row">
-                    <button class="hyd-btn" onclick="modWater(1)">+1 Cup</button>
-                    <button class="hyd-btn" onclick="modWater(2)">+2 Cups</button>
-                    <button class="hyd-btn" onclick="modWater(0)">Reset</button>
-                </div>
             </div>
 
             <div class="card">
@@ -297,56 +783,78 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><div class="card-title">📰 News</div></div>
-                <div id="dashNews" style="font-size:13px; color:var(--text-secondary)">Loading...</div>
+                <div class="card-header"><div class="card-title">🚨 Recent Alerts</div></div>
+                <div id="dashAlertsPreview"></div>
             </div>
-            <div id="dashAlertsPreview"></div>
+
+            <div class="card">
+                <div class="card-header"><div class="card-title">📰 News</div></div>
+                <div id="dashNews"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
         </div>
 
         <div class="page" id="page-weather">
             <div class="input-group">
-                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search city..." autocomplete="off">
+                <input type="text" class="input-field" id="weatherSearch" placeholder="🔍 Search city (e.g. London)..." autocomplete="off">
                 <div id="searchResults" class="search-results"></div>
             </div>
             <div class="card">
-                <div class="card-header"><div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div></div>
+                <div class="card-header">
+                    <div class="card-title">📍 <span id="weatherLocation">Johor Jaya</span></div>
+                    <span class="badge live">● LIVE</span>
+                </div>
                 <div class="weather-main">
                     <div class="weather-icon" id="weatherIcon">☀️</div>
                     <div><div class="weather-temp"><span id="weatherTemp">--</span>°C</div><div class="weather-condition" id="weatherCondition">Loading...</div></div>
                 </div>
                 <div class="weather-details">
                     <div class="weather-detail"><div class="value" id="weatherWind">--</div><div class="label">Wind</div></div>
-                    <div class="weather-detail"><div class="value" id="weatherHumidity">--</div><div class="label">Hum %</div></div>
+                    <div class="weather-detail"><div class="value" id="weatherHumidity">--</div><div class="label">Humidity</div></div>
                     <div class="weather-detail"><div class="value" id="weatherRain">--</div><div class="label">Rain %</div></div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header"><div class="card-title">🌍 Locations</div></div>
-                <div id="monitoredLocations"></div>
+                <div class="location-list" id="monitoredLocations"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
         <div class="page" id="page-journey">
-            <div class="card" id="activeJourneyCard" style="display:none; border:1px solid var(--accent-green)">
-                <div class="card-header"><div class="card-title" style="color:var(--accent-green)">🚗 Tracking Active</div><span class="badge live" style="background:rgba(48,209,88,0.2);color:#30D158">REC</span></div>
-                <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:16px">
+            <div class="card" id="activeJourneyCard" style="display: none;">
+                <div class="card-header">
+                    <div class="card-title">🚗 <span id="journeyModeText">Tracking</span></div>
+                    <span class="badge tracking">● LIVE</span>
+                </div>
+                <div class="gps-accuracy" id="gpsAccuracy">
+                    <div class="gps-accuracy-dot good" id="gpsAccuracyDot"></div>
+                    <span id="gpsAccuracyText">GPS: Good</span>
+                </div>
+                <div class="stats-grid" style="margin-top: 15px; grid-template-columns: repeat(3, 1fr);">
                     <div class="stat-item"><div class="stat-value" id="jDistance">0.0</div><div class="stat-label">km</div></div>
                     <div class="stat-item"><div class="stat-value" id="jSpeed">0</div><div class="stat-label">km/h</div></div>
                     <div class="stat-item"><div class="stat-value" id="jTime">0</div><div class="stat-label">min</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jPace">--</div><div class="stat-label">min/km</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jAlt">0</div><div class="stat-label">m (Alt)</div></div>
+                    <div class="stat-item"><div class="stat-value" id="jCalories">0</div><div class="stat-label">kcal</div></div>
                 </div>
-                <div class="map-small-container" onclick="openFullscreenMap()"><div id="journeyMapSmall"></div></div>
+                <div class="map-small-container" onclick="openFullscreenMap()">
+                    <div id="journeyMapSmall"></div>
+                </div>
+                <div class="timeline" id="timelinePreview" style="max-height: 150px; overflow: hidden;"></div>
                 <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="openFullscreenMap()">🗺️ Map</button>
-                    <button class="btn btn-danger" onclick="endJourney()">Stop 🏁</button>
+                    <button class="btn btn-secondary" onclick="openFullscreenMap()">🗺️ Full Map</button>
+                    <button class="btn btn-danger" onclick="endJourney()">🏁 End</button>
                 </div>
             </div>
 
             <div class="card" id="startJourneyCard">
-                <div class="card-header"><div class="card-title">🚀 New Journey</div></div>
-                <div style="text-align:center; padding:20px; color:var(--text-tertiary); font-size:13px">
-                    GPS Tracking • Auto Speed Detection • Calorie Counter
+                <div class="card-header"><div class="card-title">🚀 Start Journey</div></div>
+                <div class="empty-state">
+                    <div class="empty-icon">🗺️</div>
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Track Your Movement</div>
+                    <div class="empty-text">Mini-map tracking + Tap to zoom<br>Auto-detects walking/driving & tracks calories</div>
                 </div>
-                <button class="btn btn-primary" onclick="startJourney()">Start Tracking</button>
+                <button class="btn btn-primary" onclick="startJourney()">📍 Start Journey</button>
             </div>
 
             <div class="card">
@@ -358,60 +866,82 @@
         <div class="page" id="page-parking">
             <div class="card">
                 <div class="card-header"><div class="card-title">🚗 My Car</div></div>
-                <div id="parkingDisplay" style="text-align:center; padding:30px; color:var(--text-tertiary)">No location saved</div>
-                <div class="map-small-container" id="parkingMapContainer" style="display:none"><div id="parkingMap"></div></div>
+                <div id="parkingDisplay">
+                    <div class="parking-display">
+                        <div class="parking-icon">🚗</div>
+                        <div style="font-size: 14px;">No location saved</div>
+                    </div>
+                </div>
+                <div class="map-small-container" id="parkingMapContainer" style="display: none;">
+                    <div id="parkingMap"></div>
+                </div>
                 <div class="btn-row-3">
                     <button class="btn btn-primary btn-sm" onclick="saveParking('gps')">📍 GPS</button>
                     <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">📸 Photo</button>
                     <button class="btn btn-secondary btn-sm" onclick="saveParking('both')">📍+📸</button>
                 </div>
-                <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="handlePhoto(event)">
+                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
             </div>
             <div class="card">
                 <div class="card-header"><div class="card-title">⭐ Saved Places</div></div>
-                <div class="input-group"><input type="text" class="input-field" id="customPlaceName" placeholder="Place Name"></div>
-                <button class="btn btn-secondary" onclick="saveCustomPlace()">Save Current Location</button>
-                <div id="customPlacesList" style="margin-top:16px"></div>
+                <div class="input-group"><input type="text" class="input-field" id="customPlaceName" placeholder="Name this place"></div>
+                <button class="btn btn-secondary" onclick="saveCustomPlace()">💾 Save Place</button>
+                <div id="customPlacesList" style="margin-top: 15px;"></div>
             </div>
         </div>
 
         <div class="page" id="page-tools">
             <div class="card">
-                <div class="card-header"><div class="card-title">⏰ Reminders</div></div>
-                <div class="input-group"><input type="text" class="input-field" id="reminderTask" placeholder="Remind me to..."></div>
-                <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="addReminder(null, 30)">+30m</button>
-                    <button class="btn btn-primary" onclick="addReminder()">Set</button>
+                <div class="card-header"><div class="card-title">⏰ Reminders</div><span class="badge" id="reminderBadge">0</span></div>
+                <button class="btn btn-secondary" onclick="enableNotifications()" style="margin-bottom: 10px;">🔔 Enable Alerts on iPhone</button>
+                <div class="input-group"><input type="text" class="input-field" id="reminderTask" placeholder="What to remind?"></div>
+                <div class="btn-row" style="margin-bottom: 15px;">
+                    <select class="input-field" id="reminderTime">
+                        <option value="10">10 mins</option>
+                        <option value="30">30 mins</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                        <option value="480">8 hours</option>
+                        <option value="1440">24 hours</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addReminder()">⏰ Set</button>
                 </div>
-                <div id="reminderList" style="margin-top:16px"></div>
-                <select id="reminderTime" style="display:none"><option value="30" selected>30</option></select>
+                <div id="reminderList"></div>
             </div>
             <div class="card">
-                <div class="card-header"><div class="card-title">💱 Exchange Rates (MYR)</div></div>
-                <div id="currencyRates">Loading...</div>
+                <div class="card-header"><div class="card-title">💱 Currency (vs MYR)</div></div>
+                <div id="currencyRates"><div class="loading"><div class="spinner"></div></div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><div class="card-title">📰 News</div></div>
+                <div id="newsList"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
         <div class="page" id="page-alerts">
             <div class="card">
-                <div class="card-header"><div class="card-title">🚨 Earthquakes (USGS)</div></div>
-                <div id="earthquakeAlerts">Loading...</div>
+                <div class="card-header"><div class="card-title">🌍 Global Weather Watch</div><span class="badge live">● LIVE</span></div>
+                <div id="globalWeatherAlerts"><div class="loading"><div class="spinner"></div></div></div>
             </div>
             <div class="card">
-                <div class="card-header"><div class="card-title">🌍 Global Weather Watch</div></div>
-                <div id="globalWeatherAlerts">Loading...</div>
+                <div class="card-header"><div class="card-title">🚨 Earthquake Monitor</div></div>
+                <div id="earthquakeAlerts"><div class="loading"><div class="spinner"></div></div></div>
             </div>
         </div>
 
         <div class="page" id="page-chat">
-            <div class="card" style="height:calc(100vh - 180px); display:flex; flex-direction:column">
-                <div class="card-header"><div class="card-title">💬 Assistant</div></div>
+            <div class="card">
+                <div class="card-header"><div class="card-title">💬 Chat</div></div>
+                <div id="chatBriefing" class="briefing-card" style="display:none; margin: 15px;">
+                    <div class="briefing-title">🔔 Morning Update</div>
+                    <div id="chatBriefingContent"></div>
+                </div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="chat-message bot"><div class="chat-bubble">Hi! I'm Sunday. I can help with weather, medical tips, or tools.</div></div>
+                    <div class="chat-message bot"><div class="chat-bubble">Hi! 👋 I'm Sunday. I monitor weather and earthquakes for you.</div></div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" class="input-field" id="chatInput" placeholder="Type..." onkeypress="if(event.key==='Enter')sendChat()">
-                    <button class="btn btn-primary" style="width:auto" onclick="sendChat()">➤</button>
+                    <button class="btn btn-primary" onclick="sendChat()">➤</button>
                 </div>
             </div>
         </div>
@@ -423,46 +953,67 @@
             <div class="map-status-row">
                 <div class="map-mode-icon" id="fsModeIcon">🚶</div>
                 <div class="map-mode-info">
-                    <div class="map-mode-title" id="fsModeTitle">Tracking</div>
-                    <div class="map-street" id="fsStreet">Locating...</div>
+                    <div class="map-mode-title" id="fsModeTitle">Walking</div>
+                    <div class="map-street" id="fsStreet">Detecting location...</div>
                 </div>
                 <button class="map-close-btn" onclick="closeFullscreenMap()">✕</button>
             </div>
+            <div class="map-live-stats" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="map-stat"><div class="value" id="fsDistance">0.0</div><div class="label">km</div></div>
+                <div class="map-stat"><div class="value" id="fsSpeed">0</div><div class="label">km/h</div></div>
+                <div class="map-stat"><div class="value" id="fsTime">0</div><div class="label">min</div></div>
+                <div class="map-stat"><div class="value" id="fsPace">--</div><div class="label">Pace</div></div>
+                <div class="map-stat"><div class="value" id="fsAlt">0</div><div class="label">Alt (m)</div></div>
+                <div class="map-stat"><div class="value" id="fsCalories">0</div><div class="label">kcal</div></div>
+            </div>
         </div>
         <div class="map-bottom-bar">
-            <div style="text-align:center; margin-bottom:20px">
-                <div style="font-size:48px; font-weight:700; color:var(--accent-green); font-variant-numeric: tabular-nums;" id="fsDuration">00:00</div>
+            <div class="map-duration">
+                <div class="map-duration-label">Duration</div>
+                <div class="map-duration-time" id="fsDuration">00:00</div>
             </div>
             <div class="map-controls">
-                <button class="map-btn" onclick="centerMapOnUser()">📍</button>
+                <button class="map-btn" onclick="toggleTimelinePanel()">📋</button>
+                <button class="map-btn" onclick="document.getElementById('journeyPhotoInput').click()">📷</button>
                 <button class="map-btn map-btn-end" onclick="endJourney()">🏁</button>
+                <button class="map-btn" onclick="centerMapOnUser()">📍</button>
+                <input type="file" id="journeyPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="addJourneyPhoto(event)">
             </div>
+        </div>
+        <div class="timeline-panel" id="timelinePanel">
+            <div class="timeline-header"><h3>📜 Timeline</h3><button class="timeline-close" onclick="toggleTimelinePanel()">×</button></div>
+            <div class="timeline-content"><div class="timeline" id="fsTimeline"></div></div>
         </div>
     </div>
 
-    <div class="toast" id="toast"><span class="toast-icon">✅</span><span class="toast-message">Success</span></div>
+    <div class="toast" id="toast"><span class="toast-icon">✅</span><span class="toast-message">Success!</span></div>
+
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">📜 Journey Details</div><button class="modal-close" onclick="closeModal()">×</button></div>
+            <div class="modal-body" id="historyModalBody"></div>
+        </div>
+    </div>
 
     <script>
-        // ==================== 1. CORE LOGIC (V9.1 Base) ====================
-        const APP = { journey: null, watchId: null, mapSmall: null, mapFull: null, markerSmall: null, markerFull: null, pathSmall: null, pathFull: null, pathCoords: [], parkingMap: null, reminders: [], parking: null, customPlaces: {}, journeyHistory: [], pendingPhoto: null, timerInterval: null, isFullscreen: false, water: 0 };
-        const LOCATIONS = { 'Johor Jaya': { lat: 1.5360, lon: 103.7930 }, 'Singapore': { lat: 1.3521, lon: 103.8198 }, 'Tokyo': { lat: 35.6895, lon: 139.6917 }, 'London': { lat: 51.5074, lon: -0.1278 } };
-        const GLOBAL_MONITOR = [{n:'Tokyo', lat:35.6895, lon:139.6917}, {n:'London', lat:51.5074, lon:-0.1278}, {n:'Singapore', lat:1.3521, lon:103.8198}];
-        const CURRENCIES = [{ code: 'USD', flag: '🇺🇸' }, { code: 'SGD', flag: '🇸🇬' }, { code: 'JPY', flag: '🇯🇵' }];
+        const APP = { journey: null, watchId: null, mapSmall: null, mapFull: null, markerSmall: null, markerFull: null, pathSmall: null, pathFull: null, pathCoords: [], parkingMap: null, reminders: [], parking: null, customPlaces: {}, journeyHistory: [], pendingPhoto: null, timerInterval: null, isFullscreen: false };
+        const LOCATIONS = { 'Johor Jaya': { lat: 1.5360, lon: 103.7930 }, 'Iskandar Puteri': { lat: 1.4190, lon: 103.6350 }, 'Singapore': { lat: 1.3521, lon: 103.8198 }, 'Tokyo': { lat: 35.6895, lon: 139.6917 }, 'London': { lat: 51.5074, lon: -0.1278 } };
+        const GLOBAL_MONITOR = [{n:'Tokyo', lat:35.6895, lon:139.6917}, {n:'New York', lat:40.7128, lon:-74.0060}, {n:'London', lat:51.5074, lon:-0.1278}, {n:'Dubai', lat:25.2769, lon:55.2962}, {n:'Sydney', lat:-33.8688, lon:151.2093}, {n:'Shanghai', lat:31.2304, lon:121.4737}, {n:'Singapore', lat:1.3521, lon:103.8198}, {n:'Paris', lat:48.8566, lon:2.3522}, {n:'Beijing', lat:39.9042, lon:116.4074}, {n:'Seoul', lat:37.5665, lon:126.9780}, {n:'Hokkaido', lat:43.2203, lon:142.8635}];
+        const CURRENCIES = [{ code: 'USD', flag: '🇺🇸' }, { code: 'SGD', flag: '🇸🇬' }, { code: 'EUR', flag: '🇪🇺' }, { code: 'GBP', flag: '🇬🇧' }, { code: 'JPY', flag: '🇯🇵' }, { code: 'CNY', flag: '🇨🇳' }];
 
         document.addEventListener('DOMContentLoaded', () => {
             loadStorage(); initNav(); updateClock(); setInterval(updateClock, 1000);
             loadWeather(); loadNews(); loadCurrency(); loadEarthquakes(); loadGlobalWeatherAlerts();
             renderReminders(); renderParking(); renderHistory(); renderPlaces(); generateDailyBriefing();
-            updateWaterUI(); // New for V10
             setInterval(checkReminders, 10000); setInterval(loadEarthquakes, 300000);
             if ('Notification' in window) Notification.requestPermission();
         });
 
         function loadStorage() {
-            try { APP.reminders = JSON.parse(localStorage.getItem('sun_rem') || '[]'); APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null'); APP.customPlaces = JSON.parse(localStorage.getItem('sun_places') || '{}'); APP.journeyHistory = JSON.parse(localStorage.getItem('sun_hist') || '[]'); APP.water = parseInt(localStorage.getItem('sun_water') || '0'); } catch(e) {}
+            try { APP.reminders = JSON.parse(localStorage.getItem('sun_rem') || '[]'); APP.parking = JSON.parse(localStorage.getItem('sun_park') || 'null'); APP.customPlaces = JSON.parse(localStorage.getItem('sun_places') || '{}'); APP.journeyHistory = JSON.parse(localStorage.getItem('sun_hist') || '[]'); } catch(e) {}
         }
         function saveStorage() {
-            localStorage.setItem('sun_rem', JSON.stringify(APP.reminders)); localStorage.setItem('sun_park', JSON.stringify(APP.parking)); localStorage.setItem('sun_places', JSON.stringify(APP.customPlaces)); localStorage.setItem('sun_hist', JSON.stringify(APP.journeyHistory)); localStorage.setItem('sun_water', APP.water);
+            localStorage.setItem('sun_rem', JSON.stringify(APP.reminders)); localStorage.setItem('sun_park', JSON.stringify(APP.parking)); localStorage.setItem('sun_places', JSON.stringify(APP.customPlaces)); localStorage.setItem('sun_hist', JSON.stringify(APP.journeyHistory));
         }
         function initNav() {
             document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active')); document.querySelectorAll('.page').forEach(x => x.classList.remove('active')); t.classList.add('active'); document.getElementById('page-' + t.dataset.page).classList.add('active'); }));
@@ -471,97 +1022,203 @@
             const now = new Date(); document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }); document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
         }
 
-        // ==================== 2. HYDRATION (NEW FOR V10) ====================
-        function modWater(n) {
-            if(n === 0) APP.water = 0;
-            else APP.water = Math.min(APP.water + n, 12);
-            saveStorage(); updateWaterUI();
-        }
-        function updateWaterUI() {
-            document.getElementById('waterCount').textContent = APP.water;
-            document.getElementById('waterBar').style.width = (APP.water / 8 * 100) + '%';
+        async function generateDailyBriefing() {
+            let content = ''; content += `<div class="briefing-row"><strong>🌥️ Sky Status (VIP Zones):</strong></div>`;
+            for (const [n, c] of Object.entries(LOCATIONS)) { if(n === 'London') break; try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json(); const cond = getWeatherCond(d.current.weather_code); content += `<div class="briefing-row"><span>• ${n}</span><span>${cond.icon} ${d.current.temperature_2m}°C</span></div>`; } catch(e) {} }
+            content += `<div class="briefing-row" style="margin-top:10px"><strong>💰 Rates:</strong></div>`; try { const r = await (await fetch('https://api.exchangerate-api.com/v4/latest/SGD')).json(); content += `<div class="briefing-row"><span>SGD 1 ≈ RM ${(r.rates.MYR).toFixed(2)}</span></div>`; } catch(e) {}
+            document.getElementById('briefingContent').innerHTML = content; document.getElementById('chatBriefingContent').innerHTML = content; document.getElementById('dailyBriefing').style.display = 'block'; document.getElementById('chatBriefing').style.display = 'block';
         }
 
-        // ==================== 3. WEATHER & SEARCH (From V9) ====================
-        async function loadWeather() { await updateWeather('Johor Jaya', 1.536, 103.793); const container = document.getElementById('monitoredLocations'); container.innerHTML = ''; for (const [n, c] of Object.entries(LOCATIONS)) { try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json(); const cond = getWeatherCond(d.current.weather_code); container.innerHTML += `<div class="list-item" onclick="updateWeather('${n}',${c.lat},${c.lon})"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">${cond.icon}</span><span>${n}</span></div><span style="font-weight:600;color:var(--accent-blue)">${Math.round(d.current.temperature_2m)}°</span></div>`; } catch(e) {} } }
-        async function updateWeather(name, lat, lon) { try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`)).json(); const temp = Math.round(d.current.temperature_2m); const cond = getWeatherCond(d.current.weather_code); document.getElementById('weatherLocation').textContent = name; document.getElementById('weatherTemp').textContent = temp; document.getElementById('weatherIcon').textContent = cond.icon; document.getElementById('weatherCondition').textContent = cond.text; document.getElementById('weatherWind').textContent = Math.round(d.current.wind_speed_10m); document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m; document.getElementById('weatherRain').textContent = d.hourly.precipitation_probability[0] || 0; document.getElementById('dashTemp').textContent = temp + '°'; document.getElementById('dashWeather').innerHTML = `<div class="weather-icon">${cond.icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name}</div></div>`; return `${cond.icon} ${name}: ${temp}°C`; } catch(e) { return 'Error'; } }
-        function getWeatherCond(code) { if (code === 0) return { icon: '☀️', text: 'Clear' }; if (code <= 3) return { icon: '⛅', text: 'Cloudy' }; if (code >= 95) return { icon: '⛈️', text: 'Storm' }; if (code >= 61) return { icon: '🌧️', text: 'Rain' }; return { icon: '☁️', text: 'Cloudy' }; }
-        
-        // Smart Search
-        const searchInput = document.getElementById('weatherSearch'); const searchResults = document.getElementById('searchResults');
-        searchInput.addEventListener('keyup', async (e) => { if (e.key === 'Enter') { const query = e.target.value.trim(); if (!query) return; searchResults.innerHTML = '<div class="search-item">Searching...</div>'; searchResults.classList.add('active'); try { const r = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`)).json(); searchResults.innerHTML = r.results ? r.results.map(i => `<div class="search-item" onclick="selectLocation('${i.name}', ${i.latitude}, ${i.longitude}, '${i.country||''}')"><div class="search-item-name">${i.name}</div><div class="search-item-detail">${i.country||''}</div></div>`).join('') : '<div class="search-item">No results</div>'; } catch(err) { searchResults.classList.remove('active'); } } });
-        document.addEventListener('click', (e) => { if (!e.target.closest('.input-group')) searchResults.classList.remove('active'); });
-        function selectLocation(n, lat, lon, c) { updateWeather(n, lat, lon); searchInput.value = `${n}, ${c}`; searchResults.classList.remove('active'); }
+        async function loadWeather() {
+            await updateWeather('Johor Jaya', 1.536, 103.793);
+            const container = document.getElementById('monitoredLocations'); container.innerHTML = '';
+            for (const [n, c] of Object.entries(LOCATIONS)) { try { const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code`)).json(); const cond = getWeatherCond(d.current.weather_code); container.innerHTML += `<div class="location-card" onclick="updateWeather('${n}',${c.lat},${c.lon})"><div class="location-info"><span style="font-size:20px">${cond.icon}</span><span class="location-name">${n}</span></div><span class="location-temp">${Math.round(d.current.temperature_2m)}°</span></div>`; } catch(e) {} }
+        }
 
-        // ==================== 4. ALERTS & EARTHQUAKES (From V9) ====================
-        async function loadGlobalWeatherAlerts() { const c = document.getElementById('globalWeatherAlerts'); let found=false, h=''; for(const city of GLOBAL_MONITOR){ try{ const d=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code`)).json(); if([95,96,99].includes(d.current.weather_code)){ found=true; h+=`<div class="alert-card"><div style="font-weight:600">🚨 ${city.n}</div><div>Thunderstorm Alert</div></div>`; } }catch(e){} } if(!found) h='<div class="list-item" style="color:var(--text-secondary)">No severe alerts</div>'; c.innerHTML=h; }
-        async function loadEarthquakes() { try { const q = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features; document.getElementById('dashAlerts').textContent = q.length; document.getElementById('earthquakeAlerts').innerHTML = q.slice(0, 10).map(x => `<div class="list-item"><div><div style="font-weight:600">${x.properties.place}</div><div style="font-size:12px;color:var(--text-tertiary)">${new Date(x.properties.time).toLocaleString()}</div></div><span class="badge" style="background:${x.properties.mag>=6?'var(--accent-red)':'var(--accent-orange)'};color:white">M${x.properties.mag.toFixed(1)}</span></div>`).join(''); document.getElementById('dashAlertsPreview').innerHTML = q.slice(0,1).map(x=>`<div class="alert-card"><div style="font-weight:600">🚨 Recent: M${x.properties.mag.toFixed(1)}</div><div>${x.properties.place}</div></div>`).join(''); } catch(e) {} }
+        async function updateWeather(name, lat, lon) {
+            try {
+                const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&hourly=precipitation_probability`)).json();
+                const temp = Math.round(d.current.temperature_2m); const cond = getWeatherCond(d.current.weather_code);
+                document.getElementById('weatherLocation').textContent = name; document.getElementById('weatherTemp').textContent = temp; document.getElementById('weatherIcon').textContent = cond.icon; document.getElementById('weatherCondition').textContent = cond.text; document.getElementById('weatherWind').textContent = Math.round(d.current.wind_speed_10m); document.getElementById('weatherHumidity').textContent = d.current.relative_humidity_2m; document.getElementById('weatherRain').textContent = d.hourly.precipitation_probability[0] || 0; document.getElementById('dashTemp').textContent = temp + '°'; document.getElementById('dashWeather').innerHTML = `<div class="weather-icon">${cond.icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-condition">${name}</div></div>`;
+                return `${cond.icon} ${name}: ${temp}°C`;
+            } catch(e) { return 'Error'; }
+        }
 
-        // ==================== 5. JOURNEY (From V9 + Map) ====================
+        function getWeatherCond(code) {
+            if (code === 0) return { icon: '☀️', text: 'Clear' }; if (code <= 3) return { icon: '⛅', text: 'Cloudy' }; if (code >= 95) return { icon: '⛈️', text: 'Storm' }; if (code >= 61) return { icon: '🌧️', text: 'Rain' }; if (code >= 51) return { icon: '🌦️', text: 'Drizzle' }; if (code >= 71) return { icon: '❄️', text: 'Snow' }; return { icon: '☁️', text: 'Cloudy' };
+        }
+
+        // ==================== NEW SMART SEARCH ====================
+        const searchInput = document.getElementById('weatherSearch');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('keyup', async (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.trim();
+                if (!query) return;
+                
+                searchResults.innerHTML = '<div class="search-item"><div class="search-item-detail">Searching...</div></div>';
+                searchResults.classList.add('active');
+
+                try {
+                    const r = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=en&format=json`)).json();
+                    if (!r.results || r.results.length === 0) {
+                        searchResults.innerHTML = '<div class="search-item"><div class="search-item-name">No results found</div></div>';
+                    } else {
+                        searchResults.innerHTML = r.results.map(item => `
+                            <div class="search-item" onclick="selectLocation('${item.name}', ${item.latitude}, ${item.longitude}, '${item.admin1 || ''}', '${item.country || ''}')">
+                                <div class="search-item-name">${item.name} ${item.country_code ? getFlagEmoji(item.country_code) : ''}</div>
+                                <div class="search-item-detail">${item.admin1 ? item.admin1 + ', ' : ''}${item.country || ''}</div>
+                            </div>
+                        `).join('');
+                    }
+                } catch(err) {
+                    searchResults.classList.remove('active');
+                }
+            }
+        });
+
+        // Click outside to close list
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.input-group')) searchResults.classList.remove('active');
+        });
+
+        function selectLocation(name, lat, lon, region, country) {
+            // Keep specific name selected from list
+            updateWeather(name, lat, lon);
+            searchInput.value = `${name}, ${country}`;
+            searchResults.classList.remove('active');
+        }
+
+        function getFlagEmoji(countryCode) {
+            const codePoints = countryCode.toUpperCase().split('').map(char =>  127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        // ==================== GLOBAL ALERTS ====================
+        async function loadGlobalWeatherAlerts() {
+            const container = document.getElementById('globalWeatherAlerts'); let alertsFound = false; let html = '';
+            for (const city of GLOBAL_MONITOR) {
+                try {
+                    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=weather_code&hourly=weather_code,precipitation&forecast_days=1`)).json();
+                    const curr = d.current.weather_code; const hourlyCodes = d.hourly.weather_code; const hourlyRain = d.hourly.precipitation; const totalRain = hourlyRain.reduce((a, b) => a + b, 0);
+                    let msg = ""; let type = "info";
+                    if ([95, 96, 99].includes(curr)) { msg = "⚡ LIVE ALERT: Heavy Thunderstorm occurring RIGHT NOW!"; type = "danger"; }
+                    else if ([71, 73, 75, 85, 86].includes(curr)) { msg = "❄️ LIVE ALERT: It is SNOWING right now! 🥶"; type = "warning"; }
+                    else if ([63, 65, 80, 81, 82].includes(curr)) { msg = "🌧 LIVE ALERT: Heavy Rain detected currently!"; type = "info"; }
+                    if (!msg) {
+                        if (hourlyCodes.some(c => [96, 99].includes(c))) { msg = "🌪️ FUTURE WARNING: Extreme storm risk in next 24h."; type = "danger"; }
+                        else if (totalRain >= 50.0) { msg = `🌊 FLOOD RISK: Heavy continuous rain predicted (${totalRain.toFixed(1)}mm).`; type = "danger"; }
+                        else if (hourlyCodes.some(c => [71, 75].includes(c))) { msg = "❄️ SNOW FORECAST: Snowfall expected within 24 hours."; type = "warning"; }
+                    }
+                    if (msg) { alertsFound = true; html += `<div class="alert-card ${type}"><div class="alert-header"><div class="alert-title">🚨 ${city.n}</div></div><div class="alert-body">${msg}</div></div>`; }
+                } catch(e) {}
+            }
+            if(!alertsFound) html = '<div class="alert-card info"><div class="alert-body">✅ No global severe weather detected.</div></div>';
+            container.innerHTML = html;
+        }
+
+        async function loadEarthquakes() {
+            try {
+                const quakes = (await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson')).json()).features;
+                document.getElementById('dashAlerts').textContent = quakes.length;
+                const container = document.getElementById('earthquakeAlerts');
+                if(!quakes.length) { container.innerHTML = '<div class="alert-card info"><div class="alert-title">✅ No earthquakes</div></div>'; return; }
+                let html = ''; let todayHeaderAdded = false; let otherHeaderAdded = false; const today = new Date().toDateString();
+                quakes.slice(0, 15).forEach(q => {
+                    const d = new Date(q.properties.time); const isToday = d.toDateString() === today;
+                    const dateStr = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute:'numeric', hour12: true });
+                    if(isToday && !todayHeaderAdded) { html += '<div class="group-header">📅 Today</div>'; todayHeaderAdded = true; }
+                    if(!isToday && !otherHeaderAdded) { html += '<div class="group-header">📅 Yesterday / Older</div>'; otherHeaderAdded = true; }
+                    html += `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'warning'}"><div class="alert-header"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)}</div><div class="alert-time">${dateStr}</div></div><div class="alert-body">📍 ${q.properties.place}</div></div>`;
+                });
+                container.innerHTML = html;
+                document.getElementById('dashAlertsPreview').innerHTML = quakes.slice(0, 2).map(q => `<div class="alert-card ${q.properties.mag >= 6 ? 'danger' : 'info'}"><div class="alert-title">${q.properties.mag >= 6 ? '🚨' : '🌍'} M${q.properties.mag.toFixed(1)} - ${q.properties.place?.split(',')[0]}</div></div>`).join('') || '<div class="alert-card info"><div class="alert-title">✅ All Clear</div></div>';
+            } catch(e) {}
+        }
+
+        function enableNotifications() {
+            if (!("Notification" in window)) { showToast("❌ Notifications not supported", true); return; }
+            Notification.requestPermission().then(permission => { if (permission === "granted") { showToast("✅ Notifications Allowed!"); new Notification("Sunday", { body: "Test: I can warn you about rain now!" }); } else { showToast("❌ Permission denied", true); } });
+        }
+
         function startJourney() {
             if (!navigator.geolocation) return showToast('GPS not supported', true);
             navigator.geolocation.getCurrentPosition(pos => {
-                const lat = pos.coords.latitude, lon = pos.coords.longitude;
-                APP.journey = { startTime: Date.now(), lastLat: lat, lastLon: lon, totalKm: 0, speed: 0 };
+                const lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy;
+                APP.journey = { startTime: Date.now(), lastLat: lat, lastLon: lon, lastTime: Date.now(), totalKm: 0, calories: 0, speed: 0, mode: 'walking', currentAlt: pos.coords.altitude || 0, overspeedWarning: false, waypoints: [{ name: '🚩 Start', lat, lon, time: Date.now(), type: 'start' }], currentStop: null };
                 APP.pathCoords = [[lat, lon]];
                 document.getElementById('startJourneyCard').style.display = 'none'; document.getElementById('activeJourneyCard').style.display = 'block';
                 setTimeout(() => {
-                    APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false }).setView([lat, lon], 17); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(APP.mapSmall);
-                    APP.pathSmall = L.polyline(APP.pathCoords, { color: '#0A84FF', weight: 4 }).addTo(APP.mapSmall);
+                    APP.mapSmall = L.map('journeyMapSmall', { zoomControl: false, attributionControl: false }).setView([lat, lon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapSmall);
+                    const icon = L.divIcon({ className: '', html: '<div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(66,133,244,0.8)"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
+                    APP.markerSmall = L.marker([lat, lon], { icon }).addTo(APP.mapSmall); APP.pathSmall = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 4 }).addTo(APP.mapSmall); L.marker([lat, lon]).addTo(APP.mapSmall).bindPopup('🚩 Start');
                 }, 100);
-                APP.watchId = navigator.geolocation.watchPosition(trackPosition, null, { enableHighAccuracy: true });
-                APP.timerInterval = setInterval(() => { const mins = Math.floor((Date.now()-APP.journey.startTime)/60000); document.getElementById('jTime').textContent=mins; document.getElementById('fsDuration').textContent = new Date(Date.now()-APP.journey.startTime).toISOString().substr(11,8); }, 1000);
-            }, null, { enableHighAccuracy: true });
+                APP.watchId = navigator.geolocation.watchPosition(trackPosition, err => updateGPSStatus('Error', 'bad'), { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 });
+                APP.timerInterval = setInterval(updateTimer, 1000); updateGPSStatus(acc); showToast('Journey started! 🚗');
+            }, err => showToast('GPS Error: ' + err.message, true), { enableHighAccuracy: true, timeout: 15000 });
         }
+
         function trackPosition(pos) {
             if (!APP.journey) return;
-            const lat = pos.coords.latitude, lon = pos.coords.longitude, j = APP.journey;
-            const dist = calcDist(j.lastLat, j.lastLon, lat, lon);
+            const lat = pos.coords.latitude, lon = pos.coords.longitude; const acc = pos.coords.accuracy; const alt = pos.coords.altitude || 0; const now = Date.now();
+            const dist = calcDist(APP.journey.lastLat, APP.journey.lastLon, lat, lon); const timeDiff = (now - APP.journey.lastTime) / 1000 / 3600;
+            let speed = timeDiff > 0 ? dist / timeDiff : 0; if (speed > 300) speed = APP.journey.speed;
+            APP.journey.speed = speed; APP.journey.currentAlt = alt;
+            if (speed > 110) { if (!APP.journey.overspeedWarning) { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); showToast('⚠️ Speeding Alert! > 110km/h', true); APP.journey.overspeedWarning = true; } } else { APP.journey.overspeedWarning = false; }
+            const prevMode = APP.journey.mode; APP.journey.mode = speed > 15 ? 'driving' : 'walking'; updateGPSStatus(acc);
+            APP.pathCoords.push([lat, lon]);
+            if (APP.mapSmall && APP.markerSmall) { APP.markerSmall.setLatLng([lat, lon]); APP.pathSmall.setLatLngs(APP.pathCoords); APP.mapSmall.panTo([lat, lon]); }
+            if (APP.isFullscreen && APP.mapFull && APP.markerFull) { APP.markerFull.setLatLng([lat, lon]); APP.pathFull.setLatLngs(APP.pathCoords); APP.mapFull.panTo([lat, lon]); }
             if (dist > 0.005) {
-                j.totalKm += dist; j.speed = (dist / ((Date.now() - j.startTime)/3600000)) || 0; // rough speed
-                j.lastLat = lat; j.lastLon = lon; APP.pathCoords.push([lat, lon]);
-                if (APP.mapSmall) { APP.pathSmall.setLatLngs(APP.pathCoords); APP.mapSmall.panTo([lat, lon]); }
-                if (APP.mapFull) { APP.pathFull.setLatLngs(APP.pathCoords); APP.mapFull.panTo([lat, lon]); }
-                document.getElementById('jDistance').textContent = j.totalKm.toFixed(2); document.getElementById('jSpeed').textContent = (pos.coords.speed*3.6||0).toFixed(1);
-            }
+                if (prevMode !== APP.journey.mode && APP.journey.totalKm > 0.05) { APP.journey.waypoints.push({ name: APP.journey.mode === 'driving' ? '🚗 Driving Mode' : '🚶 Walking Mode', lat, lon, time: now, type: 'mode', mode: APP.journey.mode }); }
+                if (APP.journey.currentStop) { const dur = Math.round((now - APP.journey.currentStop.startTime) / 60000); if (dur >= 2) { APP.journey.waypoints.push({ name: `⏸️ Stopped ${dur}min`, lat: APP.journey.currentStop.lat, lon: APP.journey.currentStop.lon, duration: dur, type: 'stop', time: APP.journey.currentStop.startTime }); if(APP.mapFull) L.marker([APP.journey.currentStop.lat, APP.journey.currentStop.lon]).addTo(APP.mapFull).bindPopup(`Stopped ${dur} min`); } APP.journey.currentStop = null; }
+                APP.journey.totalKm += dist; if (APP.journey.mode === 'walking') APP.journey.calories += dist * 65; APP.journey.lastLat = lat; APP.journey.lastLon = lon; APP.journey.lastTime = now; getStreetName(lat, lon);
+            } else if (!APP.journey.currentStop && APP.journey.totalKm > 0.01) { APP.journey.currentStop = { lat, lon, startTime: now }; }
+            updateJourneyUI();
         }
-        function endJourney() {
-            if (APP.watchId) navigator.geolocation.clearWatch(APP.watchId); clearInterval(APP.timerInterval);
-            const j = APP.journey;
-            APP.journeyHistory.unshift({ id: Date.now(), date: new Date().toISOString(), distance: j.totalKm.toFixed(2), duration: Math.floor((Date.now()-j.startTime)/60000) });
-            saveStorage(); APP.journey = null; APP.pathCoords = [];
-            document.getElementById('activeJourneyCard').style.display = 'none'; document.getElementById('startJourneyCard').style.display = 'block';
-            closeFullscreenMap(); renderHistory();
+
+        function updateJourneyUI() {
+            if (!APP.journey) return;
+            const j = APP.journey; let pace = "--"; if (j.speed > 1) { const paceMin = 60 / j.speed; const pm = Math.floor(paceMin); const ps = Math.round((paceMin - pm) * 60); pace = `${pm}'${ps}"`; }
+            document.getElementById('jDistance').textContent = j.totalKm.toFixed(2); document.getElementById('jSpeed').textContent = j.speed.toFixed(1); document.getElementById('jCalories').textContent = Math.round(j.calories); document.getElementById('jAlt').textContent = Math.round(j.currentAlt || 0); document.getElementById('jPace').textContent = pace; document.getElementById('journeyModeText').textContent = j.mode === 'driving' ? '🚗 Driving' : '🚶 Walking';
+            document.getElementById('fsDistance').textContent = j.totalKm.toFixed(2); document.getElementById('fsSpeed').textContent = j.speed.toFixed(1); document.getElementById('fsCalories').textContent = Math.round(j.calories); document.getElementById('fsAlt').textContent = Math.round(j.currentAlt || 0); document.getElementById('fsPace').textContent = pace; document.getElementById('fsModeIcon').textContent = j.mode === 'driving' ? '🚗' : '🚶'; document.getElementById('fsModeTitle').textContent = j.mode === 'driving' ? 'Driving' : 'Walking'; renderTimeline();
         }
-        function renderHistory() { const c = document.getElementById('journeyHistory'); c.innerHTML = APP.journeyHistory.slice(0, 10).map(j => `<div class="list-item"><div><div style="font-weight:600">${j.distance} km</div><div style="font-size:12px;color:var(--text-tertiary)">${new Date(j.date).toLocaleDateString()}</div></div><span style="color:var(--accent-blue)">${j.duration} min</span></div>`).join(''); document.getElementById('dashJourneys').textContent = APP.journeyHistory.length; }
-        function openFullscreenMap() { if(!APP.journey) return; document.getElementById('mapFullscreen').classList.add('active'); setTimeout(()=>{ if(APP.mapFull) APP.mapFull.remove(); APP.mapFull = L.map('journeyMapFull',{zoomControl:false}).setView([APP.journey.lastLat, APP.journey.lastLon], 17); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(APP.mapFull); APP.pathFull = L.polyline(APP.pathCoords, {color:'#0A84FF', weight:5}).addTo(APP.mapFull); },100); }
-        function closeFullscreenMap() { document.getElementById('mapFullscreen').classList.remove('active'); }
-        function centerMapOnUser() { if(APP.journey && APP.mapFull) APP.mapFull.setView([APP.journey.lastLat, APP.journey.lastLon], 17); }
 
-        // ==================== 6. PARKING & TOOLS (From V9) ====================
-        function handlePhoto(e) { const f = e.target.files[0]; const r = new FileReader(); r.onload = ev => { APP.pendingPhoto = ev.target.result; if(APP.pendingMode==='both') finishSave('both'); else { APP.parking={type:'photo', photo:ev.target.result, time:Date.now()}; saveStorage(); renderParking(); } }; r.readAsDataURL(f); }
-        function saveParking(type) { APP.pendingMode = type; if(type==='photo') document.getElementById('photoInput').click(); else navigator.geolocation.getCurrentPosition(pos => { APP.pendingGPS={lat:pos.coords.latitude, lon:pos.coords.longitude}; if(type==='both') document.getElementById('photoInput').click(); else finishSave('gps'); }); }
-        function finishSave(type) { APP.parking = { type, time: Date.now(), lat: APP.pendingGPS?.lat, lon: APP.pendingGPS?.lon, photo: APP.pendingPhoto }; saveStorage(); renderParking(); }
-        function renderParking() { const p = APP.parking; const d = document.getElementById('parkingDisplay'); const m = document.getElementById('parkingMapContainer'); if(!p) { d.innerHTML='No location'; m.style.display='none'; return; } d.innerHTML = `Saved: ${new Date(p.time).toLocaleTimeString()}` + (p.photo?`<br><img src="${p.photo}" class="parking-photo" style="width:100%;margin-top:10px;border-radius:10px">`:''); if(p.lat) { m.style.display='block'; setTimeout(()=>{ if(APP.parkingMap) APP.parkingMap.remove(); APP.parkingMap = L.map('parkingMap',{zoomControl:false}).setView([p.lat, p.lon], 17); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(APP.parkingMap); L.marker([p.lat, p.lon]).addTo(APP.parkingMap); },100); } }
-        function saveCustomPlace() { const n = document.getElementById('customPlaceName').value; if(n && APP.parking?.lat) { APP.customPlaces[n] = APP.parking; saveStorage(); renderPlaces(); } }
-        function renderPlaces() { document.getElementById('customPlacesList').innerHTML = Object.keys(APP.customPlaces).map(n => `<div class="list-item"><span>${n}</span><button class="btn btn-secondary btn-sm" style="width:auto" onclick="window.open('http://maps.google.com/?q=${APP.customPlaces[n].lat},${APP.customPlaces[n].lon}')">Go</button></div>`).join(''); }
-        
-        function addReminder(task, mins) { task = task || document.getElementById('reminderTask').value; mins = mins || parseInt(document.getElementById('reminderTime').value); if(!task) return; APP.reminders.push({id:Date.now(), task, time:Date.now()+mins*60000}); saveStorage(); renderReminders(); showToast('Reminder Set'); }
-        function renderReminders() { const l = document.getElementById('reminderList'); l.innerHTML = APP.reminders.map(r => `<div class="list-item"><span>${r.task}</span><span>${Math.ceil((r.time-Date.now())/60000)}m</span></div>`).join(''); document.getElementById('dashReminders').textContent = APP.reminders.length; }
-        function checkReminders() { const now=Date.now(); APP.reminders.forEach(r=>{ if(r.time<=now){ showToast(r.task); if(Notification.permission==='granted') new Notification(r.task); } }); APP.reminders=APP.reminders.filter(r=>r.time>now); saveStorage(); renderReminders(); }
-        
-        async function loadCurrency() { try { const r = await(await fetch('https://api.exchangerate-api.com/v4/latest/MYR')).json(); document.getElementById('currencyRates').innerHTML = CURRENCIES.map(c => `<div class="list-item"><span>${c.code}</span><span style="color:var(--accent-green)">${(1/r.rates[c.code]).toFixed(3)}</span></div>`).join(''); } catch(e){} }
-        async function loadNews() { document.getElementById('dashNews').textContent = "News loaded (Mock)"; } // Keeping simple to avoid CORS issues in demo
-        async function generateDailyBriefing() { document.getElementById('briefingContent').textContent = "Weather looks good today. Check alerts tab for details."; }
-
-        // ==================== 7. CHAT & MEDICAL (From V9) ====================
-        const MEDICAL = { stomach: '🤢 Ginger tea, avoid spicy food.', fever: '🤒 Drink water, Paracetamol.', head: '🧠 Rest in dark room.' };
-        function sendChat() { const i = document.getElementById('chatInput'); const t = i.value.toLowerCase(); if(!t) return; addMsg(i.value, 'user'); i.value=''; setTimeout(()=>{ let r="I can help with weather, rates, or health."; if(t.includes('weath')) r="Check Weather tab."; if(t.includes('fever')||t.includes('head')) r=MEDICAL.fever; addMsg(r, 'bot'); },500); }
-        function addMsg(t, type) { document.getElementById('chatMessages').innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${t}</div></div>`; }
-
-        // Utils
-        function calcDist(lat1,lon1,lat2,lon2) { const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2; return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
-        function showToast(msg, err=false) { const t=document.getElementById('toast'); t.querySelector('.toast-message').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+        function updateTimer() { if (!APP.journey) return; const secs = Math.floor((Date.now() - APP.journey.startTime) / 1000); const mins = Math.floor(secs / 60), s = secs % 60; const str = `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; document.getElementById('jTime').textContent = mins; document.getElementById('fsTime').textContent = mins; document.getElementById('fsDuration').textContent = str; }
+        function updateGPSStatus(acc, status) { let quality = 'good', text = 'GPS: Good'; if (typeof acc === 'number') { if (acc <= 10) { quality = 'excellent'; text = `GPS: Excellent (±${Math.round(acc)}m)`; } else if (acc <= 30) { quality = 'good'; text = `GPS: Good (±${Math.round(acc)}m)`; } else if (acc <= 100) { quality = 'poor'; text = `GPS: Poor (±${Math.round(acc)}m)`; } else { quality = 'bad'; text = `GPS: Weak (±${Math.round(acc)}m)`; } } else if (status === 'bad') { quality = 'bad'; text = 'GPS: Error'; } document.getElementById('gpsAccuracyDot').className = 'gps-accuracy-dot ' + quality; document.getElementById('gpsAccuracyText').textContent = text; }
+        async function getStreetName(lat, lon) { try { const d = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18`)).json(); const street = d.address?.road || d.address?.suburb || 'Unknown'; document.getElementById('fsStreet').textContent = street; } catch(e) {} }
+        function calcDist(lat1, lon1, lat2, lon2) { const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180; const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2; return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
+        function renderTimeline() { if (!APP.journey) return; const html = APP.journey.waypoints.map((w, i) => ` <div class="timeline-item"> <div class="timeline-dot ${w.mode || ''} ${i === APP.journey.waypoints.length - 1 ? 'active' : ''}"></div> <div class="timeline-card"> <div class="timeline-title">${w.name}</div> <div class="timeline-time">${new Date(w.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div> ${w.duration ? `<span class="timeline-badge resting">${w.duration} min</span>` : ''} ${w.photo ? `<img src="${w.photo}" style="width:100%;margin-top:5px;border-radius:8px">` : ''} </div> </div> `).join(''); document.getElementById('timelinePreview').innerHTML = `<div class="timeline">${html}</div>`; document.getElementById('fsTimeline').innerHTML = html; }
+        function addJourneyPhoto(e) { if (!APP.journey) return; const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { const photoData = ev.target.result; const lat = APP.journey.lastLat; const lon = APP.journey.lastLon; APP.journey.waypoints.push({ name: '📸 Photo', lat: lat, lon: lon, time: Date.now(), type: 'photo', photo: photoData }); if (APP.mapFull) { const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${photoData});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] }); L.marker([lat, lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${photoData}" style="width:100px;border-radius:8px">`); } renderTimeline(); showToast('Photo added! 📸'); }; reader.readAsDataURL(file); }
+        function exportGPX(journeyId) { const journey = APP.journeyHistory.find(j => j.id === journeyId); if (!journey) return showToast('Error finding journey', true); let gpx = `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SundayApp"><metadata><name>Journey ${new Date(journey.date).toLocaleDateString()}</name></metadata><trk><name>Sunday Track</name><trkseg>`; const points = journey.pathCoords || journey.waypoints; points.forEach(p => { const lat = p.lat || p[0]; const lon = p.lon || p[1]; gpx += `<trkpt lat="${lat}" lon="${lon}"><time>${new Date(p.time || journey.id).toISOString()}</time></trkpt>`; }); gpx += `</trkseg></trk></gpx>`; const blob = new Blob([gpx], { type: 'application/gpx+xml' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `journey_${journeyId}.gpx`; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast('GPX Downloaded! 📂'); }
+        function openFullscreenMap() { if (!APP.journey) return; APP.isFullscreen = true; document.getElementById('mapFullscreen').classList.add('active'); setTimeout(() => { if (APP.mapFull) APP.mapFull.remove(); APP.mapFull = L.map('journeyMapFull', { zoomControl: false }).setView([APP.journey.lastLat, APP.journey.lastLon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.mapFull); const icon = L.divIcon({ className: '', html: '<div style="width:20px;height:20px;background:#4285F4;border:4px solid white;border-radius:50%;box-shadow:0 0 15px rgba(66,133,244,0.8)"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }); APP.markerFull = L.marker([APP.journey.lastLat, APP.journey.lastLon], { icon }).addTo(APP.mapFull); APP.pathFull = L.polyline(APP.pathCoords, { color: '#4285F4', weight: 5 }).addTo(APP.mapFull); L.marker([APP.journey.waypoints[0].lat, APP.journey.waypoints[0].lon]).addTo(APP.mapFull).bindPopup('🚩 Start'); APP.journey.waypoints.forEach(w => { if (w.type === 'stop') L.marker([w.lat, w.lon]).addTo(APP.mapFull).bindPopup(`⏸️ ${w.duration} min`); if (w.type === 'photo') { const photoIcon = L.divIcon({ className: 'custom-marker-photo', html: `<div style="width:30px;height:30px;background:url(${w.photo});background-size:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.5)"></div>`, iconSize: [30, 30] }); L.marker([w.lat, w.lon], { icon: photoIcon }).addTo(APP.mapFull).bindPopup(`<img src="${w.photo}" style="width:100px;border-radius:8px">`); } }); }, 100); }
+        function closeFullscreenMap() { APP.isFullscreen = false; document.getElementById('mapFullscreen').classList.remove('active'); document.getElementById('timelinePanel').classList.remove('show'); }
+        function centerMapOnUser() { if (APP.journey && APP.mapFull) { APP.mapFull.setView([APP.journey.lastLat, APP.journey.lastLon], 17); } }
+        function toggleTimelinePanel() { document.getElementById('timelinePanel').classList.toggle('show'); }
+        function endJourney() { if (!APP.journey) return; if (APP.watchId) navigator.geolocation.clearWatch(APP.watchId); if (APP.timerInterval) clearInterval(APP.timerInterval); const j = APP.journey; const totalMins = Math.round((Date.now() - j.startTime) / 60000); const avgSpeed = totalMins > 0 ? (j.totalKm / (totalMins / 60)).toFixed(1) : 0; APP.journeyHistory.unshift({ id: Date.now(), date: new Date().toISOString(), distance: parseFloat(j.totalKm.toFixed(2)), duration: totalMins, calories: Math.round(j.calories), avgSpeed: parseFloat(avgSpeed), mode: avgSpeed > 12 ? 'driving' : 'walking', waypoints: j.waypoints, pathCoords: APP.pathCoords, startLat: j.waypoints[0].lat, startLon: j.waypoints[0].lon, endLat: j.lastLat, endLon: j.lastLon }); if (APP.journeyHistory.length > 30) APP.journeyHistory = APP.journeyHistory.slice(0, 30); APP.parking = { type: 'gps', lat: j.lastLat, lon: j.lastLon, time: Date.now() }; saveStorage(); if (APP.mapSmall) { APP.mapSmall.remove(); APP.mapSmall = null; } if (APP.mapFull) { APP.mapFull.remove(); APP.mapFull = null; } APP.journey = null; APP.pathCoords = []; APP.isFullscreen = false; document.getElementById('mapFullscreen').classList.remove('active'); document.getElementById('activeJourneyCard').style.display = 'none'; document.getElementById('startJourneyCard').style.display = 'block'; renderHistory(); renderParking(); document.getElementById('dashJourneys').textContent = APP.journeyHistory.length; showToast(`Done! ${j.totalKm.toFixed(2)}km, ${Math.round(j.calories)}kcal 🏁`); }
+        function renderHistory() { const c = document.getElementById('journeyHistory'); document.getElementById('dashJourneys').textContent = APP.journeyHistory.length; if (!APP.journeyHistory.length) { c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No journeys yet</div></div>'; return; } c.innerHTML = APP.journeyHistory.slice(0, 10).map(j => ` <div class="history-card" onclick="showHistoryDetail(${j.id})"> <div class="history-header"> <span class="history-date">${new Date(j.date).toLocaleDateString()}</span> <span class="history-mode ${j.mode}">${j.mode === 'driving' ? '🚗' : '🚶'}</span> </div> <div class="history-stats"> <div class="history-stat">📏 <span>${j.distance}km</span></div> <div class="history-stat">⏱️ <span>${j.duration}min</span></div> <div class="history-stat">🔥 <span>${j.calories}kcal</span></div> </div> </div> `).join(''); }
+        function showHistoryDetail(id) { const j = APP.journeyHistory.find(x => x.id === id); if (!j) return; document.getElementById('historyModalBody').innerHTML = ` <div class="fitness-grid"> <div class="fitness-item"><div class="fitness-icon">${j.mode === 'driving' ? '🚗' : '🚶'}</div><div class="fitness-value">${j.distance}</div><div class="fitness-label">km</div></div> <div class="fitness-item"><div class="fitness-icon">⏱️</div><div class="fitness-value">${j.duration}</div><div class="fitness-label">min</div></div> <div class="fitness-item"><div class="fitness-icon">🔥</div><div class="fitness-value">${j.calories}</div><div class="fitness-label">kcal</div></div> <div class="fitness-item"><div class="fitness-icon">⚡</div><div class="fitness-value">${j.avgSpeed}</div><div class="fitness-label">km/h</div></div> </div> <div class="btn-row"> <a href="https://www.google.com/maps/dir/${j.startLat},${j.startLon}/${j.endLat},${j.endLon}" target="_blank" class="btn btn-primary">🗺️ View Route</a> <button class="btn btn-secondary" onclick="exportGPX(${j.id})">📂 Export GPX</button> </div> `; document.getElementById('historyModal').classList.add('show'); }
+        function closeModal() { document.getElementById('historyModal').classList.remove('show'); }
+        function handlePhoto(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { APP.pendingPhoto = ev.target.result; if (APP.pendingSaveMode === 'both') completeBothSave(); else { APP.parking = { type: 'photo', photo: APP.pendingPhoto, time: Date.now() }; saveStorage(); renderParking(); showToast('Photo saved! 📸'); } }; reader.readAsDataURL(file); }
+        function saveParking(type) { APP.pendingSaveMode = type; if (type === 'photo') { document.getElementById('photoInput').click(); return; } navigator.geolocation.getCurrentPosition(pos => { if (type === 'gps') { APP.parking = { type: 'gps', lat: pos.coords.latitude, lon: pos.coords.longitude, time: Date.now() }; saveStorage(); renderParking(); showToast('GPS saved! 🅿️'); } else { APP.pendingGPS = { lat: pos.coords.latitude, lon: pos.coords.longitude }; document.getElementById('photoInput').click(); } }, err => showToast('GPS Error', true), { enableHighAccuracy: true }); }
+        function completeBothSave() { APP.parking = { type: 'both', lat: APP.pendingGPS.lat, lon: APP.pendingGPS.lon, photo: APP.pendingPhoto, time: Date.now() }; saveStorage(); renderParking(); showToast('GPS + Photo saved! 🅿️📸'); }
+        function renderParking() { const c = document.getElementById('parkingDisplay'); const mc = document.getElementById('parkingMapContainer'); if (!APP.parking) { c.innerHTML = '<div class="parking-display"><div class="parking-icon">🚗</div><div>No location saved</div></div>'; mc.style.display = 'none'; return; } let html = '<div class="parking-display">'; if (APP.parking.photo) html += `<img src="${APP.parking.photo}" class="parking-photo">`; html += `<div style="font-size:14px;font-weight:600">${APP.parking.lat ? '📍 GPS Saved' : '📸 Photo Saved'}</div>`; html += `<div style="font-size:12px;color:var(--text-muted);margin:5px 0">${getTimeAgo(APP.parking.time)}</div>`; if (APP.parking.lat) html += `<a href="https://www.google.com/maps?q=${APP.parking.lat},${APP.parking.lon}" target="_blank" class="btn btn-success btn-sm" style="margin:10px 0">🗺️ Open Maps</a>`; html += `<button class="btn btn-secondary btn-sm" onclick="APP.parking=null;saveStorage();renderParking()">🗑️ Clear</button></div>`; c.innerHTML = html; if (APP.parking.lat) { mc.style.display = 'block'; setTimeout(() => { if (APP.parkingMap) APP.parkingMap.remove(); APP.parkingMap = L.map('parkingMap', { zoomControl: false }).setView([APP.parking.lat, APP.parking.lon], 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(APP.parkingMap); L.marker([APP.parking.lat, APP.parking.lon]).addTo(APP.parkingMap).bindPopup('🚗').openPopup(); }, 100); } else mc.style.display = 'none'; }
+        function saveCustomPlace() { const name = document.getElementById('customPlaceName').value.trim(); if (!name || !APP.parking?.lat) return showToast('Save GPS first', true); APP.customPlaces[name] = { lat: APP.parking.lat, lon: APP.parking.lon, photo: APP.parking.photo || null }; saveStorage(); document.getElementById('customPlaceName').value = ''; showToast(`"${name}" saved! ⭐`); renderPlaces(); }
+        function renderPlaces() { const c = document.getElementById('customPlacesList'); const p = Object.entries(APP.customPlaces); if (!p.length) { c.innerHTML = ''; return; } c.innerHTML = p.map(([n, d]) => ` <div class="place-card"> ${d.photo ? `<img src="${d.photo}" class="place-photo">` : ''} <div class="place-info"> <div class="place-name">⭐ ${n}</div> <button class="btn btn-secondary btn-sm" style="width:auto" onclick="window.open('https://www.google.com/maps?q=${d.lat},${d.lon}')">🗺️</button> </div> </div> `).join(''); }
+        function addReminder(task, mins) { task = task || document.getElementById('reminderTask').value.trim(); mins = mins || parseInt(document.getElementById('reminderTime').value); if (!task) return showToast('Enter task', true); APP.reminders.push({ id: Date.now(), task, triggerTime: Date.now() + mins * 60000 }); saveStorage(); document.getElementById('reminderTask').value = ''; renderReminders(); showToast(`Reminder: ${mins} mins ⏰`); return `✅ ${task} in ${mins} mins`; }
+        function renderReminders() { const active = APP.reminders.filter(r => r.triggerTime > Date.now()); document.getElementById('reminderBadge').textContent = active.length; document.getElementById('dashReminders').textContent = active.length; document.getElementById('reminderList').innerHTML = active.length ? active.map(r => ` <div class="reminder-item"> <div class="reminder-icon">⏰</div> <div class="reminder-content"> <div class="reminder-task">${r.task}</div> <div class="reminder-time">${getTimeUntil(r.triggerTime)}</div> </div> <button class="reminder-delete" onclick="APP.reminders=APP.reminders.filter(x=>x.id!==${r.id});saveStorage();renderReminders()">✕</button> </div> `).join('') : '<div class="empty-state"><div class="empty-text">No reminders</div></div>'; }
+        function checkReminders() { const now = Date.now(); APP.reminders.filter(r => r.triggerTime <= now).forEach(r => { showToast(`⏰ ${r.task}`, false, 8000); if (Notification.permission === 'granted') new Notification('Sunday', { body: r.task }); }); APP.reminders = APP.reminders.filter(r => r.triggerTime > now); saveStorage(); renderReminders(); }
+        let rates = {}; async function loadCurrency() { try { rates = (await (await fetch('https://api.exchangerate-api.com/v4/latest/MYR')).json()).rates; document.getElementById('currencyRates').innerHTML = CURRENCIES.map(c => ` <div class="rate-card"> <div class="rate-pair"><span class="rate-flag">${c.flag}</span><div class="rate-code">${c.code}/MYR</div></div> <span class="rate-value">${(1/rates[c.code]).toFixed(4)}</span> </div> `).join(''); } catch(e) {} }
+        let news = []; async function loadNews() { try { news = (await (await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.thestar.com.my/rss/news/nation')).json()).items?.slice(0, 5) || []; const html = news.map(n => `<div class="news-item" onclick="window.open('${n.link}')"><span class="news-source">NEWS</span><div class="news-title">${n.title}</div></div>`).join(''); document.getElementById('dashNews').innerHTML = html; document.getElementById('newsList').innerHTML = html; } catch(e) {} }
+        function sendChat() { const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return; addMsg(text, 'user'); input.value = ''; processCmd(text).then(r => addMsg(r, 'bot')); }
+        function addMsg(text, type) { const c = document.getElementById('chatMessages'); c.innerHTML += `<div class="chat-message ${type}"><div class="chat-bubble">${text}</div></div>`; c.scrollTop = c.scrollHeight; }
+        const MEDICAL = { stomach: { kw: ['stomach', 'gastric'], reply: '🤢 Ginger tea, avoid spicy food, rest upright.' }, fever: { kw: ['fever', 'hot'], reply: '🤒 Drink water, cool towel, Paracetamol.' }, headache: { kw: ['headache', 'head'], reply: '🧠 Drink water, dark room, cold compress.' }, flu: { kw: ['flu', 'cold', 'cough'], reply: '🤧 Rest, warm soup, Vitamin C.' } };
+        async function processCmd(text) { const t = text.toLowerCase(); if (t.startsWith('weather ')) { return await updateWeather(text.slice(8), 0, 0); } if (t === 'weather') { document.querySelector('[data-page="weather"]').click(); return '🌤️ Weather page'; } const m = t.match(/remind.*?(\d+)\s*(min|hour|h|m).*?(?:to)?\s*(.+)/i); if (m) { let mins = parseInt(m[1]); if (m[2]?.startsWith('h')) mins *= 60; return addReminder(m[3], mins); } if (t.includes('car') || t.includes('parking')) { document.querySelector('[data-page="parking"]').click(); return APP.parking?.lat ? '🚗 Opening parking...' : '❌ No parking saved'; } if (t.includes('start') && t.includes('journey')) { setTimeout(startJourney, 500); return '🚗 Starting...'; } if (t === 'news') return news[0]?.title || 'No news'; if (t.startsWith('rate ')) { const c = t.split(' ')[1].toUpperCase(); return rates[c] ? `${c}: ${(1/rates[c]).toFixed(4)} MYR` : 'Not found'; } for (const [, d] of Object.entries(MEDICAL)) if (d.kw.some(k => t.includes(k))) return d.reply; return 'Try: weather tokyo, remind me in 30 mins to call'; }
+        function getTimeAgo(t) { const s = Math.floor((Date.now() - t) / 1000); if (s < 60) return 'just now'; if (s < 3600) return `${Math.floor(s/60)} mins ago`; if (s < 86400) return `${Math.floor(s/3600)} hours ago`; return `${Math.floor(s/86400)} days ago`; }
+        function getTimeUntil(t) { const s = Math.floor((t - Date.now()) / 1000); if (s < 60) return `${s}s`; if (s < 3600) return `${Math.floor(s/60)}m`; return `${Math.floor(s/3600)}h`; }
+        function showToast(msg, err = false, dur = 3000) { const t = document.getElementById('toast'); t.querySelector('.toast-icon').textContent = err ? '❌' : '✅'; t.querySelector('.toast-message').textContent = msg; t.classList.toggle('error', err); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), dur); }
     </script>
 </body>
 </html>
+
